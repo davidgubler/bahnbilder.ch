@@ -1,0 +1,20 @@
+@(  request: Http.Request,
+    photo: entities.Photo,
+    returnUrl: String,
+    errors: Map[String, String],
+    user: entities.User,
+    lang: String,
+)
+
+@template(request, i18n.Txt.get(lang, "uploadNewVersion"), "", user, lang) {
+} {
+    <div class="row">
+        <div class="col-12">
+            <h1>@i18n.Txt.get(lang, "uploadNewVersion")</h1>
+            @form(request, routes.PhotoController.replacePost(photo.getId, returnUrl), multipart = true) {
+                @formUpload("", "file", false, errors, lang, forceVerticalLayout = true)
+                @formButtons("upload", returnUrl, lang)
+            }
+        </div>
+    </div>
+}

@@ -1,0 +1,29 @@
+@(	implicit request: Http.Request,
+    users: List[_ <: entities.User],
+    user: entities.User,
+    lang: String
+)
+
+@template(request, "Users", "manage-users", user, lang) {
+} {
+    <a href="@routes.UsersController.create()">Create new user...</a>
+    <table class="dataTable" data-paging="false" data-ordering="false">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        @for(user <- users) {
+            <tr>
+                <td>@user.getEmail</td>
+                <td>@user.getName</td>
+                <td><a href="@routes.UsersController.edit(user.getId)">edit</a> <a href="@routes.UsersController.delete(user.getId)">delete</a></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+}

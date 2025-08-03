@@ -1,0 +1,2 @@
+@(photo: entities.Photo)
+@for(res <- photo.getResolutions){@if(res.getName() == "xlarge" || res.getName() == "xxlarge" || res.getName() == "original"){<a target="blank" href="@photo.getUrl(res)">@res.getWidth()x@res.getHeight()</a> }}

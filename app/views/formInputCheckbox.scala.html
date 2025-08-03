@@ -1,0 +1,19 @@
+@(  label: String,
+    name: String,
+    checked: Boolean,
+    errors: Map[String, String],
+    lang: String,
+    value: String = "true",
+)
+
+<div class="form-group row mb-1">
+    <div class="col-12">
+        <div class="form-check">
+            <input class='form-check-input @if(errors.containsKey(name)){is-invalid}' type='checkbox' name='@name' id='@name' value='@value' @if(checked){checked="checked"}>
+            <label class='form-check-label' for='@name'>@label</label>
+            @if(errors.containsKey(name)) {
+            <div class="invalid-feedback">@i18n.Txt.get(lang, errors.get(name))</div>
+            }
+        </div>
+    </div>
+</div>

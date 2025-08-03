@@ -1,0 +1,20 @@
+@(  request: Http.Request,
+    operators: List[_ <: entities.Operator],
+    user: entities.User,
+    lang: String,
+)
+
+@template(request, i18n.Txt.get(lang, "operatorsNoWikidata"), "manage", user, lang) {
+} {
+    <h1>@i18n.Txt.get(lang, "operatorsNoWikidata")</h1>
+    @manageNav("noWikidata", lang)
+
+    <div class="mb-3">
+        @i18n.Txt.get(lang, "total") @operators.size()
+    </div>
+    <div class="columns">
+        @for(operator <- operators) {
+            @operator.getName()&nbsp;<a href='@routes.ManagementController.createOrUpdateOperator(request.uri(), operator.getId)'><i class='fas fa-sm fa-pen' ></i></a><br />
+        }
+    </div>
+}

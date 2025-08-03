@@ -1,0 +1,15 @@
+@(  implicit request: Http.Request,
+    email: String,
+    user: entities.User,
+    lang: String
+)
+
+@template(request, i18n.Txt.get(lang, "calendarOrder"), "calendar", user, lang) {
+} {
+    <h1>@i18n.Txt.get(lang, "calendarOrder")</h1>
+    @if(lang == "de") {
+        Danke für die Bestellung! Eine Bestätigung wurde versandt an @email.
+    } else {
+        Thanks for the order! A confirmation was sent to @email.
+    }
+}

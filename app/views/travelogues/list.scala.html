@@ -1,0 +1,50 @@
+@(  implicit request: Http.Request,
+    travelogues: Map[String, List[entities.Travelogue]],
+    yearMonth: String,
+    user: entities.User,
+    lang: String
+)
+
+@template(request, i18n.Txt.get(lang, "travelogues"), "travelogues", user, lang) {
+} {
+    <link rel='stylesheet' href='@routes.Assets.versioned("stylesheets/travelogues.css")'/>
+    @if(user != null) {
+    <div style="text-align: right;">
+        <a href="/travelogue/_create" title="Erstellen"><i class="fas fa-plus"></i></a>
+    </div>
+    }
+    @for(ym <- travelogues.keySet.toList.sorted.reverse) {
+        <div class="row traveloguesList">
+        @if(ym.equals(yearMonth)) {
+            <div class='col-12'>
+                <h1 class='mt-4 mb-0'><a id='@ym' href='@routes.TraveloguesController.list(ym)#@ym'>@utils.StringUtils.formatYearMonth(lang, travelogues.get(ym).get(0).getDate())</a></h1>
+                <hr class='mt-0'/>
+            </div>
+            @for(travelogue <- travelogues.get(ym)) {
+                <div class='col-xl-4 col-lg-6' itemscope itemtype='http://schema.org/BlogPosting'>
+                    <a class='divButton' itemprop='url' href='@routes.TraveloguesController.view(travelogue.getId)'>
+                        <div>
+                            <h2>@travelogue.getTitle</h2>
+                            <hr />
+                            @if(travelogue.getTitlePhoto() != null) {
+                            <img itemprop='image' src='@travelogue.getTitlePhoto().getUrlPublic900()' style='float:left;'/>
+                            }
+                            <p>@travelogue.getSummary()</p>
+                        </div>
+                    </a>
+                </div>
+            }
+        } else {
+            <div class='col-12'>
+                <h1 class='mt-4 mb-0'><a id='@ym' href='@routes.TraveloguesController.list(ym)#@ym'>@utils.StringUtils.formatYearMonth(lang, travelogues.get(ym).get(0).getDate()) <i class='fas fa-caret-down'></i></a></h1>
+                <hr class='mt-0'/>
+            </div>
+            <div class='col-12'>
+                @for(travelogue <- travelogues.get(ym)) {
+                    <a href="@routes.TraveloguesController.view(travelogue.getId)">@travelogue.getTitle()</a><br />
+                }
+            </div>
+        }
+        </div>
+    }
+}

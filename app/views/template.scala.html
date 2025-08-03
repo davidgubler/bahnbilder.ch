@@ -1,0 +1,65 @@
+@(  request: Http.RequestHeader,
+    title: String,
+    menu: String,
+    user: entities.User,
+    lang: String,
+)(meta: Html)(content: Html)
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <meta name='robots' content='@if(menu == "newest" || menu == "search"){noindex}else{index}, follow' />
+    @if(lang == "de") {<link rel='alternate' hreflang='en' href='@utils.Config.getSelfUrl("en")@request.uri()' />}
+    @if(lang == "en") {<link rel='alternate' hreflang='de' href='@utils.Config.getSelfUrl("de")@request.uri()' />}
+    <link rel='canonical' href='@utils.Config.getSelfUrl(lang)@request.uri()' />
+    @meta
+    <title>@title</title>
+    <link rel='apple-touch-icon' href='@routes.Assets.versioned("images/apple-touch-icon.png")'/>
+    <link rel='stylesheet' href='@routes.Assets.versioned("bootstrap4/css/bootstrap.min.css")'>
+    <link rel='stylesheet' href='@routes.Assets.versioned("fontawesome/css/all.css")'>
+    <link rel='stylesheet' href='@routes.Assets.versioned("stylesheets/bahnbilder.css")'/>
+    <script src='@routes.Assets.versioned("javascripts/jquery-3.4.1.min.js")'></script>
+    <script src='@routes.Assets.versioned("bootstrap4/js/bootstrap.min.js")'></script>
+</head>
+<body>
+<div id='main'>
+    <nav class='navbar navbar-expand-md navbar-dark'>
+        <div class='logo'>
+            <a href='/'><span style="color: #a0a0a0; font-size: 30px;">bahnbilder</span><span style="color: #707070; font-size: 22px;">.ch</span></a>
+        </div>
+        <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarContent' aria-controls='navbarContent' aria-expanded='false' aria-label='Navigation'>
+            <span class='navbar-toggler-icon'></span>
+        </button>
+        <div class='collapse navbar-collapse flex-column' id='navbarContent'>
+            <ul class='navbar-nav ml-auto'>
+                <li class='nav-item'><a @if(menu=="home"){class='active'} href='@routes.HomeController.home()'>@i18n.Txt.get(lang, "home")</a></li>
+                <li class='nav-item'><a @if(menu=="newest"){class='active'} href='@routes.NewestController.list()'>@i18n.Txt.get(lang, "newest")</a></li>
+                <li class='nav-item'><a @if(menu=="travelogues"){class='active'} href='@routes.TraveloguesController.list(null)'>@i18n.Txt.get(lang, "travelogues")</a></li>
+                <li class='nav-item'><a @if(menu=="browse"){class='active'} href='@routes.BrowseController.browse(1, null, null, null)'>@i18n.Txt.get(lang, "browse")</a></li>
+                <li class='nav-item'><a @if(menu=="search"){class='active'} href='@routes.SearchController.search()'>@i18n.Txt.get(lang, "search")</a></li>
+                <li class='nav-item'><a @if(menu=="map"){class='active'} href='@routes.MapController.view()'>@i18n.Txt.get(lang, "map")</a></li>
+                <li class='nav-item'><a @if(menu=="calendar"){class='active'} href='@routes.CalendarController.view()'>@i18n.Txt.get(lang, "calendar")</a></li>
+                <li class='nav-item'><a @if(menu=="webcamzhb"){class='active'} href='/webcamzhb'>@i18n.Txt.get(lang, "webcamZHB")</a></li>
+                <li class='nav-item'><a @if(menu=="about"){class='active'} href='/about'>@i18n.Txt.get(lang, "about")</a></li>
+            </ul>
+            @if(user != null) {
+            <ul class='navbar-nav ml-auto'>
+                <li class='nav-item'><a @if(menu=="upload"){class='active'} href='@routes.UploadController.upload()'>@i18n.Txt.get(lang, "upload")</a></li>
+                <li class='nav-item'><a @if(menu=="incomplete"){class='active'} href='/incomplete'>@i18n.Txt.get(lang, "incomplete")</a></li>
+                <li class='nav-item'><a @if(menu=="manage"){class='active'} href='@routes.ManagementController.manage(null, null)'>@i18n.Txt.get(lang, "manage")</a></li>
+                <li class='nav-item'><a @if(menu=="logout"){class='active'} href='@routes.LoginController.logout()'>@i18n.Txt.get(lang, "logoutUser", user.getName())</a></li>
+            </ul>
+            }
+        </div>
+        <hr />
+    </nav>
+    <div class='container'>
+        @content
+    </div>
+</div>
+<footer>
+    <span id='footer-text'><a href='https://www.facebook.com/www.bahnbilder.ch' target='_blank'>@i18n.Txt.get(lang, "followUsOnFacebook")</a> &middot; <a href='@routes.AboutController.privacy()'>@i18n.Txt.get(lang, "privacyPolicy")</a> &middot; @if(lang!="en"){<a href='@routes.HomeController.lang("en", request.uri())'>English</a>}@if(lang!="de"){<a href='@routes.HomeController.lang("de", request.uri())'>Deutsch</a>}</span>
+</footer>
+</body>
+</html>

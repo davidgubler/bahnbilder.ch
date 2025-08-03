@@ -1,0 +1,47 @@
+@(  implicit request: Http.Request,
+    year: Integer,
+    years: List[Integer],
+    orders: List[_ <: entities.CalendarOrder],
+    user: entities.User,
+    lang: String
+)
+
+@template(request, i18n.Txt.get(lang, "calendar"), "calendar", user, lang) {
+} {
+    <script src='@routes.Assets.versioned("javascripts/calendarOrdersList.js")'></script>
+    <div class='row'>
+        <div class='col-12'>
+            @form(request) {
+                @formSelect(i18n.Txt.get(lang, "year"), "year", true, Collections.emptyMap()) {
+                    @for(y <- years) {
+                        <option value='@y' @if(year==y){selected="selected"}>@y</option>
+                    }
+                }
+            }
+            <table>
+                <tr>
+                    <th style="padding-right: 20px;">@i18n.Txt.get(lang, "date")</th>
+                    <th style="padding-right: 20px;">@i18n.Txt.get(lang, "nrOfCalendars")</th>
+                    <th style="padding-right: 20px;">@i18n.Txt.get(lang, "name")</th>
+                    <th style="padding-right: 20px;">@i18n.Txt.get(lang, "addressShipping")</th>
+                    <th style="padding-right: 20px;">@i18n.Txt.get(lang, "country")</th>
+                    <th>@i18n.Txt.get(lang, "email")</th>
+                </tr>
+                @for(order <- orders) {
+                    <tr>
+                        <td style="padding-right: 20px;">@order.getTimestamp()</td>
+                        <td style="padding-right: 20px;">@order.getNrOfCalendars()</td>
+                        <td style="padding-right: 20px;">@order.getFirstName() @order.getLastName()</td>
+                        <td style="padding-right: 20px;">
+                            @order.getAddressStreetAndNr()<br />
+                            @if(order.getAddressRemarks() != null){@order.getAddressRemarks()<br />}
+                            @order.getZip() @order.getCity()
+                        </td>
+                        <td style="padding-right: 20px;">@order.getCountry()</td>
+                        <td>@order.getEmail()</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+}

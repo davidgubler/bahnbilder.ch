@@ -1,0 +1,12 @@
+@(  key: String,
+    cancel: Object = null,
+    lang: String,
+)
+<div class="form-group row mb-1">
+    <div class="col-12 text-right">
+        @if(cancel != null){
+        <a href="@cancel" class="btn btn-link ps-0">@i18n.Txt.get(lang, "cancel")</a>
+        }
+        <button type="submit" class="btn btn-primary" type="submit" name="submit" value="@key">@i18n.Txt.get(lang, key)</button>
+    </div>
+</div>

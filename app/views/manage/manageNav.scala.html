@@ -1,0 +1,11 @@
+@(  active: String,
+    lang: String,
+)
+<p>
+<a @if(active == "coc"       ){class="active"} href="@routes.ManagementController.manage(null, null)">@i18n.Txt.get(lang, "countries")/@i18n.Txt.get(lang, "operators")/@i18n.Txt.get(lang, "vclasses")</a> |
+<a @if(active == "series"    ){class="active"} href="@routes.ManagementController.manageSeries()">@i18n.Txt.get(lang, "series")</a> |
+<a @if(active == "noSeries"  ){class="active"} href="@routes.ManagementController.manageNoSeries()">@i18n.Txt.get(lang, "vclassesWithoutSeries")</a> |
+<a @if(active == "noTypeProp"){class="active"} href="@routes.ManagementController.manageNoTypeProp()">@i18n.Txt.get(lang, "vclassesWithoutTypeProp")</a> |
+<a @if(active == "noWikidata"){class="active"} href="@routes.ManagementController.manageNoWikidata()">@i18n.Txt.get(lang, "operatorsNoWikidata")</a> |
+<a @if(active == "keywords"  ){class="active"} href="@routes.ManagementController.manageKeywords()">@i18n.Txt.get(lang, "keywords")</a>
+</p>

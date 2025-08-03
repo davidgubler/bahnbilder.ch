@@ -1,0 +1,179 @@
+@(  implicit request: Http.Request,
+    search: entities.ModelSearch,
+    authors: List[_ <: entities.User],
+    licenses: List[_ <: entities.License],
+    photoTypes: List[_ <: entities.PhotoType],
+    countries: List[_ <: entities.Country],
+    locations: List[_ <: entities.Location],
+    operators: List[_ <: entities.Operator],
+    vehicleClasses: List[_ <: entities.VehicleClass],
+    keywords: List[_ <: entities.Keyword],
+    keywordSelection: Map[entities.Keyword, Boolean],
+    lastPage: Integer,
+    results: List[_ <: entities.Photo],
+    user: entities.User,
+    lang: String
+)
+
+@template(request, i18n.Txt.get(lang, "search"), "search", user, lang) {
+} {
+    <script src='@routes.Assets.versioned("javascripts/search.js")'></script>
+    <link rel='stylesheet' href='@routes.Assets.versioned("stylesheets/search.css")'/>
+    <script src='@routes.Assets.versioned("javascripts/multiedit.js")'></script>
+    @breadCrumbs("search", search, true, lang)
+    <div class='row'>
+        <div class='col-xl-6'>
+            <form id='searchForm' method='POST' action='@routes.SearchController.search()' style='@if(search.isActive){display:none;}' >
+                <div class='form-group row mb-2'>
+                    <label class='col-3 col-form-label' for='author'>@i18n.Txt.get(lang, "author")</label>
+                    <div class='col-9 col-md-4'>
+                        <select class='form-control' id='author' name='author' >
+                            <option value=''> </option>
+                            @for(author <- authors) {
+                            <option @if(author.getId() == search.getAuthorId()){selected="selected"} value='@author.getId()'>@author</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class='form-group row mb-2'>
+                    <label class='col-3 col-form-label' for='license'>@i18n.Txt.get(lang, "license")</label>
+                    <div class='col-9 col-md-4'>
+                        <select class='form-control' id='license' name='license' >
+                            <option value=''> </option>
+                            @for(license <- licenses) {
+                            <option @if(license.getId() == search.getLicenseId()){selected="selected"} value='@license.getId()'>@license</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class='form-group row mb-2'>
+                    <label class='col-3 col-form-label' for='datefrom'>@i18n.Txt.get(lang, "date")</label>
+                    <div class='col-9'>
+                        @i18n.Txt.get(lang, "fromDate") <input type='text' class='form-control' style='display: inline-block; width: 100px' id='datefrom' name='datefrom' value='@i18n.Formatter.formatDate(lang, search.getDateFrom())' autocomplete='off'>
+                        @i18n.Txt.get(lang, "to") <input type='text' class='form-control' style='display: inline-block; width: 100px' id='dateto' name='dateto' value='@i18n.Formatter.formatDate(lang, search.getDateTo())' autocomplete='off'>
+                    </div>
+                </div>
+                <div class='form-group row mb-2'>
+                    <label class='col-3 col-form-label' for='phototype'>@i18n.Txt.get(lang, "photoType")</label>
+                    <div class='col-9 col-md-4'>
+                        <select class='form-control' id='phototype' name='phototype'>
+                            <option value=''> </option>
+                            @for(photoType <- photoTypes) {
+                            <option @if(photoType.getId() == search.getPhotoTypeId()){selected="selected"} value='@photoType.getId()'>@photoType.getName(lang)</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class='form-group row mb-2'>
+                    <label class='col-3 col-form-label' for='country'>@i18n.Txt.get(lang, "country")</label>
+                    <div class='col-9 col-md-4'>
+                        <select class='form-control' id='country' name='country' >
+                            <option value=''> </option>
+                            @for(country <- countries) {
+                            <option @if(country.getId() == search.getCountryId()){selected="selected"} value='@country.getId()'>@country.getName(lang)</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class='form-group row mb-2'>
+                    <label class='col-3 col-form-label' for='location'>@i18n.Txt.get(lang, "location")</label>
+                    <div class='col-9 col-md-9'>
+                        <select class='form-control' id='location' name='location' @if(locations == null){disabled} data-choose-country="@i18n.Txt.get(lang, "chooseCountry")">
+                            @if(locations == null) {
+                                <option value=''>@i18n.Txt.get(lang, "chooseCountry")</option>
+                            } else {
+                                <option value=''></option>
+                                @for(location <- locations) {
+                                    <option @if(location.getId() == search.getLocationId()){selected="selected"} value='@location.getId()'>@location</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class='form-group row mb-2'>
+                    <label class='col-3 col-form-label' for='operator'>@i18n.Txt.get(lang, "operator")</label>
+                    <div class='col-9 col-md-9'>
+                        <select class='form-control' id='operator' name='operator' >
+                            <option value=''> </option>
+                            @for(operator <- operators) {
+                            <option @if(operator.getId() == search.getOperatorId()){selected="selected"} value='@operator.getId()'>@operator</option>
+                            }
+                          </select>
+                    </div>
+                </div>
+                <div class='form-group row mb-2'>
+                    <label class='col-3 col-form-label' for='vclass'>@i18n.Txt.get(lang, "vclass")</label>
+                    <div class='col-9 col-md-9'>
+                        <select class='form-control' id='vclass' name='vclass' >
+                            <option value=''> </option>
+                            @for(vehicleClass <- vehicleClasses) {
+                            <option @if(vehicleClass.getId() == search.getVehicleClassId()){selected="selected"} value='@vehicleClass.getId()'>@vehicleClass</option>
+                            }
+                        </select>
+                        <div class='form-check'>
+                            <input class='form-check-input' type='checkbox' name='series' id='series' value='true' @if(search.getIncludeVehicleSeries()){checked="checked"}>
+                            <label class='form-check-label' for='series'>@i18n.Txt.get(lang, "findAllOfSeries")</label>
+                        </div>
+                    </div>
+                </div>
+                <div class='form-group row mb-2'>
+                    <label class='col-3 col-form-label' for='nr'>@i18n.Txt.get(lang, "nr")</label>
+                    <div class='col-4 col-md-2'>
+                        <input type='text' class='form-control' id='nr' name='nr' value='@search.getNr()' autocomplete='off'>
+                    </div>
+                </div>
+                <div class='form-group row mb-2'>
+                    <label class='col-3 col-form-label' for='description'>@i18n.Txt.get(lang, "description")</label>
+                    <div class='col-9 col-md-9'>
+                        <input type='text' class='form-control' id='description' name='description' value='@search.getDescription()' autocomplete='off'>
+                    </div>
+                </div>
+                <div class='form-group row mb-2'>
+                    <label class='col-3 col-form-label' for='description'>@i18n.Txt.get(lang, "keywords")</label>
+                    <div class='col-9 col-md-9'>
+                        @for(keyword <- keywords) {
+                        <span class='token-selectable @if(Boolean.TRUE.equals(keywordSelection.get(keyword))){include} @if(Boolean.FALSE.equals(keywordSelection.get(keyword))){exclude}'>@keyword.getName(lang)</span>
+                        }
+                    </div>
+                </div>
+                <input type='hidden' name='keywords' value='' />
+                <div class='form-group row mb-2'>
+                    <label class='col-3 col-form-label' for='sortBy'>@i18n.Txt.get(lang, "sortBy")</label>
+                    <div class='col-9 col-md-4'>
+                        <select class='form-control' id='sortBy' name='sortBy' >
+                            <option @if(search.getSortBy() == entities.Search.SortBy.photoDate){selected="selected"} value='photoDate'>@i18n.Txt.get(lang, "photoDate")</option>
+                            <option @if(search.getSortBy() == entities.Search.SortBy.uploadDate){selected="selected"} value='uploadDate'>@i18n.Txt.get(lang, "uploadDate")</option>
+                            <option @if(search.getSortBy() == entities.Search.SortBy.rating){selected="selected"} value='rating'>@i18n.Txt.get(lang, "rating")</option>
+                            <option @if(search.getSortBy() == entities.Search.SortBy.views){selected="selected"} value='views'>@i18n.Txt.get(lang, "views")</option>
+                        </select>
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-md-12 col-sm-9'>
+                        <div class='form-group text-right'>
+                            <button type='submit' name='submit' value='search' class='btn btn-primary'>@i18n.Txt.get(lang, "search")</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <br />
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-12'>
+            @pageChooser("/search?" + search.toQuery, search.getPage, lastPage)
+            <div class='fleximages'>
+                <div class="multiedit">
+                    <span id="multiedit"><i class="fas fa-edit"></i></span>
+                </div>
+                @for(photo <- results) {
+                    <a @if(user != null && user.canEdit(photo)){id='editable-@photo.getId()' class='editable'} style="--w: @photo.getResMedium.getWidth; --h: @photo.getResMedium.getHeight; position: relative" href="/@photo.getId()?menu=search&@search.toQuery()">
+                        <img src="@photo.getUrlPublic900()">
+                        <div class='bottom-label'>@photo.getGeneratedDescription(lang, true, false, true, true, false)</div>
+                    </a>
+                }
+            </div>
+            @pageChooser("/search?" + search.toQuery, search.getPage, lastPage)
+        </div>
+    </div>
+}

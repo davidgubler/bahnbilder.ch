@@ -1,0 +1,2 @@
+@(photo: entities.Photo, lang: String)
+@if(photo.getPhotoDate!=null){<a href='@routes.SearchController.search(datefrom = photo.getPhotoDate.toLocalDate.toString, dateto = photo.getPhotoDate.toLocalDate.toString)'>@i18n.Formatter.formatDate(lang, photo.getPhotoDate)</a> @i18n.Formatter.formatTime(photo.getPhotoDate)}

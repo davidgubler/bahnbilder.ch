@@ -1,0 +1,29 @@
+@(  implicit request: Http.Request,
+    page: Integer,
+    lastPage: Integer,
+    results: List[_ <: entities.Photo],
+    user: entities.User,
+    lang: String
+)
+
+@template(request, i18n.Txt.get(lang, "newest"), "newest", user, lang) {
+} {
+    <script src='@routes.Assets.versioned("javascripts/multiedit.js")'></script>
+    <div class='row'>
+        <div class='col-12'>
+            @pageChooser("/newest", page, lastPage)
+            <div class='fleximages'>
+                <div class="multiedit">
+                    <span id="multiedit"><i class="fas fa-edit"></i></span>
+                </div>
+                @for(photo <- results) {
+                    <a @if(user != null && user.canEdit(photo)){id='editable-@photo.getId()' class='editable'} style="--w: @photo.getResMedium.getWidth; --h: @photo.getResMedium.getHeight; position: relative" href="/@photo.getId()?sortBy=uploadDate&menu=newest">
+                        <img src="@photo.getUrlPublic900()">
+                        <div class='bottom-label'>@photo.getGeneratedDescription(lang, true, false, true, true, false)</div>
+                    </a>
+                }
+            </div>
+            @pageChooser("/newest", page, lastPage)
+        </div>
+    </div>
+}

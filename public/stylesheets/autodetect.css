@@ -1,0 +1,16 @@
+span.solution-selected {
+	font-weight: bold;
+	color: #ffffff;
+}
+
+span.solution {
+	cursor: pointer;
+}
+
+div.hidden {
+	display: none;
+}
+
+small.unhide {
+	cursor: pointer;
+}

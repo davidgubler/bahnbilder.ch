@@ -1,0 +1,63 @@
+@(  implicit request: Http.Request,
+    countries: List[_ <: entities.Country],
+    operators: List[_ <: entities.Operator],
+    vehicleClasses: List[_ <: entities.VehicleClass],
+    search: entities.ModelSearch,
+    lastPage: Integer,
+    results: List[_ <: entities.Photo],
+    user: entities.User,
+    lang: String
+)
+
+
+@template(request, i18n.Txt.get(lang, "browse"), "browse", user, lang) {
+} {
+    <script src='@routes.Assets.versioned("javascripts/multiedit.js")'></script>
+    @breadCrumbs("browse", search, true, lang)
+    <br />
+    @if(countries != null) {
+        <h1>@i18n.Txt.get(lang, "country")</h1>
+        <div class="columns">
+            @for(country <- countries) {
+                <a href="@routes.BrowseController.browse(1, country.getId, null, null)">@flag(country.getCode(), country.getName(lang))@country.getName(lang)</a><br />
+            }
+        </div>
+        <br />
+    }
+    @if(operators != null) {
+        <h1>@i18n.Txt.get(lang, "operator")</h1>
+        <div class="columns">
+            @for(operator <- operators) {
+                <a href="@routes.BrowseController.browse(1, search.getCountryId, operator.getId, null)">@operator.getName()</a><br />
+            }
+        </div>
+        <br />
+    }
+    @if(vehicleClasses != null) {
+        <h1>@i18n.Txt.get(lang, "vclass")</h1>
+        <div class="columns">
+            @for(vehicleClass <- vehicleClasses) {
+            <a href="@routes.BrowseController.browse(1, search.getCountryId, search.getOperatorId, vehicleClass.getId)">@vehicleClass.getName()</a><br />
+            }
+        </div>
+        <br />
+    }
+
+    <div class='row'>
+        <div class='col-12'>
+            @pageChooser(routes.BrowseController.browse(1, search.getCountryId, search.getOperatorId, search.getVehicleClassId).toString, search.getPage, lastPage)
+            <div class='fleximages'>
+                <div class="multiedit">
+                    <span id="multiedit"><i class="fas fa-edit"></i></span>
+                </div>
+                @for(photo <- results) {
+                    <a @if(user != null && user.canEdit(photo)){id='editable-@photo.getId()' class='editable'} style="--w: @photo.getResMedium.getWidth; --h: @photo.getResMedium.getHeight; position: relative" href="/@photo.getId()?menu=browse&@search.toQuery()">
+                        <img src="@photo.getUrlPublic900()">
+                        <div class='bottom-label'>@photo.getGeneratedDescription(lang, true, false, true, true, false)</div>
+                    </a>
+                }
+            </div>
+            @pageChooser(routes.BrowseController.browse(1, search.getCountryId, search.getOperatorId, search.getVehicleClassId).toString, search.getPage, lastPage)
+        </div>
+    </div>
+}

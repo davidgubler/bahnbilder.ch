@@ -1,0 +1,167 @@
+@(  implicit request: Http.Request,
+    user: entities.User,
+    lang: String
+)
+
+@template(request, i18n.Txt.get(lang, "privacyPolicy"), null, user, lang) {
+} {
+    <h1>@i18n.Txt.get(lang, "privacyPolicy")</h1>
+    @if(lang == "de") {
+        <h2>Grundlegendes</h2>
+        <p>
+            Diese Datenschutzerkl&auml;rung soll die Nutzer dieser Website &uuml;ber die Art, den Umfang und den Zweck der Erhebung und Verwendung personenbezogener Daten durch den Websitebetreiber
+            (David Gubler, <a href="mailto:david@@bahnbilder.ch">david@@bahnbilder.ch</a>) informieren.
+        </p>
+        <p>
+            Der Websitebetreiber nimmt Ihren Datenschutz sehr ernst und behandelt Ihre personenbezogenen Daten vertraulich und entsprechend der gesetzlichen Vorschriften. Da durch neue Technologien
+            und die st&auml;ndige Weiterentwicklung dieser Webseite &Auml;nderungen an dieser Datenschutzerkl&auml;rung vorgenommen werden k&ouml;nnen, empfehlen wir Ihnen sich die
+            Datenschutzerkl&auml;rung in regelm&auml;ssigen Abst&auml;nden wieder durchzulesen.
+        </p>
+        <p>
+            Definitionen der verwendeten Begriffe (z.B. &quot;personenbezogene Daten&quot; oder &quot;Verarbeitung&quot;) finden Sie in Art. 4 DSGVO.
+        </p>
+        <h2>Zugriffsdaten</h2>
+        <p>
+            Wir, der Websitebetreiber bzw. Seitenprovider, erheben aufgrund unseres berechtigten Interesses (s. Art. 6 Abs. 1 lit. f. DSGVO) Daten über Zugriffe auf die Website und speichern diese
+            als "Server-Logfiles“ auf dem Server der Website ab. Folgende Daten werden so protokolliert:
+        </p>
+        <p><ul>
+            <li>Besuchte Website</li>
+            <li>Uhrzeit zum Zeitpunkt des Zugriffes</li>
+            <li>Menge der gesendeten Daten in Byte</li>
+            <li>Quelle/Verweis, von welchem Sie auf die Seite gelangten</li>
+            <li>Verwendeter Browser</li>
+            <li>Verwendetes Betriebssystem</li>
+            <li>Verwendete IP-Adresse</li>
+        </ul></p>
+        <p>
+            Die Server-Logfiles werden f&uuml;r maximal 30 Tage gespeichert und anschliessend gel&ouml;scht. Die Speicherung der Daten erfolgt aus Sicherheitsgr&uuml;nden, um z. B.
+            Missbrauchsf&auml;lle aufkl&auml;ren zu k&ouml;nnen. M&uuml;ssen Daten aus Beweisgr&uuml;nden aufgehoben werden, sind sie solange von der L&ouml;schung ausgenommen bis der Vorfall
+            endg&uuml;ltig gekl&auml;rt ist.
+        </p>
+        <h2>Cookies</h2>
+        <p>
+            Bei Cookies handelt es sich um kleine Dateien, welche auf Ihrem Endger&auml;t gespeichert werden. Ihr Browser greift auf diese Dateien zu. Durch den Einsatz von Cookies erh&ouml;ht sich
+            die Benutzerfreundlichkeit und Sicherheit dieser Website. Falls Sie nicht m&ouml;chten, dass Cookies auf Ihrem Endger&auml;t gespeichert werden, k&ouml;nnen Sie dem Einsatz dieser
+            Dateien hier widersprechen:
+        </p>
+        <p><ul>
+            <li><a href="http://optout.networkadvertising.org/?c=1#!/" target="_blank">Cookie-Deaktivierungsseite der Netzwerkwerbeinitiative</a></li>
+            <li><a href="http://optout.aboutads.info/?c=2#!/" target="_blank">Cookie-Deaktivierungsseite der US-amerikanischen Website</a></li>
+            <li><a href="http://optout.networkadvertising.org/?c=1#!/" target="_blank">Cookie-Deaktivierungsseite der europäischen Website</a></li>
+        </ul></p>
+        <p>
+            G&auml;ngige Browser bieten die Einstellungsoption, Cookies nicht zuzulassen. Hinweis: Es ist nicht gew&auml;hrleistet, dass Sie auf alle Funktionen dieser Website ohne
+            Einschr&auml;nkungen zugreifen k&ouml;nnen, wenn Sie entsprechende Einstellungen vornehmen.
+        </p>
+        <h2>Umgang mit Kontaktdaten</h2>
+        <p>
+            Nehmen Sie mit uns als Websitebetreiber durch die angebotenen Kontaktmöglichkeiten Verbindung auf, werden Ihre Angaben gespeichert, damit auf diese zur Bearbeitung und Beantwortung
+            Ihrer Anfrage zurückgegriffen werden kann. Ohne Ihre Einwilligung werden diese Daten nicht an Dritte weitergegeben.
+        </p>
+        <h2>Google Maps</h2>
+        <p>
+            Diese Webseite verwendet das Produkt Google Maps von Google Inc. Durch Nutzung dieser Webseite erkl&auml;ren Sie sich mit der Erfassung, Bearbeitung sowie Nutzung der automatisiert
+            erhobenen Daten durch Google Inc, deren Vertreter sowie Dritter einverstanden. Die Nutzungsbedingungen von Google Maps finden sie unter
+            &quot;<a href="https://www.google.com/intl/de_de/help/terms_maps.html" target="_blank">Nutzungsbedingungen von Google Maps</a>&quot;.
+        </p>
+        <h2>Rechte des Nutzers</h2>
+        <p>
+            Sie haben als Nutzer das Recht, auf Antrag eine kostenlose Auskunft dar&uuml;ber zu erhalten, welche personenbezogenen Daten &uuml;ber Sie gespeichert wurden. Sie haben außerdem das
+            Recht auf Berichtigung falscher Daten und auf die Verarbeitungseinschr&auml;nkung oder L&ouml;schung Ihrer personenbezogenen Daten. Falls zutreffend, k&ouml;nnen Sie auch Ihr Recht
+            auf Datenportabilit&auml;t geltend machen. Sollten Sie annehmen, dass Ihre Daten unrechtm&auml;ssig verarbeitet wurden, k&ouml;nnen Sie eine Beschwerde bei der zust&auml;ndigen
+            Aufsichtsbeh&ouml;rde einreichen.
+        </p>
+        <h2>Löschung von Daten</h2>
+        <p>
+            Sofern Ihr Wunsch nicht mit einer gesetzlichen Pflicht zur Aufbewahrung von Daten (z. B. Vorratsdatenspeicherung) kollidiert, haben Sie ein Anrecht auf L&ouml;schung Ihrer Daten.
+            Von uns gespeicherte Daten werden, sollten sie für ihre Zweckbestimmung nicht mehr vonn&ouml;ten sein und es keine gesetzlichen Aufbewahrungsfristen geben, gel&ouml;scht.
+            Falls eine L&ouml;schung nicht durchgef&uuml;hrt werden kann, da die Daten für zul&auml;ssige gesetzliche Zwecke erforderlich sind, erfolgt eine Einschr&auml;nkung der Datenverarbeitung.
+            In diesem Fall werden die Daten gesperrt und nicht f&uuml;r andere Zwecke verarbeitet.
+        </p>
+        <h2>Widerspruchsrecht</h2>
+        <p>
+            Nutzer dieser Webseite können von ihrem Widerspruchsrecht Gebrauch machen und der Verarbeitung ihrer personenbezogenen Daten zu jeder Zeit widersprechen.
+        </p>
+        <p>
+            Wenn Sie eine Berichtigung, Sperrung, L&ouml;schung oder Auskunft &uuml;ber die zu Ihrer Person gespeicherten personenbezogenen Daten w&uuml;nschen oder Fragen bzgl. der Erhebung,
+            Verarbeitung oder Verwendung Ihrer personenbezogenen Daten haben oder erteilte Einwilligungen widerrufen m&ouml;chten, wenden Sie sich bitte an folgende E-Mail-Adresse:
+            <a href="mailto:david@@bahnbilder.ch">david@@bahnbilder.ch</a>.
+        </p>
+    } else {
+        <h2>Basics</h2>
+        <p>
+            This privacy policy is intended to inform the users of this website about the nature, scope and purpose of the collection and use of personal data by the website operator (David Gubler,
+            <a href="mailto:david@@bahnbilder.ch">david@@bahnbilder.ch</a>).
+        </p>
+        <p>
+            The website operator takes your privacy very seriously and will treat your personal information confidentially and in accordance with the law. Since changes to this privacy policy can
+            be made through new technologies and the ongoing development of this website, we recommend that you read the privacy statement at regular intervals.
+        </p>
+        <p>
+            Definitions of the terms used (eg "personal data" or "processing") can be found in Art. 4 GDPR.
+        </p>
+        <h2>Access logs</h2>
+        <p>
+            We, the website operator or website provider, collect data on website access on the basis of our legitimate interest (see Art. 6 (1) lit. GDPR) and save these as &quot;server log
+            files&quot; on the server of the website. The following data is logged:
+        </p>
+        <p><ul>
+            <li>Visited website</li>
+            <li>Date/time of access</li>
+            <li>Amount of data sent in bytes</li>
+            <li>Source / reference from which you came to the page</li>
+            <li>Used browser</li>
+            <li>Operating system used</li>
+            <li>Used IP address</li>
+        </ul></p>
+        <p>
+            The server log files are stored for a maximum of 30 days and then deleted. The storage of the data is done for security reasons, e.g. to clarify cases of abuse. If data must be retained
+            as evidence, it is excluded from the deletion until the incident has been resolved.
+        </p>
+        <h2>Cookies</h2>
+        <p>
+            Cookies are small files that are stored on your device. Your browser accesses these files. The use of cookies increases the user-friendliness and security of this website. If you do not
+            want cookies stored on your device, you may object to the use of these files here:
+        </p>
+        <p><ul>
+            <li><a href="http://optout.networkadvertising.org/?c=1#!/" target="_blank">Cookie opt-out page of the Network Advertising Initiative</a></li>
+            <li><a href="http://optout.aboutads.info/?c=2#!/" target="_blank">Cookie deactivation page of the US website</a></li>
+            <li><a href="http://optout.networkadvertising.org/?c=1#!/" target="_blank">Cookie deactivation page of the European website</a></li>
+        </ul></p>
+
+        <p>
+            Popular browsers offer the preference option of not allowing cookies. Note: There is no guarantee that you will be able to access all the functions of this website without restrictions
+            if you make the appropriate settings.
+        </p>
+        <h2>Contact information</h2>
+        <p>
+            If you contact us as a website operator through the offered contact options, your details will be stored so that they can be used to process and answer your request. Without your consent,
+            this data will not be disclosed to third parties.
+        </p>
+        <h2>Google Maps</h2>
+        <p>
+            This website uses the Google Maps product of Google Inc. By using this site, you consent to the collection, processing and use of the automated data collected by Google Inc, its agents
+            and third parties. You can find the terms of use of Google Maps under "Terms of Use of Google Maps".
+        </p>
+        <h2>User rights</h2>
+        <p>
+            As a user you have the right to receive free information on request about which personal data has been stored about you. You also have the right to correct incorrect data and to restrict
+            or delete your personal data. If applicable, you can also claim your right to data portability. If you believe your data has been processed unlawfully, you can file a complaint with the
+            appropriate regulatory agency.
+        </p>
+        <h2>Deletion of data</h2>
+        <p>
+            If your request does not conflict with a legal duty to store data (eg data retention), you have the right to delete your data. Data stored by us, if they are no longer necessary for their
+            purpose and there are no legal retention periods, will be deleted. If deletion can not be carried out because the data is required for legitimate legal purposes, data processing is
+            restricted. In this case, the data is locked and not processed for other purposes.
+        </p>
+        <h2>Right of objection</h2>
+        <p>Users of this website may exercise their right of objection and object to the processing of their personal data at any time.
+        </p>
+        <p>
+            If you would like a correction, blocking, deletion or information about the personal data stored about you, or if you have questions regarding the collection, processing or use of your
+            personal data or if you would like to revoke your consent, please contact the following e-mail address: <a href="mailto:david@@bahnbilder.ch">david@@bahnbilder.ch</a>.
+        </p>
+    }
+}

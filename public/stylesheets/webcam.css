@@ -1,0 +1,55 @@
+#video > iframe {
+	aspect-ratio: 1.7777777777;
+}
+
+#timetable {
+	height: 300px;
+	overflow: auto;
+}
+
+@media (min-width: 768px) {
+	#timetable {
+		height: 500px;
+	}
+}
+
+@media (min-width: 992px) {
+	#timetable {
+		height: calc(100vh - 150px);
+	}
+}
+
+#timetable {
+	background-color: #1a258f;
+	padding: 10px;
+	color: #ffffff;
+	font-weight: bold;
+}
+
+#timetable > div {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	border-bottom: 1px solid #ffffff;
+}
+
+#timetable > div > span {
+	cursor: pointer;
+}
+
+span.product {
+	background-color: #ffffff;
+	display: inline-block;
+	padding-left: 0.1em;
+	width: 4em;
+	line-height: 1.2em;
+	font-weight: bold;
+	border: 1px solid #ffffff;
+	color: #1a258f;
+}
+
+span.product-ir, span.product-ic, span.product-re, span.product-ec, span.product-ice, span.product-rjx {
+	background-color: red;
+	color: #ffffff;
+	font-style:italic;
+	border: 1px solid red;
+}

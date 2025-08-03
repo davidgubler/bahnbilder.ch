@@ -1,0 +1,19 @@
+@(  implicit request: Http.Request,
+    search: entities.ModelSearch,
+    mapsKey: String,
+    user: entities.User,
+    lang: String
+)
+
+@template(request, i18n.Txt.get(lang, "map"), "map", user, lang) {
+} {
+    <script src='@routes.MapController.markers()?@search.toQuery()'></script>
+    <script src='@routes.MapController.config()'></script>
+    <script src='https://maps.googleapis.com/maps/api/js?key=@mapsKey'></script>
+    <script src='@routes.Assets.versioned("/markerclusterer/markerclusterer.js")'></script>
+    <script src='@routes.Assets.versioned("javascripts/map.js")'></script>
+    @breadCrumbs("search", search, true, lang)
+    <div style="position: absolute; width: 100%; height: calc(100vh - 155px); margin-top: 10px; left: 0px; right: 0px;">
+        <div id='mapCanvas' style='height: 100%;'></div>
+    </div>
+}

@@ -1,0 +1,21 @@
+@(  request: Http.Request,
+    seriesList: List[_ <: entities.VehicleSeries],
+    user: entities.User,
+    lang: String,
+)
+
+@template(request, i18n.Txt.get(lang, "series"), "manage", user, lang) {
+} {
+    <h1>@i18n.Txt.get(lang, "series")</h1>
+    @manageNav("series", lang)
+
+    <div class="columns">
+        @for(series <- seriesList) {
+            @series.getName()&nbsp;<a href='@routes.ManagementController.createOrUpdateVehicleSeries(request.uri(), series.getId)'><i class='fas fa-sm fa-pen' ></i></a><br />
+
+        }
+    </div>
+    <div class="mt-3">
+        <a href='@routes.ManagementController.createOrUpdateVehicleSeries(request.uri(), null)'>@i18n.Txt.get(lang, "createVehicleSeries")...</a>
+    </div>
+}

@@ -1,0 +1,2 @@
+@(photo: entities.Photo)
+@if(photo.getVehicleClass() != null){<a href="@routes.VehicleOverviewController.vehicleSeries(photo.getVehicleClass().getVehicleSeriesId())">@photo.getVehicleClass().getVehicleSeries()</a>}

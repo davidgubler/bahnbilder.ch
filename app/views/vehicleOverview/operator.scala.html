@@ -1,0 +1,44 @@
+@(  implicit request: Http.Request,
+    operator: entities.Operator,
+    countries: List[_ <: entities.Country],
+    operatorSummaries: List[entities.tmp.OperatorSummary],
+    vehicleTypes: List[_ <: entities.VehicleType],
+    summariesByVehicleType: Map[entities.VehicleType, List[entities.tmp.VehicleClassSummary]],
+    user: entities.User,
+    lang: String
+)
+
+@template(request, operator.getName(), "", user, lang) {
+} {
+    <h1>@operator.getName()</h1>
+    @i18n.Txt.get(lang, "operator")&nbsp;&nbsp;@for(country <- countries){@flag(country.getCode(), country.getName(lang))}
+
+    @for(s <- operatorSummaries) {
+    <div class="row mt-4">
+        <div class="col-12">
+            @if(s.getLogoUrl() != null) {
+                <div style='float: right; text-align: right; color: #a0a0a0; width: 30%; max-width: 250px;'>
+                    <div style='background-color: #ffffff; line-height: 1; box-shadow: 0 0 15px 15px #ffffff; margin-left: 15px; margin-right: 15px;'>
+                        <a href='@s.getLogoSrc()' target='_blank'><img style='width: 100%;' src='@s.getLogoUrl()' /></a>
+                    </div>
+                </div>
+            }
+            <div style="float: right; text-align: right; color: #a0a0a0; width: 30%; max-width: 250px;">
+            </div>
+            <h3 class="dynamic-icon">@s.getName() <a href="https://wikidata.org/wiki/@s.getSourceRef()" target="_blank" title="Wikidata @s.getSourceRef()"><i class="fa fa-barcode"></i></a></h3>
+            @s.getInceptedYear()&nbsp;&ndash;&nbsp;@s.getDissolvedYear()<br />
+            <a href="@routes.SearchController.search()?@s.getSearch().toQuery()"><i class="fa fa-camera"></i> @s.getSearchCount()</a><br />
+        </div>
+    </div>
+    }
+
+    @for(vehicleType <- vehicleTypes) {
+        <h2 class="mt-5 mb-0">@vehicleType.getPlural(lang)</h2>
+        <hr class="mt-0 mb-0"/>
+        <div class="row">
+            @for(vcs <- summariesByVehicleType.get(vehicleType)) {
+                @vehicleClassDetails(vcs, lang)
+            }
+        </div>
+    }
+}

@@ -1,0 +1,75 @@
+@(  implicit request: Http.Request,
+    travelogue: entities.Travelogue,
+    title: String,
+    titlePhoto: String,
+    date: String,
+    summary: String,
+    text: String,
+    errors: Map[String, String],
+    user: entities.User,
+    lang: String
+)
+
+@template(request, if (travelogue == null) {i18n.Txt.get(lang, "travelogueCreate")} else {travelogue.getTitle()}, "travelogues", user, lang) {
+} {
+    <script src='@routes.Assets.versioned("javascripts/unload.js")'></script>
+    @form(request, if (travelogue == null) {routes.TraveloguesController.createPost()} else {routes.TraveloguesController.editPost(travelogue.getId)}) {
+        @formInputText(i18n.Txt.get(lang, "title"), "title", title, false, errors, lang)
+        @formInputText(i18n.Txt.get(lang, "titlePhoto"), "titlePhoto", titlePhoto, true, errors, lang)
+        @formInputText(i18n.Txt.get(lang, "date"), "date", date, true, errors, lang)
+        @formInputTextArea(i18n.Txt.get(lang, "summary"), "summary", summary, true, errors, lang)
+        @formInputTextArea(i18n.Txt.get(lang, "text"), "text", text, false, errors, lang)
+        <div class="mt-3"></div>
+        @formButtons("save", if (travelogue == null) {routes.TraveloguesController.list(null)} else {routes.TraveloguesController.view(travelogue.getId)}, lang)
+    }
+    <div class="row mt-3">
+        <div class="col-xl-6">
+            <table style="width: 100%">
+                <tbody style="width: 100%; display: table">
+                    <tr>
+                        <td style="width:40%"><b><nobr>[pic:3366]</nobr></b></td>
+                        <td style="width:60%">@i18n.Txt.get(lang, "tagPic")</td>
+                    </tr>
+                    <tr>
+                        <td style="width:40%"><b><nobr>[picauto:3366]</nobr></b></td>
+                        <td style="width:60%">@i18n.Txt.get(lang, "tagPicauto")</td>
+                    </tr>
+                    <tr>
+                        <td style="width:40%"><b><nobr>[title]</nobr></b>@i18n.Txt.get(lang, "title")<b><nobr>[/title]</nobr></b></td>
+                        <td style="width:60%">@i18n.Txt.get(lang, "tagTitle")</td>
+                    </tr>
+                    <tr>
+                        <td style="width:40%"><b><nobr>[b]</nobr></b>@i18n.Txt.get(lang, "text")<b><nobr>[/b]</nobr></b></td>
+                        <td style="width:60%">@i18n.Txt.get(lang, "tagBold")</td>
+                    </tr>
+                    <tr>
+                        <td style="width:40%"><b><nobr>[i]</nobr></b>@i18n.Txt.get(lang, "text")<b><nobr>[/i]</nobr></b></td>
+                        <td style="width:60%">@i18n.Txt.get(lang, "tagItalic")</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-xl-6">
+            <table style="width: 100%">
+                <tbody style="width: 100%; display: table">
+                    <tr>
+                        <td style="width:40%"><b><nobr>https://example.com</nobr></b></td>
+                        <td style="width:60%">@i18n.Txt.get(lang, "tagLink")</td>
+                    </tr>
+                    <tr>
+                        <td style="width:40%"><b><nobr>[url:https://example.com]</nobr></b><wbr />@i18n.Txt.get(lang, "text")<wbr /><b><nobr>[/url]</nobr></b></td>
+                        <td style="width:60%">@i18n.Txt.get(lang, "tagUrl")</td>
+                    </tr>
+                    <tr>
+                        <td style="width:40%"><b><nobr>[size:20]</nobr></b>@i18n.Txt.get(lang, "text")<b><nobr>[/size]</nobr></b></td>
+                        <td style="width:60%">@i18n.Txt.get(lang, "tagSize")</td>
+                    </tr>
+                    <tr>
+                        <td style="width:40%"><b><nobr>[color:red]</nobr></b>@i18n.Txt.get(lang, "text")<b><nobr>[/color]</nobr></b></td>
+                        <td style="width:60%">@i18n.Txt.get(lang, "tagColor")</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

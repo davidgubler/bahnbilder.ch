@@ -1,0 +1,26 @@
+@(  implicit request: Http.Request,
+    vehicleSeries: entities.VehicleSeries,
+    operators: List[_ <: entities.Operator],
+    countriesByOperator: Map[entities.Operator, List[_ <: entities.Country]],
+    vcsByOperator: Map[entities.Operator, List[entities.tmp.VehicleClassSummary]],
+    user: entities.User,
+    lang: String
+)
+
+@template(request, i18n.Txt.get(lang, "series") + ": " + vehicleSeries.getName(), "", user, lang) {
+} {
+    <h1>@i18n.Txt.get(lang, "series"): @vehicleSeries.getName()</h1>
+    <p>
+        <a href="@routes.VehicleOverviewController.vehicleSeriesList()">@i18n.Txt.get(lang, "allSeries")</a>
+    </p>
+
+    @for(operator <- operators) {
+        <h2 class='mt-5 mb-0'>@operator.getName()&nbsp;&nbsp;@for(country <- countriesByOperator.get(operator)){@flag(country.getCode, country.getName(lang))}</h2>
+        <hr class='mt-0 mb-0'/>
+        <div class='row' style='text-align: center;'>
+            @for(vcs <- vcsByOperator.get(operator)) {
+                @vehicleClassSummary(vcs, lang)
+            }
+        </div>
+    }
+}

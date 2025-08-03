@@ -1,0 +1,49 @@
+@(  implicit request: Http.Request,
+    featured: List[entities.Photo],
+    travelogues: List[_ <: entities.Travelogue],
+    countryViews: List[_ <: entities.aggregations.AggregationCountryViews],
+    user: entities.User,
+    lang: String,
+)
+
+@template(request, "bahnbilder.ch", "home", user, lang) {
+} {
+    <div class="row">
+        <div class="col-md-6 order-md-2">
+            @for(photo <- featured) {
+                <div class="featured">
+                    <h2>@photo.getVehicleClass</h2>
+                    <a href="@routes.PhotoController.view(photo.getId)?menu=home"><img src="@photo.getUrlPublic900()" srcset="@photo.getUrlPublic1280() 1280w" /></a>
+                    @photo.getGeneratedDescription(lang, true, true, true, true, false)
+                </div>
+            }
+        </div>
+
+        <div class="col-md-3 order-md-1 sidebar">
+            <h2>Reiseberichte</h2>
+            @for(travelogue <- travelogues) {
+                <a class="divButton" href="@routes.TraveloguesController.view(travelogue.getId)">
+                    <div>
+                        <h2>@travelogue.getTitle()</h2>
+                        <hr />
+                        <img src="@travelogue.getTitlePhoto().getUrlPublic200()" srcset="@travelogue.getTitlePhoto().getUrlPublic900() 900w" />@utils.StringUtils.limitText(travelogue.getSummary(), 280)
+                    </div>
+                </a>
+            }
+        </div>
+
+
+        <div class="col-md-3 order-md-3 sidebar">
+            <h2>@i18n.Txt.get(lang, "countriesByViews")</h2>
+            <table class="stats">
+                @for(cv <- countryViews) {
+                    <tr>
+                        <td><span><a href="@routes.BrowseController.browse(1, cv.getCountry().getId, null, null)" ><div class='flag'><img src='@routes.Assets.versioned("images/flags/" + cv.getCountry().getCode() + ".png")' title='@cv.getCountry().getName(lang)' /></div>@cv.getCountry().getName(lang)</a></span></td>
+                        <td>@(cv.getViews() / 1000L)&nbsp;k</td>
+                    </tr>
+                }
+            </table>
+        </div>
+
+    </div>
+}

@@ -1,0 +1,25 @@
+@(  request: Http.Request,
+    data: entities.formdata.KeywordFormData,
+    errors: Map[String, String],
+    user: entities.User
+)
+
+@template(request, i18n.Txt.get(data.lang, if(data.entity==null){"createKeyword"}else{"updateKeyword"}), "manage", user, data.lang) {
+} {
+    <link rel='stylesheet' href='@routes.Assets.versioned("tokenfield/css/bootstrap-tokenfield.css")'/>
+    <link rel='stylesheet' href='@routes.Assets.versioned("stylesheets/tokenfield-overrides.css")'/>
+    <script src='@routes.Assets.versioned("tokenfield/bootstrap-tokenfield.min.js")'></script>
+    <script src='@routes.Assets.versioned("javascripts/tokenfield-init.js")'></script>
+    <div class="row">
+        <div class="col-xl-6">
+            <h1>@i18n.Txt.get(data.lang, if(data.entity==null){"createKeyword"}else{"updateKeyword"})</h1>
+            @form(request, if(data.entity==null){routes.ManagementController.createOrUpdateKeywordPost(data.returnUrl, null)}else{routes.ManagementController.createOrUpdateKeywordPost(data.returnUrl, data.entity.getId())}) {
+                @formInputText(i18n.Txt.get(data.lang, "nameDe"), "nameDe", data.nameDe, false, errors, data.lang)
+                @formInputText(i18n.Txt.get(data.lang, "nameEn"), "nameEn", data.nameEn, false, errors, data.lang)
+                @formInputTokenField(i18n.Txt.get(data.lang, "labels"), "labels", data.labels, false, errors, data.lang)
+                <div class="mt-3"></div>
+                @formButtons("save", data.returnUrl, data.lang)
+            }
+        </div>
+    </div>
+}

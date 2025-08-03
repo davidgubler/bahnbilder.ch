@@ -1,0 +1,34 @@
+@(  request: Http.Request,
+    fileNames: List[String],
+    successes: Map[String, entities.Photo],
+    errors: Map[String, String],
+    user: entities.User,
+    lang: String,
+)
+
+@template(request, i18n.Txt.get(lang, "upload"), "upload", user, lang) {
+} {
+    <div class="row">
+        <div class="col-12">
+            <h1>@i18n.Txt.get(lang, "uploadPhotos")</h1>
+            <p>@i18n.Txt.get(lang, "uploadLimits")</p>
+            <p>
+            @for(fileName <- fileNames) {
+                @if(errors.containsKey(fileName)) {
+                    <span style="color: #dc3545; font-weight: bold;">
+                    @fileName: @i18n.Txt.get(lang, errors.get(fileName))
+                    </span><br />
+                } else {
+                    <span style="color: #22dd22; font-weight: bold;">
+                    @fileName: @successes.get(fileName).getId()@if(successes.get(fileName).getCountry() != null){, @successes.get(fileName).getCountry().getName(lang)}@if(successes.get(fileName).getOperator() != null){, @successes.get(fileName).getOperator().getName()}@if(successes.get(fileName).getVehicleClass() != null){, @successes.get(fileName).getVehicleClass().getName()}@if(successes.get(fileName).getNr() != null){, @successes.get(fileName).getNr()}
+                    </span><br />
+                }
+            }
+            </p>
+            @form(request, routes.UploadController.uploadPost(), multipart = true) {
+                @formUpload("", "files", false, errors, lang, forceVerticalLayout = true, multiple = true)
+                @formButtons("upload", null, lang)
+            }
+        </div>
+    </div>
+}

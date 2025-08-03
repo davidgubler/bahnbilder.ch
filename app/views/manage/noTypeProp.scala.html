@@ -1,0 +1,20 @@
+@(  request: Http.Request,
+    vehicleClasses: List[_ <: entities.VehicleClass],
+    user: entities.User,
+    lang: String,
+)
+
+@template(request, i18n.Txt.get(lang, "vclassesWithoutTypeProp"), "manage", user, lang) {
+} {
+    <h1>@i18n.Txt.get(lang, "vclassesWithoutTypeProp")</h1>
+    @manageNav("noTypeProp", lang)
+
+    <div class="mb-3">
+        @i18n.Txt.get(lang, "total") @vehicleClasses.size()
+    </div>
+    <div class="columns">
+        @for(vehicleClass <- vehicleClasses) {
+            @vehicleClass.getName()&nbsp;<a href='@routes.ManagementController.createOrUpdateVehicleClass(request.uri(), vehicleClass.getId)'><i class='fas fa-sm fa-pen' ></i></a><br />
+        }
+    </div>
+}

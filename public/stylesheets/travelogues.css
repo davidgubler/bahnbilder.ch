@@ -1,0 +1,19 @@
+.traveloguesList h1 a {
+	color: #c0b000;
+}
+
+.travelogue h1 {
+	color: #c0b000;
+}
+
+.travelogue img {
+	width: 100%;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.travelogue i.caption {
+	display: block;
+	text-align: center;
+}

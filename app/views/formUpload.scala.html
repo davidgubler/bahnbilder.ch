@@ -1,0 +1,18 @@
+@(  label: String,
+    name: String,
+    short: Boolean,
+    errors: Map[String, String],
+    lang: String,
+    forceVerticalLayout: Boolean = false,
+    multiple: Boolean = false,
+)
+
+<div class="form-group row mb-1">
+    <label for="@name" class="@if(forceVerticalLayout){col-12}else{col-xl-3 col-lg-4 col-md-12} col-form-label">@label</label>
+    <div class="@if(forceVerticalLayout){col-12}else{@if(short){col-xl-3 col-lg-3 col-md-4 col-sm-6}else{col-xl-9 col-lg-8 col-md-12}}">
+        <input type='file' class='file' id='@name' name='@name@if(multiple){[]}' accept='image/jpeg' @if(multiple){multiple="multiple"}/>
+        @if(errors.containsKey(name)) {
+        <div class="invalid-feedback">@i18n.Txt.get(lang, errors.get(name))</div>
+        }
+    </div>
+</div>

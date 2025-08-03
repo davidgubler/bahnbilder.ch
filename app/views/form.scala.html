@@ -1,0 +1,14 @@
+@(  request: Http.Request,
+    action: Call = null,
+    style: String = null,
+    multipart: Boolean = false,
+)(content: Html)
+
+<div class='row'>
+    <div class='col-12'>
+        <form method="post" @if(action != null){action="@action"}@if(style!=null){ style="@style"} @if(multipart){enctype="multipart/form-data"}>
+            <input type="hidden" name="csrfToken" @if(request.cookies.get("csrfToken").orElse(null) != null){value="@request.cookies.get("csrfToken").orElse(null).value()"}></input>
+            @content
+        </form>
+    </div>
+</div>

@@ -1,0 +1,105 @@
+@(  implicit request: Http.Request,
+    priceChf: Integer,
+    priceEur: Integer,
+    shippingChf: Integer,
+    shippingEur: Integer,
+    year: Integer,
+    orderAvailable: Boolean,
+    user: entities.User,
+    lang: String
+)
+
+@template(request, i18n.Txt.get(lang, "calendar"), "calendar", user, lang) {
+} {
+    <div class='row'>
+        <div class='col-md-3'>
+            <a href='/assets/images/calendar/@year-int-large.jpg' target='_blank'><img src='/assets/images/calendar/@year-int-large.jpg' style='width: 100%;'></a> &nbsp;
+        </div>
+        <div class='col-md-9'>
+            <h1>@i18n.Txt.get(lang, "calendar") @year</h1>
+            @if(lang == "de") {
+                Langsam aber sicher neigt sich das Jahr @(year-1) dem Ende zu und wir freuen uns, euch den neuen Kalender präsentieren zu dürfen.<br />
+                <br />
+                <ul style="margin-left: 20px;">
+                    <li style="margin-bottom: 5px;">International: Von Wales bis nach Usbekistan, von Finnland bis nach Italien</li>
+                    <li style="margin-bottom: 5px;">Im XXL-Format (50x32cm) um die Bilder noch grösser und eindrucksvoller zu präsentieren</li>
+                    <li style="margin-bottom: 5px;">Mit stabiler Spiralbindung</li>
+                    <li style="margin-bottom: 5px;">Mit 14 Kalenderblättern (Titel, 12 Monatsblätter und Informationsblatt zu den einzelnen Monaten)</li>
+                    <li style="margin-bottom: 5px;">In gewohnt bester Qualität</li>
+                    <li style="margin-bottom: 5px;">Einzeln in Folie eingeschweisst</li>
+                    <li>Druck in der Schweiz auf FSC-zertifiziertem Papier</li>
+                </ul><br />
+                Wie die letzten Jahre werden wir den Kalender wieder zum Selbstkostenpreis verkaufen. Die Preise gestalten sich wie folgt:<br />
+                <br />
+                <table>
+                    <tr>
+                        <td>Versand in die Schweiz:</td><td>CHF @(priceChf+shippingChf).-&nbsp;&nbsp;&nbsp;</td><td><small>inkl. Verpackung und Versand</small></td>
+                    </tr>
+                    <tr>
+                        <td>Ab zweitem Kalender:</td><td>CHF @priceChf.-&nbsp;&nbsp;&nbsp;</td><td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="height: 10px;"></td>
+                    </tr>
+                    <tr>
+                        <td>Versand nach Deutschland:&nbsp;&nbsp;&nbsp;</td><td>€ @(priceEur+shippingEur).-</td><td><small>inkl. Verpackung und Versand</small></td>
+                    </tr>
+                    <tr>
+                        <td>Ab zweitem Kalender:</td><td>€ @priceEur.-</td><td></td>
+                    </tr>
+                </table><br />
+                Für den Versand in weitere Länder bitte per Mail anfragen, wir liefern rund um den Globus!<br />
+                <br />
+                @if(orderAvailable) {
+                    <h1><a style='color: #c0b000' href='/calendar/order'>&gt;&gt; Hier gehts zur Bestellung</a></h1><br />
+                } else {
+                    <h2 style="color: #ee4444;">Wir nehmen leider keine Bestellungen mehr entgegen. Einzelne Exemplare können noch verfügbar sein; bitte per <a style='color: #ff6666;' href="mailto:calender@@bahnbilder.ch?subject=Kalender @year">E-Mail</a> anfragen. Infos zu den Kalendern @(year+1) findest du hier ab ca. Oktober @year.</h2><br />
+                }
+                Die Bezahlung erfolgt nach der Lieferung mittels per E-Mail zugestelltem Einzahlungsschein, Paypal oder E-Banking (EU-Konto vorhanden).<br />
+                <br />
+                Bei Fragen stehen wir euch gerne persönlich oder <a class='active' href="mailto:calender@@bahnbilder.ch?subject=Kalender @year">per E-Mail</a> zur Verfügung.
+            } else {
+                Slowly but surely the year @(year-1) is coming to a close and we're proud to present our new calendar.<br />
+                <br />
+                <ul style="margin-left: 20px;">
+                    <li style="margin-bottom: 5px;">International: From Wales to Uzbekistan, from Finland to Italy</li>
+                    <li style="margin-bottom: 5px;">XXL format (50x32 cm) for an even larger and more impressive presentation</li>
+                    <li style="margin-bottom: 5px;">Robust spiral binding</li>
+                    <li style="margin-bottom: 5px;">14 pages (title, 12 months and an information sheet with details about each month)</li>
+                    <li style="margin-bottom: 5px;">The usual premium quality</li>
+                    <li style="margin-bottom: 5px;">Individually shrink wrapped</li>
+                    <li>Printed in Switzerland on FSC certified paper</li>
+                </ul><br />
+                Just like in previous years we're selling the calendars at cost. The prices are as follows:<br />
+                <br />
+                <table>
+                    <tr>
+                        <td>Shipping to Switzerland:</td><td>CHF @(priceChf+shippingChf).-&nbsp;&nbsp;&nbsp;</td><td><small>includes packaging and shipping</small></td>
+                    </tr>
+                    <tr>
+                        <td>Additional calendars:</td><td>CHF @priceChf.-&nbsp;&nbsp;&nbsp;</td><td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="height: 10px;"></td>
+                    </tr>
+                    <tr>
+                        <td>Shipping to Germany:&nbsp;&nbsp;&nbsp;</td><td>€ @(priceEur+shippingEur).-</td><td><small>includes packaging and shipping</small></td>
+                    </tr>
+                    <tr>
+                        <td>Additional calendars:</td><td>€ @priceEur.-</td><td></td>
+                    </tr>
+                </table><br />
+                For shipping to other countries please ask via e-mail, we're shipping around the globe!<br />
+                <br />
+                @if(orderAvailable) {
+                    <h1><a style='color: #c0b000' href='/calendar/order'>&gt;&gt; Go to order form</a></h1><br />
+                } else {
+                    <h2 style="color: #ee4444;">Unfortunately we can't take any more orders at this time. Some calendars may still be available, please inquire via <a style='color: #ff6666;' href="mailto:calender@@bahnbilder.ch?subject=Calendar @year">email</a>. Information about the calendar @(year+1) will be available here around october @year.</h2><br />
+                }
+                Payment details will be sent via email after delivery. Payment is possible via bank transfer or Paypal.<br />
+                <br />
+                We're happy to answer any questions in person or <a class='active' href="mailto:calender@@bahnbilder.ch?subject=Kalender @year">via email</a>.
+            }
+        </div>
+    </div>
+}

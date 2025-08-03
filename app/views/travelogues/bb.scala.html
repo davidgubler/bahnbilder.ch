@@ -1,0 +1,14 @@
+@(  implicit request: Http.Request,
+    travelogue: entities.Travelogue,
+    user: entities.User,
+    lang: String
+)
+
+@template(request, travelogue.getTitle(), "travelogues", user, lang) {
+} {
+    <div class="row">
+        <div id="content" class="col-12 travelogue" itemprop="mainEntity" itemscope="" itemtype="https://schema.org/BlogPosting" itemid="https://@request.host()@routes.TraveloguesController.view(travelogue.getId())">
+            <span style="font-family: monospace; white-space: pre-wrap;">@travelogue.toBBCode(lang)</span>
+        </div>
+    </div>
+}

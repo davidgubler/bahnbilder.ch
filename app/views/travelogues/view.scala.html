@@ -1,0 +1,35 @@
+@(  implicit request: Http.Request,
+    travelogue: entities.Travelogue,
+    user: entities.User,
+    lang: String
+)
+
+@template(request, travelogue.getTitle(), "travelogues", user, lang) {
+    <link rel='canonical' href='@utils.Config.getSelfUrl(request)@routes.TraveloguesController.view(travelogue.getId())' />
+    <meta property='og:title' content='@travelogue.getTitle()' />
+    <meta property='og:type' content='website' />
+    @if(travelogue.getTitlePhoto() != null) {<meta property='og:image' content='@utils.Config.getSelfUrl(request)@travelogue.getTitlePhoto().getUrlPublic900()' />}
+    <meta property='og:url' content='@utils.Config.getSelfUrl(request)@routes.TraveloguesController.view(travelogue.getId())' />
+    <meta property='og:site_name' content='@utils.Config.getSelfHost(lang)' />
+    <meta property='og:description' content='@travelogue.getSummary()' />
+    <meta name='author' content='@travelogue.getUser()' />
+    <meta name='description' content='@travelogue.getSummary()' />
+} {
+    <link rel='stylesheet' href='@routes.Assets.versioned("stylesheets/travelogues.css")'/>
+    <div class="row">
+        <div id="content" class="col-12 travelogue" itemprop="mainEntity" itemscope="" itemtype="https://schema.org/BlogPosting" itemid="https://@request.host()@routes.TraveloguesController.view(travelogue.getId())">
+            @if(user != null && user.canEdit(travelogue)) {
+                <div style='float: right;'>
+                    <a href='@routes.TraveloguesController.edit(travelogue.getId)' title='Bearbeiten'><i class='fas fa-edit'></i></a>
+                    &nbsp;
+                    <a href='@routes.TraveloguesController.delete(travelogue.getId)' title='L&ouml;schen'><i class='fas fa-trash'></i></a>
+                    &nbsp;
+                    <a href='@routes.TraveloguesController.bb(travelogue.getId)' title='BBCode export'><i class='fas fa-file-export'></i></a>
+                </div>
+            }
+            <h1 itemprop='headline'>@travelogue.getTitle</h1>
+            <p>Von <span itemprop='author'>@travelogue.getUser</span></p>
+            @Html(travelogue.toHtml(lang))
+        </div>
+    </div>
+}

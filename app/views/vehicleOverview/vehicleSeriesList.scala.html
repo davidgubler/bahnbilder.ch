@@ -1,0 +1,16 @@
+@(  implicit request: Http.Request,
+    vehicleSeriesList: List[_ <: entities.VehicleSeries],
+    user: entities.User,
+    lang: String
+)
+
+@template(request, i18n.Txt.get(lang, "allSeries"), "", user, lang) {
+} {
+    <h1>@i18n.Txt.get(lang, "allSeries")</h1>
+
+    <div class="columns">
+        @for(vehicleSeries <- vehicleSeriesList) {
+            <a href="@routes.VehicleOverviewController.vehicleSeries(vehicleSeries.getId())">@vehicleSeries.getName()</a><br />
+        }
+    </div>
+}

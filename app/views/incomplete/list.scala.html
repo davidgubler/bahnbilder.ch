@@ -1,0 +1,33 @@
+@(  implicit request: Http.Request,
+    page: Integer,
+    lastPage: Integer,
+    results: List[_ <: entities.Photo],
+    user: entities.User,
+    lang: String
+)
+
+@template(request, i18n.Txt.get(lang, "incomplete"), "incomplete", user, lang) {
+} {
+    <script src='@routes.Assets.versioned("javascripts/incomplete.js")'></script>
+    <div class='row'>
+        <div class='col-12'>
+            <div class='form-group'>
+                <button class='btn btn-secondary' id='selectAll'>@i18n.Txt.get(lang, "incompleteSelectAll")</button>
+                <button class='btn btn-secondary' id='selectNone'>@i18n.Txt.get(lang, "incompleteSelectNone")</button>
+                <button class='btn btn-primary' id='modify'>@i18n.Txt.get(lang, "incompleteModifySelected")</button>
+                <button class='btn btn-primary' id='autodetect'>@i18n.Txt.get(lang, "autodetect")</button>
+                <button class='btn btn-danger' id='delete'>@i18n.Txt.get(lang, "incompleteDeleteSelected")</button>
+            </div>
+            @pageChooser("/incomplete", page, lastPage)
+            <div class='fleximages'>
+                @for(photo <- results) {
+                    <a @if(user != null && user.canEdit(photo)){id='editable-@photo.getId()' class='incomplete'} style="--w: @photo.getResMedium.getWidth; --h: @photo.getResMedium.getHeight; position: relative" href="/@photo.getId()?sortBy=uploadDate&menu=newest">
+                        <img src="@photo.getUrlPublic900()">
+                        <div class='bottom-label'>@photo.getGeneratedDescription(lang, true, false, true, true, false)</div>
+                    </a>
+                }
+            </div>
+            @pageChooser("/incomplete", page, lastPage)
+        </div>
+    </div>
+}

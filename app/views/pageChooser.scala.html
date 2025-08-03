@@ -1,0 +1,7 @@
+@(  baseUrl: String,
+    currentPage: Integer,
+    lastPage: Integer,
+)
+@if(lastPage > 1) {
+    @pageChooserImpl(baseUrl, currentPage, lastPage, utils.PageChooser.calculateButtons(currentPage, lastPage))
+}

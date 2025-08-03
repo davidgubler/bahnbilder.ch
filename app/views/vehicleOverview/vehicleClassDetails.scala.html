@@ -1,0 +1,56 @@
+@(  vcs: entities.tmp.VehicleClassSummary,
+    lang: String,
+)
+
+<div class='col-lg-6 col-md-12 mt-3'>
+    <div class='row'>
+        <div class='col-6'>
+            <a href='@routes.SearchController.search()?@vcs.getSearch().toQuery()'>
+                <div class='ratio-3-2-outer'>
+                    <div class='ratio-3-2-inner' style='background-image: url(@vcs.getPhoto().getUrlPublic900()); background-position: center; background-size: cover;'></div>
+                </div>
+            </a>
+        </div>
+        <div class='col-6'>
+            <a href='@routes.VehicleOverviewController.vehicleClass(vcs.getVehicleClass().getId())'><h3 class='mb-1'>@vcs.getVehicleClass().getName()</h3></a>
+            <span class='muted'>
+                <table>
+                    @if(vcs.getVehicleClass().getVehiclePropulsion() != null) {
+                    <tr>
+                        <td style='width: 22px'>
+                            <img src='@routes.Assets.versioned("images/propulsion.svg")' style='width: 15px;' />
+                        </td>
+                        <td>
+                            @vcs.getVehicleClass().getVehiclePropulsion().getName(lang)
+                        </td>
+                    </tr>
+                    }
+                    <tr>
+                        <td style='width: 22px;'>
+                            <i class='fa fa-camera'>
+                        </td>
+                        <td>
+                            <a href='@routes.SearchController.search()?@vcs.getSearch().toQuery()'>@vcs.getSearchCount()</a>
+                        </td>
+                    </tr>
+                    @if(vcs.getNrs().size() > 1 || (vcs.getNrs().size() == 1 && vcs.getNrs().get(0) != null)) {
+                    <tr>
+                        <td style='vertical-align: top; width: 22px;'>
+                            <i class='fa fa-hashtag'></i>
+                        </td>
+                        <td>
+                            @for(nr <- vcs.getNrs()) {
+                                @if(nr != null){
+                                    <a style='display: inline-block;' href='@routes.SearchController.search()?@vcs.getSearch().withNr(nr).toQuery()'>@nr</a>&nbsp;
+                                } else {
+                                    <a style='display: inline-block;' href='@routes.SearchController.search()?@vcs.getSearch().withNr(-1).toQuery()'>[?]</a>&nbsp;
+                                }
+                            }
+                        </td>
+                    </tr>
+                    }
+                </table>
+            </span>
+        </div>
+    </div>
+</div>

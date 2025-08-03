@@ -1,0 +1,17 @@
+@(  label: String,
+    name: String,
+    value: String,
+    small: Boolean,
+    errors: Map[String, String],
+    lang: String,
+)
+
+<div class="form-group row mb-1">
+    <label for="@name" class="@if(small){col-xl-3 col-lg-4 col-md-12}else{col-12} col-form-label">@label</label>
+    <div class="@if(small){col-xl-9 col-lg-8 col-md-12}else{col-12}">
+        <textarea id="@name" name="@name"  class="form-control" rows="@if(small){4}else{24}">@value</textarea>
+        @if(errors.containsKey(name)) {
+        <div class="invalid-feedback">@i18n.Txt.get(lang, errors.get(name))</div>
+        }
+    </div>
+</div>

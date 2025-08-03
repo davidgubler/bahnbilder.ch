@@ -1,0 +1,14 @@
+@(  request: Http.RequestHeader,
+    message: String,
+    lang: String,
+)
+
+@template(request, i18n.Txt.get(lang, "error"), "", null, lang) {
+} {
+    <div class='row'>
+        <div class='col-12' style="text-align: center;">
+            <h1 class="mt-3">@message</h1>
+            <a href="/">@i18n.Txt.get(lang, "startOver")</a>
+        </div>
+    </div>
+}

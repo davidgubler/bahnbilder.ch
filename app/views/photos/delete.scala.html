@@ -1,0 +1,25 @@
+@(  request: Http.Request,
+    data: entities.formdata.PhotoFormData,
+    user: entities.User
+)
+
+@template(request, i18n.Txt.get(data.lang, "photosDelete"), null, user, data.lang) {
+} {
+    @form(request, routes.PhotoController.deletePost(data.ids, data.returnUrl)) {
+    <div class="row">
+        <div class="col-12">
+            <h1>@i18n.Txt.get(data.lang, "photosDelete")</h1>
+            <div class="form-group row mb-1">
+                <label class="col-xl-3 col-lg-4 col-md-12 col-form-label" style="padding-top: 20px;">@i18n.Txt.get(data.lang, "photos")</label>
+                <div class="col-xl-9 col-lg-8 col-md-12">
+                    @for(photo <- data.photos) {
+                        <a class="mb-2" style="display: inline-block" href="@routes.PhotoController.view(photo.getId)" target="_blank"><img style="max-height: 60px;" src="@photo.getUrlPublic200()"></a>
+                    }
+                </div>
+            </div>
+            <div class="mt-3"></div>
+            @formButtons("delete", data.returnUrl, data.lang)
+        </div>
+    </div>
+    }
+}

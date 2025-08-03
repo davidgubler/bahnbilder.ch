@@ -1,0 +1,20 @@
+@(  implicit request: Http.Request,
+    editUser: entities.User,
+    email: String,
+    name: String,
+    password: String,
+    errors: Map[String, String],
+    user: entities.User,
+    lang: String
+)
+
+@template(request, "Edit User: " + editUser.getEmail(), "manage-users", user, lang) {
+} {
+    @form(request, routes.UsersController.editPost(editUser.getId)) {
+        @formInputText("E-Mail Address", "email", email, false, errors, lang)
+        @formInputText("Name", "name", name, false, errors, lang)
+        @formInputPassword("Password", "password", password, errors, lang)
+        <div class="mt-3"></div>
+        @formButtons("save", routes.UsersController.list(), lang)
+    }
+}

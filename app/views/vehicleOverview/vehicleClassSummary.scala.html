@@ -1,0 +1,23 @@
+@(  vcs: entities.tmp.VehicleClassSummary,
+    lang: String,
+)
+
+<div class='col-xl-3 col-lg-4 col-md-6'>
+    <h3 class='mt-4 mb-1'><a href='@routes.VehicleOverviewController.vehicleClass(vcs.getVehicleClass.getId())'>@vcs.getVehicleClass.getName()</a></h3>
+    <a href='@routes.SearchController.search()?@vcs.getSearch().toQuery()'>
+        <div class='ratio-3-2-outer'>
+            <div class='ratio-3-2-inner' style='background-image: url(@vcs.getPhoto().getUrlPublic900()); background-position: center; background-size: cover;'></div>
+            <div class='bottom-label' style='display: block;'>@if(vcs.getSearchCount() == 1){1 @i18n.Txt.get(lang, "photo")...}else{@vcs.getSearchCount() @i18n.Txt.get(lang, "photos")...}</div>
+        </div>
+    </a>
+    @if(!vcs.getNrs().isEmpty()){
+        Nr.&nbsp;
+        @for(nr <- vcs.getNrs()) {
+            @if(nr != null){
+                <a href='@routes.SearchController.search()?@vcs.getSearch().withNr(nr).toQuery()'>@nr</a>&nbsp;
+            } else {
+                <a href='@routes.SearchController.search()?@vcs.getSearch().withNr(-1).toQuery()'>[?]</a>&nbsp;
+            }
+        }
+    }
+</div>

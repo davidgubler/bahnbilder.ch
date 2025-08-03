@@ -1,0 +1,78 @@
+@(  implicit request: Http.Request,
+    order: entities.CalendarOrder,
+    nrOfCalendars: String,
+    nrOfCalendarsOther: String,
+    email: String,
+    emailConfirm: String,
+    firstName: String,
+    lastName: String,
+    addressStreetAndNr: String,
+    addressRemarks: String,
+    zip: String,
+    city: String,
+    country: String,
+    countryOther: String,
+    acceptTC: Boolean,
+    user: entities.User,
+    lang: String
+)
+
+@template(request, i18n.Txt.get(lang, "calendarOrder"), "calendar", user, lang) {
+} {
+    <script src='@routes.Assets.versioned("javascripts/unload.js")'></script>
+    <h1>@i18n.Txt.get(lang, "calendarOrder")</h1>
+    @form(request) {
+        <input type="hidden" name="nrOfCalendars" value="@nrOfCalendars" />
+        <input type="hidden" name="nrOfCalendarsOther" value="@nrOfCalendarsOther" />
+        <input type="hidden" name="email" value="@email" />
+        <input type="hidden" name="emailConfirm" value="@emailConfirm" />
+        <input type="hidden" name="firstName" value="@firstName" />
+        <input type="hidden" name="lastName" value="@lastName" />
+        <input type="hidden" name="addressStreetAndNr" value="@addressStreetAndNr" />
+        <input type="hidden" name="addressRemarks" value="@addressRemarks" />
+        <input type="hidden" name="zip" value="@zip" />
+        <input type="hidden" name="city" value="@city" />
+        <input type="hidden" name="country" value="@country" />
+        <input type="hidden" name="countryOther" value="@countryOther" />
+        <input type="hidden" name="acceptTC" value="@acceptTC" />
+
+        <table>
+            <tr>
+                <td style="padding-right: 30px;">@i18n.Txt.get(lang, "nrOfCalendars")</td>
+                <td>@if(nrOfCalendars=="other"){@nrOfCalendarsOther}else{@nrOfCalendars} (@order.getCalendarCost(lang))</td>
+            </tr>
+            <tr>
+                <td style="padding-right: 30px;">@i18n.Txt.get(lang, "name")</td>
+                <td>@firstName @lastName</td>
+            </tr>
+            <tr>
+                <td style="padding-right: 30px;">@i18n.Txt.get(lang, "email")</td>
+                <td>@email</td>
+            </tr>
+            <tr>
+                <td style="padding-right: 30px;">@i18n.Txt.get(lang, "addressStreetAndNr")</td>
+                <td>@addressStreetAndNr</td>
+            </tr>
+            <tr>
+                <td style="padding-right: 30px;">@i18n.Txt.get(lang, "addressRemarks")</td>
+                <td>@addressRemarks</td>
+            </tr>
+            <tr>
+                <td style="padding-right: 30px;">@i18n.Txt.get(lang, "country")</td>
+                <td>@if(country=="other"){@countryOther}else{@country}</td>
+            </tr>
+            <tr>
+                <td style="padding-right: 30px;">@i18n.Txt.get(lang, "shippingCost")</td>
+                <td>
+                    @order.getShippingCost(lang)
+                </td>
+            </tr>
+        </table>
+        <div class="form-group row mb-1">
+            <div class="col-12 text-right">
+                <button type="submit" class="btn btn-link" name="submit" value="form">@i18n.Txt.get(lang, "back")</button>
+                <button type="submit" class="btn btn-primary" name="submit" value="order">@i18n.Txt.get(lang, "orderSend")</button>
+            </div>
+        </div>
+    }
+}

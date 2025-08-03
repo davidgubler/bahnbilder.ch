@@ -1,0 +1,19 @@
+span.token-selectable {
+	cursor: pointer;
+	display: inline-block;
+	border: 1px solid #333333;
+	border-radius: 5px;
+	padding: 1px 5px 1px 5px;
+	margin: 1px 5px 1px 0px;
+	user-select: none;
+}
+
+span.token-selectable.include {
+	color: #ffffff;
+	background-color: #c0b000;
+}
+
+span.token-selectable.exclude {
+	color: #ffffff;
+	background-color: #b00000;
+}

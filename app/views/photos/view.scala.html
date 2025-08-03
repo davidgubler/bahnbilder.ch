@@ -1,0 +1,147 @@
+@(  implicit request: Http.Request,
+    photo: entities.Photo,
+    menu: String,
+    user: entities.User,
+    lang: String,
+)
+
+@template(request, photo.getGeneratedDescription(lang, true, false, true, true, false), menu, user, lang) {
+    <link rel='canonical' href='@utils.Config.getSelfUrl(request)@routes.PhotoController.view(photo.getId())' />
+    <meta property='og:title' content='@photo.getGeneratedDescription(lang, true, false, true, true, false)' />
+    <meta property='og:type' content='landmark' />
+    <meta property='og:image' content='@utils.Config.getSelfUrl(request)@photo.getUrlPublic900()' />
+    <meta property='og:url' content='@utils.Config.getSelfUrl(request)@routes.PhotoController.view(photo.getId())' />
+    <meta property='og:site_name' content='@utils.Config.getSelfHost(lang)' />
+    <meta property='og:description' content='@if(photo.getDescription() != null){@photo.getDescription()}else{@photo.getGeneratedDescription(lang, true, true, true, true, true)}' />
+    <meta name='author' content='@photo.getUser()' />
+    <meta name='description' content='@if(photo.getDescription() != null){@photo.getDescription()}else{@photo.getGeneratedDescription(lang, true, true, true, true, true)}' />
+    <meta name='keywords' content='@i18n.Txt.get(lang, "photo")@if(photo.getVehicleClass() != null){, @photo.getVehicleClass()@if(photo.getVehicleClass().getVehicleSeries() != null){, @photo.getVehicleClass().getVehicleSeries()}}@if(photo.getNr() != null){, @photo.getNr()}@if(photo.getOperator() != null){, @photo.getOperator().getName(), @photo.getOperator().getAbbr()}@if(photo.getCountry() != null){, @photo.getCountry().getName(lang)}@if(photo.getLocation() != null){, @photo.getLocation().getName()}' />
+} {
+    <script src='@routes.Assets.versioned("javascripts/photo.js")'></script>
+    <span itemscope itemtype='https://schema.org/ImageObject'>
+        <div class='row'>
+            <div class='col-md-12 large-picture'>
+                <img id="mainphoto" data-id='@photo.getId()'
+                     itemprop='contentUrl' id='large'
+                     width='@photo.getResXLarge().getWidth()'
+                     height='@photo.getResXLarge().getHeight()'
+                     style='max-width: calc(min((100vh - 100px) * @photo.getResXLarge().getWidth() / @photo.getResXLarge().getHeight(), @photo.getResXLarge().getWidth()px)); height: auto;'
+                     title='@photo.getGeneratedDescription(lang, true, true, true, true, true)'
+                     sizes='(min-width: 768px) calc(min(100vw - 160px, 1600px)), 100vw'
+                     srcset='@photo.getSrcSet()'
+                     src="@photo.getUrlPublic1600()">
+                <i class='fas fa-angle-left nodisplay'></i>
+                <i class='fas fa-angle-right nodisplay'></i>
+                <div class='bottom-label'><span id='fullscreen-label-content'>@photo.getGeneratedDescription(lang, true, true, true, true, true)</span><a id='endFullscreen' href='javascript:void(0)' style='float: right;' title='@i18n.Txt.get(lang, "fullscreenEnd")'><i class='fas fa-compress-alt'></i></a></div>
+            </div>
+            <div class='col-md-12' style='text-align: center;'>
+                <a id='startFullscreen' href='javascript:void(0)' style='float: right;' title='Vollbild'><i class='fas fa-expand-alt'></i></a>
+                <span id='label-content' itemprop='caption'>@photo.getGeneratedDescription(lang, true, true, true, true, true)</span>
+            </div>
+        </div>
+        <div class='row'>
+            <div class='col-lg-4 col-md-12 order-lg-2 large-picture-details'>
+                <div id='description-container' style='@if(photo.getDescription() == null){display: none}'>
+                    <h2>@i18n.Txt.get(lang, "description")</h2>
+                    <hr>
+                    <span id='description-content'>@photo.getDescription()</span>
+                </div>
+            </div>
+            <div class='col-lg-4 col-md-6 order-lg-1 order-md-2 large-picture-details'>
+                <div id='editUrl-container' style='float:right; padding-top: 20px; display: none'><span id='editUrl-content'></span></div>
+                <h2>@i18n.Txt.get(lang, "photoDetails")</h2>
+                <hr>
+                <table id='detailsTable'>
+                    <tr id='authorRating-container' style=''>
+                        <td>@i18n.Txt.get(lang, "rating"):</td>
+                        <td id='authorRating-content'>
+                            @for(i <- 1.to(5)) {
+                                @if(photo.getAuthorRating() >= i) {
+                                    <a id='rate@i' href='#'>&starf;</a>
+                                } else {
+                                    <a id='rate@i' href='#'>&star;</a>
+                                }
+                            }
+                        </td>
+                    </tr>
+                    <tr id='vehicleClass-container' style='@if(photo.getVehicleClass() == null){display: none}'>
+                        <td>@i18n.Txt.get(lang, "vclass"):</td>
+                        <td id='vehicleClass-content'>@vehicleClassLink(photo)</td>
+                    </tr>
+                    <tr id='vehicleSeries-container' style='@if(photo.getVehicleClass() == null || photo.getVehicleClass().getVehicleSeries() == null){display: none}'>
+                        <td>@i18n.Txt.get(lang, "series"):</td>
+                        <td id='vehicleSeries-content'>@vehicleSeriesLink(photo)</td>
+                    </tr>
+                    <tr id='operator-container' style='@if(photo.getOperator() == null){display: none}'>
+                        <td>@i18n.Txt.get(lang, "operator"):</td>
+                        <td id='operator-content'>@operatorLink(photo)</td>
+                    </tr>
+                    <tr id='photographer-container' style='@if(photo.getPhotographer() == null){display: none}'>
+                        <td>@i18n.Txt.get(lang, "photographer"):</td>
+                        <td id='photographer-content'>@photo.getPhotographer()</td>
+                    </tr>
+                    <tr id='author-container' style='@if(photo.getPhotographer() != null){display: none}'>
+                        <td>@i18n.Txt.get(lang, "author"):</td>
+                        <td id='author-content' itemprop='author' >@photo.getUser()</td>
+                    </tr>
+                    <tr id='collection-container' style='@if(photo.getPhotographer() == null){display: none}'>
+                        <td>@i18n.Txt.get(lang, "collection"):</td>
+                        <td id='collection-content'>@photo.getUser()</td>
+                    </tr>
+                    <tr id='photoDate-container' style='@if(photo.getPhotoDate() == null){display: none}'>
+                        <td>@i18n.Txt.get(lang, "date"):</td>
+                        <td id='photoDate-content' itemprop='dateCreated' content='@photo.getPhotoDate'>@dateTimeLink(photo, lang)</td>
+                    </tr>
+                    <tr id='license-container' style='@if(photo.getLicense() == null){display: none}'>
+                        <td>@i18n.Txt.get(lang, "license"):</td>
+                        <td id='license-content'>@if(photo.getLicense() != null){@Html(photo.getLicense.getLogo(lang))}</td>
+                    </tr>
+                    <tr id='camera-container' style='@if(photo.getExif().getCamera() == null){display: none}'>
+                        <td>@i18n.Txt.get(lang, "camera"):</td>
+                        <td id='camera-content'  >@photo.getExif().getCamera()</td>
+                    </tr>
+                    <tr id='focalLength-container' style='@if(photo.getExif().getFocalLength() == null){display: none}'>
+                        <td>@i18n.Txt.get(lang, "focalLength"):</td>
+                        <td id='focalLength-content'  >@photo.getExif().getFocalLength()</td>
+                    </tr>
+                    <tr id='aperture-container' style='@if(photo.getExif().getAperture() == null){display: none}'>
+                        <td>@i18n.Txt.get(lang, "aperture"):</td>
+                        <td id='aperture-content'  >@photo.getExif().getAperture()</td>
+                    </tr>
+                    <tr id='exposure-container' style='@if(photo.getExif().getExposure() == null){display: none}'>
+                        <td>@i18n.Txt.get(lang, "exposureTime"):</td>
+                        <td id='exposure-content'  >@photo.getExif().getExposure()</td>
+                    </tr>
+                    <tr id='sensitivity-container' style='@if(photo.getExif().getSensitivity() == null){display: none}'>
+                        <td>@i18n.Txt.get(lang, "sensitivity"):</td>
+                        <td id='sensitivity-content'  >@photo.getExif().getSensitivity()</td>
+                    </tr>
+                    <tr id='viewsUncollected-container'>
+                        <td>@i18n.Txt.get(lang, "views"):</td>
+                        <td id='viewsUncollected-content'>@photo.getViewsUncollected()</td>
+                    </tr>
+                    <tr id='share-container'>
+                        <td>@i18n.Txt.get(lang, "share"):</td>
+                        <td id='share-content'><span id='shareBbSmall' title='@i18n.Txt.get(lang, "copyToClipboard")'>[bb]</span>&nbsp;&nbsp;<span id='shareBbLarge' title='@i18n.Txt.get(lang, "copyToClipboard")'>[BB]</span>&nbsp;&nbsp;<img id='shareFb' src='/assets/images/facebook.png' /></td>
+                    </tr>
+                    <tr id='download-container'>
+                        <td>@i18n.Txt.get(lang, "download"):</td>
+                        <td id='download-content'>@downloadLinks(photo)</td>
+                    </tr>
+                </table>
+                @if(photo.getVehicleClass() != null) {<meta itemprop='about' content='@photo.getVehicleClass()' />}
+                <meta itemprop='contentLocation' content='@if(photo.getLocation() != null){@photo.getLocation()}@if(photo.getLocation() != null && photo.getCountry() != null){, }@if(photo.getCountry() != null){@photo.getCountry().getName(lang)}' />
+                <meta itemprop='mainEntityOfPage' content='https://bahnbilder.ch/photo/@photo.getId()' />
+            </div>
+            <div class='col-lg-4 col-md-6 order-lg-3 order-md-3 large-picture-details'>
+                <div id='map-container' >
+                    <h2>@i18n.Txt.get(lang, "map")</h2>
+                    <hr>
+                    <div id='map-content'>
+                        <iframe src='https://www.google.com/maps/embed/v1/place?key=AIzaSyCSTI76nMO56dK7L252bAD24E6rQROFRms&amp;q=@photo.getLat(),@photo.getLng()'></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </span>
+}

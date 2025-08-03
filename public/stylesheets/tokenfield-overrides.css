@@ -1,0 +1,9 @@
+.tokenfield {
+	background-color: #181818;
+	border-color: #505050 !important
+}
+
+.tokenfield > .token {
+	font-size: 14px;
+	margin: 0px 5px 0px 0px;
+}

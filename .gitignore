@@ -1,0 +1,11 @@
+logs
+target
+env
+deploy.sh
+/.bsp
+/.idea
+/.idea_modules
+/.classpath
+/.project
+/.settings
+/RUNNING_PID

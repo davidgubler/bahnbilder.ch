@@ -1,0 +1,102 @@
+@(  request: Http.Request,
+    data: entities.formdata.PhotoFormData,
+    licenses: List[_ <: entities.License],
+    photoTypes: List[_ <: entities.PhotoType],
+    countries: List[_ <: entities.Country],
+    locations: List[_ <: entities.Location],
+    operators: List[_ <: entities.Operator],
+    vehicleClasses: List[_ <: entities.VehicleClass],
+    errors: Map[String, String],
+    mapsKey: String,
+    user: entities.User
+)
+
+@template(request, i18n.Txt.get(data.lang, "updatePhotos"), null, user, data.lang) {
+} {
+    <link rel='stylesheet' href='@routes.Assets.versioned("tokenfield/css/bootstrap-tokenfield.css")'/>
+    <link rel='stylesheet' href='@routes.Assets.versioned("stylesheets/tokenfield-overrides.css")'/>
+    <script src='@routes.PhotoController.config("0")'></script>
+    <script src='@routes.Assets.versioned("tokenfield/bootstrap-tokenfield.min.js")'></script>
+    <script src='@routes.Assets.versioned("javascripts/tokenfield-init.js")'></script>
+    <script src='https://maps.googleapis.com/maps/api/js?key=@mapsKey'></script>
+    <script src='@routes.Assets.versioned("javascripts/manage.js")'></script>
+    @form(request, routes.PhotoController.editPost(data.ids, data.returnUrl)) {
+    <input type='hidden' name='lat' id='lat' value='@data.lat' />
+    <input type='hidden' name='lng' id='lng' value='@data.lng' />
+    <div class="row">
+        <div class="col-xl-8">
+            <div class="form-group row mb-1">
+                <label class="col-xl-3 col-lg-4 col-md-12 col-form-label" style="padding-top: 20px;">@i18n.Txt.get(data.lang, "photos")</label>
+                <div class="col-xl-9 col-lg-8 col-md-12">
+                    @for(photo <- data.photos) {
+                        <a class="mb-2" style="display: inline-block" href="@routes.PhotoController.view(photo.getId)" target="_blank"><img style="max-height: 60px;" src="@photo.getUrlPublic200()"></a>
+                    }
+                </div>
+            </div>
+            <div class="form-group row mb-1">
+                <label class="col-xl-3 col-lg-4 col-md-12 col-form-label">@i18n.Txt.get(data.lang, "date")/@i18n.Txt.get(data.lang, "time")</label>
+                <div class="col-xl-9 col-lg-8 col-md-12">
+                    <input type="text" class="form-control @if(errors.containsKey("date")){is-invalid}" style="display: inline; width:100px;" id="date" name="date" value="@data.date">
+                    <input type="text" class="form-control @if(errors.containsKey("time")){is-invalid}" style="display: inline; width:100px;" id="time" name="time" value="@data.time">
+                    @if(errors.containsKey("date")) {
+                    <div class="invalid-feedback">@i18n.Txt.get(data.lang, errors.get("date"))</div>
+                    }
+                    @if(errors.containsKey("time")) {
+                    <div class="invalid-feedback">@i18n.Txt.get(data.lang, errors.get("time"))</div>
+                    }
+                </div>
+            </div>
+            @formInputText(i18n.Txt.get(data.lang, "photographer"), "photographer", data.photographer, false, errors, data.lang, hint = i18n.Txt.get(data.lang, "photographerHint"))
+            @formSelect(i18n.Txt.get(data.lang, "license"), "license", true, errors) {
+                <option></option>
+                @for(license <- licenses) {
+                <option value="@license.getId()" @if(data.licenseId == license.getId()){selected="selected"}>@license.getName()</option>
+                }
+            }
+            @formSelect(i18n.Txt.get(data.lang, "photoType"), "photoType", true, errors) {
+                <option></option>
+                @for(photoType <- photoTypes) {
+                <option value="@photoType.getId()" @if(data.photoTypeId == photoType.getId()){selected="selected"}>@photoType.getName(data.lang)</option>
+                }
+            }
+            @formSelect(i18n.Txt.get(data.lang, "country"), "country", true, errors) {
+                <option></option>
+                @for(country <- countries) {
+                <option value="@country.getId()" @if(data.countryId == country.getId()){selected="selected"}>@country.getName(data.lang)</option>
+                }
+            }
+            @formSelect(i18n.Txt.get(data.lang, "location"), "location", false, errors, hint = i18n.Txt.get(data.lang, "locationCreateNewHint")) {
+                <option></option>
+                @for(location <- locations) {
+                <option value="@location.getId()" @if(data.locationId == location.getId()){selected="selected"}>@location.getName()</option>
+                }
+            }
+            @formInputText("", "newLocation", data.newLocation, false, errors, data.lang, hintHtml = i18n.Txt.get(data.lang, "locationHint"))
+            @formSelect(i18n.Txt.get(data.lang, "operator"), "operator", false, errors) {
+                <option></option>
+                @for(operator <- operators) {
+                <option value="@operator.getId()" @if(data.operatorId == operator.getId()){selected="selected"}>@operator.getName()</option>
+                }
+            }
+            @formSelect(i18n.Txt.get(data.lang, "vclass"), "vehicleClass", false, errors) {
+                <option></option>
+                @for(vehicleClass <- vehicleClasses) {
+                <option value="@vehicleClass.getId()" @if(data.vehicleClassId == vehicleClass.getId()){selected="selected"}>@vehicleClass.getName()</option>
+                }
+            }
+            @formInputText(i18n.Txt.get(data.lang, "nr"), "nr", if(data.nr!=null){""+data.nr}else{""}, true, errors, data.lang)
+            @formInputTextArea(i18n.Txt.get(data.lang, "description"), "description", data.description, true, errors, data.lang)
+        </div>
+        <div class="col-xl-4">
+            <div id='editmap' class='mb-3' style='height: 400px;'></div>
+            @formInputTokenField(i18n.Txt.get(data.lang, "labels"), "labels", data.labels, false, errors, data.lang, forceVerticalLayout = true)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="mt-3"></div>
+            @formButtons("save", data.returnUrl, data.lang)
+        </div>
+    </div>
+    }
+}

@@ -1,0 +1,4 @@
+-J-Xmx4G 
+
+# If you want TLS (can't be configured via application.conf!):
+# -Dhttps.port=9443 -Dplay.server.https.engineProvider=utils.CustomSSLEngineProvider

@@ -1,0 +1,33 @@
+@(  implicit request: Http.Request,
+    dbIsWritable: Boolean,
+    replSetStatus: entities.mongodb.MongoDbReplSetStatus,
+    user: entities.User,
+    lang: String
+)
+
+@template(request, i18n.Txt.get(lang, "systemState"), null, user, lang) {
+} {
+    <h1>@i18n.Txt.get(lang, "systemState")</h1>
+    <table class="simpleTable">
+        <tr>
+            <td>
+                @i18n.Txt.get(lang, "systemStateDbIsWritable")
+            </td>
+            <td>
+                @dbIsWritable
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top">
+                @i18n.Txt.get(lang, "systemStateReplSetStatus")
+            </td>
+            <td>
+                @if(replSetStatus == null) {
+                    @i18n.Txt.get(lang, "systemStateNotAvailable")
+                } else {
+                    <pre>@replSetStatus.toStringAnon()</pre>
+                }
+            </td>
+        </tr>
+    </table>
+}

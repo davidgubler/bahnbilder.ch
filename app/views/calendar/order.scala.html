@@ -1,0 +1,86 @@
+@(  implicit request: Http.Request,
+    priceChf: Integer,
+    priceEur: Integer,
+    shippingChf: Integer,
+    shippingEur: Integer,
+    nrOfCalendars: String,
+    nrOfCalendarsOther: String,
+    email: String,
+    emailConfirm: String,
+    firstName: String,
+    lastName: String,
+    addressStreetAndNr: String,
+    addressRemarks: String,
+    zip: String,
+    city: String,
+    country: String,
+    countryOther: String,
+    acceptTC: Boolean,
+    errors: Map[String, String],
+    user: entities.User,
+    lang: String
+)
+
+@template(request, i18n.Txt.get(lang, "calendarOrder"), "calendar", user, lang) {
+} {
+    <script src='@routes.Assets.versioned("javascripts/unload.js")'></script>
+    <script src='@routes.Assets.versioned("javascripts/forms.js")'></script>
+    <h1>@i18n.Txt.get(lang, "calendarOrder")</h1>
+    @form(request) {
+        <div class='row'>
+            <div class='col-xl-6'>
+                @formSelect(i18n.Txt.get(lang, "nrOfCalendars"), "nrOfCalendars", true, errors) {
+                    @for(i <- List.of(1, 2, 3, 4)) {
+                        <option value='@i' @if(nrOfCalendars==""+i){selected="selected"}>@i (CHF @(priceChf * i)/&euro; @{priceEur * i})</option>
+                    }
+                    <option value='other' @if(nrOfCalendars=="other"){selected="selected"}>@i18n.Txt.get(lang, "other")</option>
+                }
+                <span id="nrOfCalendarsOtherWrapper" @if(nrOfCalendars!="other"){style="display: none"}>@formInputText("", "nrOfCalendarsOther", nrOfCalendarsOther, false, errors, lang)</span>
+                <br />
+                @formInputText(i18n.Txt.get(lang, "email"), "email", email, false, errors, lang)
+                @formInputText(i18n.Txt.get(lang, "emailConfirm"), "emailConfirm", emailConfirm, false, errors, lang)
+                <br />
+                @formInputText(i18n.Txt.get(lang, "firstName"), "firstName", firstName, false, errors, lang)
+                @formInputText(i18n.Txt.get(lang, "lastName"), "lastName", lastName, false, errors, lang)
+                <br />
+                @formInputText(i18n.Txt.get(lang, "addressStreetAndNr"), "addressStreetAndNr", addressStreetAndNr, false, errors, lang)
+                @formInputText(i18n.Txt.get(lang, "addressRemarks"), "addressRemarks", addressRemarks, false, errors, lang)
+                @formInputText(i18n.Txt.get(lang, "zip"), "zip", zip, true, errors, lang)
+                @formInputText(i18n.Txt.get(lang, "city"), "city", city, false, errors, lang)
+                @formSelect(i18n.Txt.get(lang, "country"), "country", true, errors) {
+                    <option value='CH' @if(country=="CH"){selected="selected"}>@i18n.Txt.get(lang, "countryCH")</option>
+                    <option value='DE' @if(country=="DE"){selected="selected"}>@i18n.Txt.get(lang, "countryDE")</option>
+                    <option value='AT' @if(country=="AT"){selected="selected"}>@i18n.Txt.get(lang, "countryAT")</option>
+                    <option value='other' @if(country=="other"){selected="selected"}>@i18n.Txt.get(lang, "other")</option>
+                }
+                <span id="countryOtherWrapper" @if(country!="other"){style="display: none"}>@formInputText("", "countryOther", countryOther, false, errors, lang)</span>
+                <br />
+            </div>
+        </div>
+        @if(lang == "de") {
+            <h3>Versandkosten</h3>
+            Schweiz: Per Post ab Schweiz, CHF 8.- pro Bestellung (nur ein Paket bei mehreren Kalendern)<br />
+            Deutschland: Per Post ab Deutschland, € 8.- pro Bestellung (nur ein Paket bei mehreren Kalendern)<br />
+            International: Per Post ab Schweiz oder Deutschland, effektive Versandkosten werden in Rechnung gestellt<br />
+            <br />
+            <h3>Geschäftsbedingungen</h3>
+            Es handelt sich hierbei um einen Privatverkauf. Die Kalender werden voraussichtlich eine Woche vor dem 24. Dezember an die Post übergeben und sollten daher vor Weihnachten beim Empfänger in der Schweiz oder Deutschland eintreffen. Für das rechtzeitige Ausliefern der Post wird keine Garantie übernommen.<br />
+            <br />
+            Es wird eine Rechnung per E-Mail versandt. Der dort aufgeführte Betrag ist innerhalb von 30 Tagen an das angegebene Schweizer oder Deutsche Konto zu bezahlen.
+        } else {
+            <h3>Shipping cost</h3>
+            Switzerland: Swiss Post, CHF @shippingChf.- per order (one package for multiple calendars)<br />
+            Germany: German Post, € @shippingEur.- per order (one package for multiple calendars)<br />
+            International: Swiss or German Post, effective shipping cost are invoiced<br />
+            <br />
+            <h3>Terms and Conditions</h3>
+            This is a private sale. The calendars are expected to be shipped in the week before the 24th of December and therefore should arrive before christmas in Switzerland and Germany. We cannot guarantee timely delivery.<br />
+            <br />
+            We will send the invoice via email. The stated sum is to be paid within 30 days to the indicated Swiss or German account.
+        }
+        <br />
+        <br />
+        @formInputCheckbox(i18n.Txt.get(lang, "acceptTC"), "acceptTC", acceptTC, errors, lang)
+        @formButtons("orderPreview", routes.CalendarController.view(), lang)
+    }
+}

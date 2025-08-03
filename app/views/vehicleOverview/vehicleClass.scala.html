@@ -1,0 +1,26 @@
+@(  implicit request: Http.Request,
+    vehicleClass: entities.VehicleClass,
+    vehicleSeries: entities.VehicleSeries,
+    operators: List[_ <: entities.Operator],
+    countriesByOperator: Map[entities.Operator, List[_ <: entities.Country]],
+    vcsByOperator: Map[entities.Operator, entities.tmp.VehicleClassSummary],
+    user: entities.User,
+    lang: String
+)
+
+@template(request, i18n.Txt.get(lang, "vclass") + ": " + vehicleClass.getName(), "", user, lang) {
+} {
+    <h1>@i18n.Txt.get(lang, "vclass"): @vehicleClass.getName()</h1>
+    @if(vehicleSeries != null) {
+        <p>
+            @Html(i18n.Txt.get(lang, "partOfSeries", "<b><a href=\"" + routes.VehicleOverviewController.vehicleSeries(vehicleSeries.getId()) + "\">" + play.twirl.api.utils.StringEscapeUtils.escapeXml11(vehicleSeries.getName()) + "</a></b>"))
+        </p>
+    }
+    @for(operator <- operators) {
+        <h2 class='mt-5 mb-0'>@operator.getName()&nbsp;&nbsp;@for(country <- countriesByOperator.get(operator)){@flag(country.getCode, country.getName(lang))}</h2>
+        <hr class='mt-0 mb-0'/>
+        <div class='row' style='text-align: center;'>
+            @vehicleClassSummary(vcsByOperator.get(operator), lang)
+        </div>
+    }
+}

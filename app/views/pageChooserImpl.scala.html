@@ -1,0 +1,24 @@
+@(  baseUrl: String,
+    currentPage: Integer,
+    lastPage: Integer,
+    buttons: List[utils.PageChooser.PageChooserButton],
+)
+
+<div class="pagechooser">
+    @if(currentPage > 1) {
+        <a href="@utils.PageChooser.url(baseUrl, currentPage - 1)">&nbsp;&nbsp;&laquo;&nbsp;&nbsp;</a>
+    } else {
+        <a>&nbsp;&nbsp;&laquo;&nbsp;&nbsp;</a>
+    }
+    @for(button <- buttons) {
+        @if(button.hasGap) {
+            <span class='spacer'>&middot;&middot;&middot;</span>
+        }
+        <a class="@if(!button.hasPriority){prio-low}@if(button.getPage == currentPage){active}" href="@utils.PageChooser.url(baseUrl, button.getPage)">@button.getPage</a>
+    }
+    @if(currentPage < lastPage) {
+        <a href="@utils.PageChooser.url(baseUrl, currentPage + 1)">&nbsp;&nbsp;&raquo;&nbsp;&nbsp;</a>
+    } else {
+        <a>&nbsp;&nbsp;&raquo;&nbsp;&nbsp;</a>
+    }
+</div>

@@ -1,0 +1,44 @@
+@(  implicit request: Http.Request,
+    user: entities.User,
+    lang: String
+)
+
+@template(request, i18n.Txt.get(lang, "about"), "about", user, lang) {
+} {
+    <h2>@i18n.Txt.get(lang, "about")</h2>
+    @if(lang == "de") {
+        <p>Diese Seite ist ein Privatprojekt von einigen Eisenbahnfotografen. Sie entstand aus der Erkenntnis heraus, dass man als Fotograf zwar gerne grosse Mengen an Bildern anh&auml;uft, was aber nicht viel n&uuml;tzt, wenn es nicht m&ouml;glich ist, die gew&uuml;nschten Bilder auch wieder zu finden. Im Internetzeitalter lag es da nahe, die Bilder auf einen Webserver zu stellen, die Metainformationen in eine Datenbank zu f&uuml;ttern und das Ganze auf verschiedene Arten durchsuchbar zu machen.</p>
+        <p>Leider gibt es bis heute keine Fertigl&ouml;sung, die die gew&uuml;nschten Kategorisierungsm&ouml;glichkeiten unterst&uuml;tzt. So entstand 2007 die erste Version dieser Webseite, welche unter Anderem - damals war das noch aussergew&ouml;hnlich - eine Google Maps-Integration f&uuml;r die Angabe der Aufnahmeorte (&quot;Fotostellen&quot;) und ausf&uuml;hrliche Kategorisierung der Bilder mit entsprechenden Suchm&ouml;glichkeiten bot.</p>
+        <p>Gut f&uuml;nf Jahre sp&auml;ter, Ende 2012, war es Zeit, das Design optisch aufzufrischen und den alten PHP-Code (ein &uuml;bler Verhau aus beliebigen Funktionen und assoziativen Arrays) einem angemessenen Ziel zuzuf&uuml;hren - der M&uuml;lltonne. Und so enstand diese heutige Version, welche zwar viele Elemente der vorherigen Webseite &uuml;bernahm, aber von Grund auf neu programmiert wurde.</p>
+        <p>In 2020 das Layout auf Bootstrap 4 umgestellt, um die Seite besser auf Mobilger&auml;ten nutzbar zu machen.</p>
+        <p>In 2025 wurde das Back-End neugeschrieben inkl. Wechsel von PHP/MySQL auf Java/Play Framework/MongoDB, um weitere Altlasten los zu werden und eine angenehmere Entwicklungsumgebung zu haben.</p>
+        <p>So, nun wünschen wir viel Spass!</p>
+        <h3>Kontakt</h3>
+        <table class="simpleTable">
+            <tr><td><a href="mailto:david@@bahnbilder.ch">david@@bahnbilder.ch</a></td><td>Bilder von David Gubler, Entwicklung und Betrieb der Webseite</td></tr>
+            <tr><td><a href="mailto:paszingg@@bluewin.ch">paszingg@@bluewin.ch</a></td><td>Bilder von Pascal Zingg</a></td></tr>
+            <tr><td><a href="mailto:JisBjoern@@t-online.de">JisBjoern@@t-online.de</a></td><td>Bilder von Christof Hofbauer</a></td></tr>
+            <tr><td><a href="mailto:michel-huber@@bluewin.ch">michel-huber@@bluewin.ch</a></td><td>Bilder von Michel Huber</a></td></tr>
+            <tr><td><a href="mailto:bahnbilder@@huerz.ch">bahnbilder@@huerz.ch</a></td><td>Bilder von Peter Hürzeler</a></td></tr>
+            <tr><td><a href="mailto:nbechtiger@@gmail.com">nbechtiger@@gmail.com</a></td><td>Bilder von Neel Bechtiger</a></td></tr>
+            <tr><td><a href="mailto:daniel.wipf@@gmail.com">daniel.wipf@@gmail.com</a></td><td>Bilder von Daniel Wipf</a></td></tr>
+        </table>
+    } else {
+        <p>This is a private site of a group of railway photographers. It was created from the realization that it's easy to collect a lot of photos but difficult to find photos. In the internet age it was kind of obvious to put the photos on a web server, metadata into a database and make everything searchable in a bunch of ways.</p>
+        <p>Unforunately there is no ready-to-use solution which supports all the categorization options. Therefore this page was created and originally launched in 2007. One of the key features was the Google Maps integration, something far from common at the time, and the detailed categorization with search options was also already present (albeit not quite in the current form yet).</p>
+        <p>About five years later, at the end of 2012, it was time to refresh the design and refactor the PHP code (a mess of functions and associative arrays). The result looked more or less like the current page, but without mobile compatibility yet. The functionality of the old site pretty much remained.</p>
+        <p>In 2020 the layout was rebuilt to use Bootstrap 4 for mobile device compatibility.</p>
+        <p>In 2025 the back-end was rewritten from PHP/MySQL to Java/Play Framework/MongoDB to get rid of more legacy and have a more pleasant tech stack.</p>
+        <p>Enjoy!</p>
+        <h3>Contact</h3>
+        <table class="simpleTable">
+            <tr><td><a href="mailto:david@@bahnbilder.ch">david@@bahnbilder.ch</a></td><td>Photos by David Gubler, web site development and operations</td></tr>
+            <tr><td><a href="mailto:paszingg@@bluewin.ch">paszingg@@bluewin.ch</a></td><td>Photos by Pascal Zingg</a></td></tr>
+            <tr><td><a href="mailto:JisBjoern@@t-online.de">JisBjoern@@t-online.de</a></td><td>Photos by Christof Hofbauer</a></td></tr>
+            <tr><td><a href="mailto:michel-huber@@bluewin.ch">michel-huber@@bluewin.ch</a></td><td>Photos by Michel Huber</a></td></tr>
+            <tr><td><a href="mailto:bahnbilder@@huerz.ch">bahnbilder@@huerz.ch</a></td><td>Photos by Peter Hürzeler</a></td></tr>
+            <tr><td><a href="mailto:nbechtiger@@gmail.com">nbechtiger@@gmail.com</a></td><td>Photos by Neel Bechtiger</a></td></tr>
+            <tr><td><a href="mailto:daniel.wipf@@gmail.com">daniel.wipf@@gmail.com</a></td><td>Photos by Daniel Wipf</a></td></tr>
+        </table>
+    }
+}

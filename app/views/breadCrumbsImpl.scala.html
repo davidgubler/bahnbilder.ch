@@ -1,0 +1,118 @@
+@(  search: entities.ModelSearch,
+    searchUrl: String,
+    worldUrl: String,
+    countryUrl: String,
+    operatorUrl: String,
+    vehicleClassUrl: String,
+    showSortBy: Boolean,
+    lang: String,
+)
+
+<div class='row' id='breadcrumbs'>
+    <div class='col-12'>
+        <div style='float: right; text-align: right; padding-left: 10px;'><a href='/map?@search.toQuery()' title='Karte zeigen'><i class='fa fa-map-marked'></i></a></div>
+
+        @if(searchUrl != null) {
+            <a id="modifySearch" href="@searchUrl">
+        }
+
+        @if(worldUrl != null) {
+            <a href="@worldUrl">@flag("WORLD", i18n.Txt.get(lang, "world"))@i18n.Txt.get(lang, "world")</a>
+        } else {
+            @flag("WORLD", i18n.Txt.get(lang, "world"))@i18n.Txt.get(lang, "world")
+        }
+
+        @if(search.getCountry() != null) {
+            &nbsp;&nbsp;&gt;&nbsp;&nbsp;
+            @if(countryUrl != null) {
+                <a href="@countryUrl">@flag(search.getCountry().getCode(), search.getCountry().getName(lang))@search.getCountry().getName(lang)</a>
+            } else {
+                @flag(search.getCountry().getCode(), search.getCountry().getName(lang))@search.getCountry().getName(lang)
+            }
+        }
+
+        @if(search.getLocation() != null) {
+            &nbsp;&nbsp;&gt;&nbsp;&nbsp;
+            @search.getLocation().getName()
+        }
+
+        @if(search.getLat() != null && search.getLng() != null) {
+            &nbsp;&nbsp;&gt;&nbsp;&nbsp;
+            @i18n.Txt.get(lang, "coordinates")
+        }
+
+        @if(search.getOperator() != null) {
+            &nbsp;&nbsp;&gt;&nbsp;&nbsp;
+            @if(operatorUrl != null) {
+                <a href="@operatorUrl">@search.getOperator()</a>
+            } else {
+                @search.getOperator()
+            }
+        }
+
+        @if(search.getVehicleClass() != null) {
+            &nbsp;&nbsp;&gt;&nbsp;&nbsp;
+            @if(vehicleClassUrl != null) {
+                <a href="@vehicleClassUrl">@search.getVehicleClass()</a>
+            } else {
+                @search.getVehicleClass()
+            }
+        }
+
+        @if(search.getNr() != null) {
+            &nbsp;&nbsp;&gt;&nbsp;&nbsp;
+            @i18n.Txt.get(lang, "nr")&nbsp;@search.getNr()
+        }
+
+        @if(search.getAuthor() != null) {
+            &nbsp;&nbsp;&gt;&nbsp;&nbsp;
+            @search.getAuthor()
+        }
+
+        @if(search.getPhotographer() != null) {
+            &nbsp;&nbsp;&gt;&nbsp;&nbsp;
+            @search.getPhotographer()
+        }
+
+        @if(search.getLicense() != null) {
+            &nbsp;&nbsp;&gt;&nbsp;&nbsp;
+            @search.getLicense()
+        }
+
+        @if(search.getDateFrom() != null) {
+            &nbsp;&nbsp;&gt;&nbsp;&nbsp;
+            @i18n.Txt.get(lang, "fromDateAlt")&nbsp;@i18n.Formatter.formatDate(lang, search.getDateFrom())
+        }
+
+        @if(search.getDateTo() != null) {
+            @if(search.getDateFrom() == null) {&nbsp;&nbsp;&gt;&nbsp;&nbsp;}
+            @i18n.Txt.get(lang, "to")&nbsp;@i18n.Formatter.formatDate(lang, search.getDateTo())
+        }
+
+        @if(search.getPhotoType() != null) {
+            &nbsp;&nbsp;&gt;&nbsp;&nbsp;
+            @search.getPhotoType().getName(lang)
+        }
+
+        @if(search.getDescription() != null) {
+            &nbsp;&nbsp;&gt;&nbsp;&nbsp;
+            @i18n.Txt.get(lang, "description"):&nbsp;@search.getDescription()
+        }
+
+        @if(search.getKeywords() != null) {
+            &nbsp;&nbsp;&gt;&nbsp;&nbsp;
+            @i18n.Txt.get(lang, "keywords"):
+            @utils.StringUtils.join(search.getKeywordsInclude(), ", ")@if(!search.getKeywordsInclude().isEmpty() && !search.getKeywordsExclude().isEmpty()) {, }
+            @utils.StringUtils.join(search.getKeywordsExclude().map(k => {i18n.Txt.get(lang, "not") + " " + k}), ", ")
+        }
+
+        @if(showSortBy && search.getSortBy() != entities.Search.SortBy.photoDate) {
+            &nbsp;&nbsp;&gt;&nbsp;&nbsp;
+            @i18n.Txt.get(lang, "sortBy"):&nbsp;@i18n.Txt.get(lang, search.getSortBy().name())
+        }
+
+        @if(searchUrl != null) {
+        </a>
+        }
+    </div>
+</div>

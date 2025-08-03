@@ -1,0 +1,73 @@
+@(  request: Http.Request,
+    data: entities.formdata.PhotoFormData,
+    autodetection: Map[entities.Photo, entities.tmp.AutodetectionStatus],
+    user: entities.User,
+    lang: String,
+)
+
+@template(request, i18n.Txt.get(data.lang, "autodetect"), null, user, data.lang) {
+} {
+    <link rel='stylesheet' href='@routes.Assets.versioned("stylesheets/autodetect.css")'/>
+    <script src='@routes.Assets.versioned("javascripts/autodetect.js")'></script>
+    @form(request, routes.PhotoController.autodetectPost(data.ids, data.returnUrl)) {
+        <div class="col-12">
+            @for(photo <- data.photos) {
+                <div class="row">
+                    <div class="col-lg-2">
+                        <a style="display: inline-block" class="mb-2" href="@routes.PhotoController.view(photo.getId)" target="_blank"><img style="width: 100%; max-width: 450px;" src="@photo.getUrlPublic900()"></a>
+                    </div>
+                    <div class="col-lg-10">
+                        <div>
+                            <input type="hidden" name="@photo.getId()" value="@if(autodetection.get(photo).getSolutions().size() == 1 && autodetection.get(photo).getSolutions().get(0).getConfidence() >= 0.2){@autodetection.get(photo).getSolutions().get(0).getEntity().toIds()}"/>
+                            @for(solution <- autodetection.get(photo).getSolutions()) {
+                                <span class="solution solution-@photo.getId() @if(autodetection.get(photo).getSolutions().size() == 1 && solution.getConfidence() >= 0.2){solution-selected}" data-photoid="@photo.getId()" data-solutionids="@solution.getEntity().toIds()">@solution.getEntity()</span><br />
+                            }
+                        </div>
+                        <small class="unhide" data-photoid="@photo.getId()">@i18n.Txt.get(lang, "showDetails")...</small>
+                        <div id="hidden-@photo.getId()" style="display: none">
+                        <table class="simpleTable" style="width: 100%">
+                            <tr>
+                                <th style="vertical-align: top; width: 25%">Operators from location</th>
+                                <td style="width: 75%">
+                                    @for(operator <- autodetection.get(photo).getOperatorsFromLocation()) {
+                                        @operator<br />
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="vertical-align: top">
+                                    Operators from text<br />
+                                    <small>@utils.StringUtils.join(photo.getTexts(), ", ")</small>
+                                </th>
+                                <td>
+                                    @for(operator <- autodetection.get(photo).getOperatorsFromTexts()) {
+                                        @operator<br />
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="vertical-align: top">Operators from abbreviations</th>
+                                <td>
+                                    @for(operator <- autodetection.get(photo).getOperatorsFromAbbreviations()) {
+                                        @operator<br />
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="vertical-align: top">Operators</th>
+                                <td>
+                                    @for(operator <- autodetection.get(photo).getOperators()) {
+                                        @operator<br />
+                                    }
+                                </td>
+                            </tr>
+                        </table>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="mt-3"></div>
+            @formButtons("save", data.returnUrl, data.lang)
+        </div>
+    }
+}

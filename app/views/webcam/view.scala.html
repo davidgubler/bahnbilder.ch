@@ -1,0 +1,15 @@
+@(  implicit request: Http.Request,
+    user: entities.User,
+    lang: String
+)
+
+@template(request, i18n.Txt.get(lang, "webcamZHB"), "webcamzhb", user, lang) {
+} {
+    <link rel='stylesheet' href='@routes.Assets.versioned("stylesheets/webcam.css")'/>
+    <script src='@routes.Assets.versioned("javascripts/webcam.js")'></script>
+    <script src='https://www.youtube.com/player_api'></script>
+    <div class='row'>
+        <div class='col-md-12 col-lg-8' id='video'><div id='ytplayer'></div></div>
+        <div class='col-md-12 col-lg-4'><div id='timetable'></div></div>
+    </div>
+}

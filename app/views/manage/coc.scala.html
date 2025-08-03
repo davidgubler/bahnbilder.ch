@@ -1,0 +1,68 @@
+@(  request: Http.Request,
+    countries: List[_ <: entities.Country],
+    activeCountry: entities.Country,
+    operators: List[_ <: entities.Operator],
+    activeOperator: entities.Operator,
+    vehicleClasses: List[_ <: entities.VehicleClass],
+    unusedCountries: List[_ <: entities.Country],
+    unusedOperators: List[_ <: entities.Operator],
+    unusedVehicleClasses: List[_ <: entities.VehicleClass],
+    user: entities.User,
+    lang: String,
+)
+
+@template(request, i18n.Txt.get(lang, "countries") + "/" + i18n.Txt.get(lang, "operators") + "/" + i18n.Txt.get(lang, "vclasses"), "manage", user, lang) {
+} {
+    <h1>@i18n.Txt.get(lang, "manage")</h1>
+    @manageNav("coc", lang)
+
+    <div class='row'>
+        <div class='col-md-3'>
+            <h3>@i18n.Txt.get(lang, "countries")</h3>
+            @for(country <- countries) {
+                <a @if(country.equals(activeCountry)){class="active"} href='@routes.ManagementController.manage(country.getId(), null)'>@country.getName(lang)</a>&nbsp;<a href='@routes.ManagementController.createOrUpdateCountry(request.uri(), country.getId)'><i class='fas fa-sm fa-pen'></i></a><br />
+            }
+        </div>
+        @if(activeCountry != null) {
+        <div class='col-md-5'>
+            <h3>@i18n.Txt.get(lang, "operators")</h3>
+            @for(operator <- operators) {
+                <a @if(operator.equals(activeOperator)){class="active"} href='@routes.ManagementController.manage(activeCountry.getId, operator.getId())'>@operator.getName()</a>&nbsp;<a href='@routes.ManagementController.createOrUpdateOperator(request.uri(), operator.getId)'><i class='fas fa-sm fa-pen'></i></a><br />
+            }
+        </div>
+        }
+        @if(activeCountry != null && activeOperator != null) {
+        <div class='col-md-4'>
+            <h3>@i18n.Txt.get(lang, "vclasses")</h3>
+            @for(vehicleClass <- vehicleClasses) {
+                @vehicleClass.getName()&nbsp;<a href='@routes.ManagementController.createOrUpdateVehicleClass(request.uri(), vehicleClass.getId)'><i class='fas fa-sm fa-pen'></i></a><br />
+            }
+        </div>
+        }
+    </div>
+    <hr />
+    <h3>@i18n.Txt.get(lang, "unused")</h3>
+    <div class='row'>
+        <div class='col-md-3'>
+            @for(country <- unusedCountries) {
+                @country.getName(lang)&nbsp;<a href='@routes.ManagementController.createOrUpdateCountry(request.uri(), country.getId)'><i class='fas fa-sm fa-pen'></i></a><br />
+            }
+            <a href='@routes.ManagementController.createOrUpdateCountry(request.uri(), null)'>@i18n.Txt.get(lang, "createCountry")...</a>
+        </div>
+        <div class='col-md-5'>
+            @for(operator <- unusedOperators) {
+                @operator.getName()&nbsp;<a href='@routes.ManagementController.createOrUpdateOperator(request.uri(), operator.getId)'><i class='fas fa-sm fa-pen'></i></a><br />
+            }
+            <a href='@routes.ManagementController.createOrUpdateOperator(request.uri(), null)'>@i18n.Txt.get(lang, "createOperator")...</a>
+        </div>
+        <div class='col-md-4'>
+            @for(vehicleClass <- unusedVehicleClasses) {
+                @vehicleClass.getName()&nbsp;<a href='@routes.ManagementController.createOrUpdateVehicleClass(request.uri(), vehicleClass.getId)'><i class='fas fa-sm fa-pen'></i></a><br />
+            }
+            <a href='@routes.ManagementController.createOrUpdateVehicleClass(request.uri(), null)'>@i18n.Txt.get(lang, "createVehicleClass")...</a>
+        </div>
+    </div>
+
+
+
+}
