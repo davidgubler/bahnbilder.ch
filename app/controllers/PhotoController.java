@@ -413,8 +413,11 @@ public class PhotoController extends Controller {
         return ok("[]").as(Http.MimeTypes.JSON);
     }
 
-    public Result config(Http.Request request, String ids) {
-        Context context = Context.get(request);
+    public Result viewConfig(Http.Request request, Integer id) {
+        return ok("var mapsKey = \"" + Config.Option.GOOGLE_MAPS_JS_KEY.get() + "\";\n").as(Http.MimeTypes.JAVASCRIPT);
+    }
+
+    public Result editConfig(Http.Request request, String ids) {
         String lang = Lang.get(request);
         return ok("var txtSuggestions = \"" + Txt.get(lang, "suggestions") + "\";\n").as(Http.MimeTypes.JAVASCRIPT);
     }

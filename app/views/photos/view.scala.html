@@ -17,6 +17,7 @@
     <meta name='description' content='@if(photo.getDescription() != null){@photo.getDescription()}else{@photo.getGeneratedDescription(lang, true, true, true, true, true)}' />
     <meta name='keywords' content='@i18n.Txt.get(lang, "photo")@if(photo.getVehicleClass() != null){, @photo.getVehicleClass()@if(photo.getVehicleClass().getVehicleSeries() != null){, @photo.getVehicleClass().getVehicleSeries()}}@if(photo.getNr() != null){, @photo.getNr()}@if(photo.getOperator() != null){, @photo.getOperator().getName(), @photo.getOperator().getAbbr()}@if(photo.getCountry() != null){, @photo.getCountry().getName(lang)}@if(photo.getLocation() != null){, @photo.getLocation().getName()}' />
 } {
+    <script src='@routes.PhotoController.viewConfig(photo.getId)'></script>
     <script src='@routes.Assets.versioned("javascripts/photo.js")'></script>
     <span itemscope itemtype='https://schema.org/ImageObject'>
         <div class='row'>

@@ -114,6 +114,7 @@ GET     /pictures/xxlarge/:id.jpg                       controllers.FilesControl
 GET     /picture/$id<[0-9]+>                            controllers.PhotoController.viewRedirect(request: Request, id: Integer)
 
 GET     /$id<[0-9]+>                                    controllers.PhotoController.view(request: Request, id: Integer)
+GET     /$id<[0-9]+>/_config                            controllers.PhotoController.viewConfig(request: Request, id: Integer)
 GET     /$id<[0-9]+>/_state                             controllers.PhotoController.state(request: Request, id: Integer)
 POST    /$id<[0-9]+>/_rate                              controllers.PhotoController.rate(request: Request, id: Integer)
 GET     /$id<[0-9]+>/_replace                           controllers.PhotoController.replace(request: Request, id: Integer, returnUrl : String ?= null)
@@ -122,7 +123,7 @@ GET     /$ids<[0-9,]+>/_edit                            controllers.PhotoControl
 POST    /$ids<[0-9,]+>/_edit                            controllers.PhotoController.editPost(request: Request, ids: String, returnUrl : String ?= null)
 GET     /$ids<[0-9,]+>/_edit/_suggest_locations         controllers.PhotoController.suggestLocations(request: Request, ids: String)
 GET     /$ids<[0-9,]+>/_edit/_suggest_trains            controllers.PhotoController.suggestTrains(request: Request, ids: String)
-GET     /$ids<[0-9,]+>/_edit/_config                    controllers.PhotoController.config(request: Request, ids: String)
+GET     /$ids<[0-9,]+>/_edit/_config                    controllers.PhotoController.editConfig(request: Request, ids: String)
 GET     /$ids<[0-9,]+>/_delete                          controllers.PhotoController.delete(request: Request, ids: String, returnUrl : String ?= null)
 POST    /$ids<[0-9,]+>/_delete                          controllers.PhotoController.deletePost(request: Request, ids: String, returnUrl : String ?= null)
 GET     /$ids<[0-9,]+>/_autodetect                      controllers.PhotoController.autodetect(request: Request, ids: String, returnUrl : String ?= null)

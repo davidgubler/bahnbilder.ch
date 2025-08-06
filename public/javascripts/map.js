@@ -5,7 +5,6 @@ var markerCount = 0;
 var closeTimeout;
 
 var addMarker = function (data) {
-    console.log(data);
 	var marker = new google.maps.Marker({'position': new google.maps.LatLng(data.lat, data.lng)});
 	google.maps.event.addListener(marker, 'mouseover', function() { showInfoWindow(marker, data.photoId, data.lat, data.lng); } );
 	google.maps.event.addListener(marker, 'click', function() { showInfoWindow(marker, data.photoId, data.lat, data.lng); } );

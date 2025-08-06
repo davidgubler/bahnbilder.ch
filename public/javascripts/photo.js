@@ -117,11 +117,11 @@ var transitionText = function(id, text) {
 
 var transitionMap = function(longitude, latitude) {
 	if ($("body").hasClass("fullscreen")) {
-		return; // do not update map if we're in fullsceen mode to improve performance and reduce requests
+		return; // do not update map if we're in fullscreen mode to improve performance and reduce requests
 	}
 	var newMap;
 	if (longitude && latitude) {
-		newMap = $('<iframe>').attr("id", "map_canvas").attr("src", "https://www.google.com/maps/embed/v1/place?key=AIzaSyCSTI76nMO56dK7L252bAD24E6rQROFRms&q="+latitude+","+longitude);
+		newMap = $('<iframe>').attr("id", "map_canvas").attr("src", "https://www.google.com/maps/embed/v1/place?key=" + mapsKey + "&q="+latitude+","+longitude);
 	} else {
 		newMap = $();
 	}
@@ -170,8 +170,6 @@ var transitionImage = function(id, push) {
 		state.photo = data.photo;
 		state.next = data.next;
 		state.prev = data.prev;
-
-
 
 		var imgOld = $("img#mainphoto");
 		var imgNew = $("<img />");
