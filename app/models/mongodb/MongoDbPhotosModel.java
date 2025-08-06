@@ -377,7 +377,7 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
             return Collections.emptyList();
         }
         MorphiaCursor<AggregationDistinct> cursor = mongoDb.getDs().aggregate(MongoDbPhoto.class)
-            .match(Filters.eq("countryId", countryId))
+            .match(Filters.ne("locationId", null), Filters.eq("countryId", countryId))
             .group(Group.group().field("_id", null).field("distinctIntegers", AccumulatorExpressions.addToSet(Expressions.field("locationId"))))
             .execute(AggregationDistinct.class);
         return cursor.hasNext() ? cursor.next().distinctIntegers : Collections.emptyList();
@@ -389,7 +389,7 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
             return Collections.emptyList();
         }
         MorphiaCursor<AggregationDistinct> cursor = mongoDb.getDs().aggregate(MongoDbPhoto.class)
-                .match(Filters.eq("countryId", countryId))
+                .match(Filters.ne("operatorId", null), Filters.eq("countryId", countryId))
                 .group(Group.group().field("_id", null).field("distinctIntegers", AccumulatorExpressions.addToSet(Expressions.field("operatorId"))))
                 .execute(AggregationDistinct.class);
         return cursor.hasNext() ? cursor.next().distinctIntegers : Collections.emptyList();
@@ -401,7 +401,7 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
             return Collections.emptyList();
         }
         MorphiaCursor<AggregationDistinct> cursor = mongoDb.getDs().aggregate(MongoDbPhoto.class)
-                .match(Filters.in("vehicleClassId", vehicleClassIds))
+                .match(Filters.ne("operatorId", null), Filters.in("vehicleClassId", vehicleClassIds))
                 .group(Group.group().field("_id", null).field("distinctIntegers", AccumulatorExpressions.addToSet(Expressions.field("operatorId"))))
                 .execute(AggregationDistinct.class);
         return cursor.hasNext() ? cursor.next().distinctIntegers : Collections.emptyList();
@@ -413,7 +413,7 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
             return Collections.emptyList();
         }
         MorphiaCursor<AggregationDistinct> cursor = mongoDb.getDs().aggregate(MongoDbPhoto.class)
-                .match(Filters.eq("countryId", countryId), Filters.eq("operatorId", operatorId))
+                .match(Filters.ne("vehicleClassId", null), Filters.eq("countryId", countryId), Filters.eq("operatorId", operatorId))
                 .group(Group.group().field("_id", null).field("distinctIntegers", AccumulatorExpressions.addToSet(Expressions.field("vehicleClassId"))))
                 .execute(AggregationDistinct.class);
         return cursor.hasNext() ? cursor.next().distinctIntegers : Collections.emptyList();
@@ -425,7 +425,7 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
             return Collections.emptyList();
         }
         MorphiaCursor<AggregationDistinct> cursor = mongoDb.getDs().aggregate(MongoDbPhoto.class)
-                .match(Filters.eq("operatorId", operatorId), Filters.in("vehicleClassId", vehicleClassIds))
+                .match(Filters.ne("countryId", null), Filters.eq("operatorId", operatorId), Filters.in("vehicleClassId", vehicleClassIds))
                 .group(Group.group().field("_id", null).field("distinctIntegers", AccumulatorExpressions.addToSet(Expressions.field("countryId"))))
                 .execute(AggregationDistinct.class);
         return cursor.hasNext() ? cursor.next().distinctIntegers : Collections.emptyList();
@@ -437,7 +437,7 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
             return Collections.emptyList();
         }
         MorphiaCursor<AggregationDistinct> cursor = mongoDb.getDs().aggregate(MongoDbPhoto.class)
-                .match(Filters.eq("operatorId", operatorId))
+                .match(Filters.ne("countryId", null), Filters.eq("operatorId", operatorId))
                 .group(Group.group().field("_id", null).field("distinctIntegers", AccumulatorExpressions.addToSet(Expressions.field("countryId"))))
                 .execute(AggregationDistinct.class);
         return cursor.hasNext() ? cursor.next().distinctIntegers : Collections.emptyList();
@@ -449,7 +449,7 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
             return Collections.emptyList();
         }
         MorphiaCursor<AggregationDistinct> cursor = mongoDb.getDs().aggregate(MongoDbPhoto.class)
-                .match(Filters.eq("operatorId", operatorId))
+                .match(Filters.ne("vehicleClassId", null), Filters.eq("operatorId", operatorId))
                 .group(Group.group().field("_id", null).field("distinctIntegers", AccumulatorExpressions.addToSet(Expressions.field("vehicleClassId"))))
                 .execute(AggregationDistinct.class);
         return cursor.hasNext() ? cursor.next().distinctIntegers : Collections.emptyList();
@@ -461,7 +461,7 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
             return Collections.emptyList();
         }
         MorphiaCursor<AggregationDistinct> cursor = mongoDb.getDs().aggregate(MongoDbPhoto.class)
-                .match(Filters.eq("operatorId", operatorId), Filters.eq("vehicleClassId", vehicleClassId))
+                .match(Filters.ne("nr", null), Filters.eq("operatorId", operatorId), Filters.eq("vehicleClassId", vehicleClassId))
                 .group(Group.group().field("_id", null).field("distinctIntegers", AccumulatorExpressions.addToSet(Expressions.field("nr"))))
                 .execute(AggregationDistinct.class);
         List<Integer> nrs = new ArrayList<>(cursor.hasNext() ? cursor.next().distinctIntegers : Collections.emptyList());
@@ -626,39 +626,80 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         Query<MongoDbPhoto> q = query().filter(Filters.in("numId", photoIds));
 
         List<UpdateOperator> ops = new ArrayList<>();
-        if (photoIds.size() == 1 || dateTime != null) {
+        if (photoIds.size() == 1 && dateTime == null) {
+            ops.add(UpdateOperators.unset("photoDate"));
+        }
+        if (dateTime != null) {
             ops.add(UpdateOperators.set("photoDate", dateTime));
         }
-        if (photoIds.size() == 1 || locationId != null) {
+
+        if (photoIds.size() == 1 && locationId == null) {
+            ops.add(UpdateOperators.unset("locationId"));
+        }
+        if (locationId != null) {
             ops.add(UpdateOperators.set("locationId", locationId));
         }
+
         if (!labelsToRemove.isEmpty()) {
             ops.add(UpdateOperators.pullAll("labels", new ArrayList<>(labelsToRemove)));
         }
-        if (photoIds.size() == 1 || data.photographer != null) {
+
+        if (photoIds.size() == 1 && data.photographer == null) {
+            ops.add(UpdateOperators.unset("photographer"));
+        }
+        if (data.photographer != null) {
             ops.add(UpdateOperators.set("photographer", data.photographer));
         }
-        if (photoIds.size() == 1 || data.licenseId != null) {
+
+        if (photoIds.size() == 1 && data.licenseId == null) {
+            ops.add(UpdateOperators.unset("licenseId"));
+        }
+        if (data.licenseId != null) {
             ops.add(UpdateOperators.set("licenseId", data.licenseId));
         }
-        if (photoIds.size() == 1 || data.photoTypeId != null) {
+
+        if (photoIds.size() == 1 && data.photoTypeId == null) {
+            ops.add(UpdateOperators.unset("photoTypeId"));
+        }
+        if (data.photoTypeId != null) {
             ops.add(UpdateOperators.set("photoTypeId", data.photoTypeId));
         }
-        if (photoIds.size() == 1 || data.countryId != null) {
+
+        if (photoIds.size() == 1 && data.countryId == null) {
+            ops.add(UpdateOperators.unset("countryId"));
+        }
+        if (data.countryId != null) {
             ops.add(UpdateOperators.set("countryId", data.countryId));
         }
-        if (photoIds.size() == 1 || data.operatorId != null) {
+
+        if (photoIds.size() == 1 && data.operatorId == null) {
+            ops.add(UpdateOperators.unset("operatorId"));
+        }
+        if (data.operatorId != null) {
             ops.add(UpdateOperators.set("operatorId", data.operatorId));
         }
-        if (photoIds.size() == 1 || data.vehicleClassId != null) {
+
+        if (photoIds.size() == 1 && data.vehicleClassId == null) {
+            ops.add(UpdateOperators.unset("vehicleClassId"));
+        }
+        if (data.vehicleClassId != null) {
             ops.add(UpdateOperators.set("vehicleClassId", data.vehicleClassId));
         }
-        if (photoIds.size() == 1 || data.nr != null) {
+
+        if (photoIds.size() == 1 && data.nr == null) {
+            ops.add(UpdateOperators.unset("nr"));
+        }
+        if (data.nr != null) {
             ops.add(UpdateOperators.set("nr", data.nr));
         }
-        if (photoIds.size() == 1 || data.description != null) {
+
+        if (photoIds.size() == 1 && data.description == null) {
+            ops.add(UpdateOperators.unset("description"));
+        }
+        if (data.description != null) {
             ops.add(UpdateOperators.set("description", data.description));
         }
+
         if (data.lat != null && data.lng != null) {
             ops.add(UpdateOperators.set("lat", data.lat));
             ops.add(UpdateOperators.set("lng", data.lng));
