@@ -145,7 +145,7 @@ public class Photos {
         Double lng = exif.getLng();
         Double lat = exif.getLat();
         Integer countryId = extractCountryIdFromKeywords(context, exif.getKeywords());
-        if (countryId == null) {
+        if (countryId == null && lat != null && lng != null) {
             try {
                 Country country = context.getGeocodingModel().getCountryByPoint(new SimplePoint(lat, lng)).get();
                 countryId = country == null ? null : country.getId();
