@@ -78,7 +78,15 @@ public class GoogleGeocodingModel implements GeocodingModel {
             throw new RuntimeException(e);
         }
         HttpRequest req = HttpRequest.newBuilder(uri).build();
-        return client.sendAsync(req, java.net.http.HttpResponse.BodyHandlers.ofByteArray()).thenApply(jsonResponseHandler(new TypeReference<GoogleGeocodeResponse>() {})).thenApply(ggr -> countriesModel.getByCode(ggr.results.get(0).address_components.get(0).short_name));
+        return client.sendAsync(req, java.net.http.HttpResponse.BodyHandlers.ofByteArray())
+                .thenApply(jsonResponseHandler(new TypeReference<GoogleGeocodeResponse>() {}))
+                .thenApply(ggr -> {
+                    if (ggr != null && ggr.results.size() > 0 && ggr.results.get(0).address_components.size() > 0) {
+                        return countriesModel.getByCode(ggr.results.get(0).address_components.get(0).short_name);
+                    } else {
+                        return null;
+                    }
+                });
     }
 
     @Override
