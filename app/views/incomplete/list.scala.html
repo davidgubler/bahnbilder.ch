@@ -23,7 +23,26 @@
                 @for(photo <- results) {
                     <a @if(user != null && user.canEdit(photo)){id='editable-@photo.getId()' class='incomplete'} style="--w: @photo.getResMedium.getWidth; --h: @photo.getResMedium.getHeight; position: relative" href="/@photo.getId()?sortBy=uploadDate&menu=newest">
                         <img src="@photo.getUrlPublic900()">
-                        <div class='bottom-label'>@photo.getGeneratedDescription(lang, true, false, true, true, false)</div>
+                        <div class='bottom-label' style="color: #ff2222; display: block !important">
+                            @if(photo.getLicense() == null) {
+                                @i18n.Txt.get(lang, "license")
+                            }
+                            @if(photo.getPhotoType() == null) {
+                                @i18n.Txt.get(lang, "photoType")
+                            }
+                            @if(photo.getCountry() == null) {
+                                @i18n.Txt.get(lang, "country")
+                            }
+                            @if(photo.getLocation() == null) {
+                                @i18n.Txt.get(lang, "location")
+                            }
+                            @if(photo.getOperator() == null) {
+                                @i18n.Txt.get(lang, "operator")
+                            }
+                            @if(photo.getVehicleClass() == null) {
+                                @i18n.Txt.get(lang, "vclass")
+                            }
+                        </div>
                     </a>
                 }
             </div>
