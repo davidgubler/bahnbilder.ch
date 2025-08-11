@@ -46,7 +46,7 @@ public class MongoDbFilesScaledModel extends MongoDbModel<MongoDbFile> implement
         try {
             scaledData = scale(fromOriginal, size);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error scaling original:" + fromOriginal.getPhotoId(), e);
         }
 
         if (scaledData == null) {
@@ -63,7 +63,7 @@ public class MongoDbFilesScaledModel extends MongoDbModel<MongoDbFile> implement
         try {
             scaledData = scale(fromOriginal, scaled.getSize());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error re-scaling original:" + fromOriginal.getPhotoId(), e);
         }
         if (scaledData == null) {
             // too small to be scaled to this size
@@ -82,7 +82,9 @@ public class MongoDbFilesScaledModel extends MongoDbModel<MongoDbFile> implement
 
     private byte[] scale(File original, PhotoResolution.Size size) throws IOException {
         BufferedImage inputImage = ImageIO.read(new ByteArrayInputStream(original.getData()));
-
+        if (inputImage == null) {
+            throw new IOException("ImageIO couldn't extract image (returned null)");
+        }
         int originalWidth = inputImage.getWidth();
         int originalHeight = inputImage.getHeight();
         F.Tuple<Integer, Integer> newSize = size.getScaledSize(originalWidth, originalHeight);

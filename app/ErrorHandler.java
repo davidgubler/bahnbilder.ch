@@ -30,7 +30,7 @@ public class ErrorHandler implements HttpErrorHandler {
 
     public CompletionStage<Result> onServerError(RequestHeader request, Throwable exception) {
         if (exception instanceof CompletionException) {
-            exception = ((CompletionException)exception).getCause();
+            exception = exception.getCause();
         }
         if (exception instanceof NotFoundException) {
             return CompletableFuture.completedFuture(Results.notFound(views.html.error.render(request, "404: " + exception.getMessage(), extractLang(request))));
