@@ -13,6 +13,7 @@ import entities.PhotoResolution;
 import entities.mongodb.MongoDbFile;
 import models.FilesOriginalModel;
 import models.FilesScaledModel;
+import play.inject.ApplicationLifecycle;
 import play.libs.F;
 
 import javax.imageio.*;
@@ -25,11 +26,20 @@ import java.time.Instant;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.*;
 
 public class MongoDbFilesScaledModel extends MongoDbModel<MongoDbFile> implements FilesScaledModel {
 
     @Inject
     private FilesOriginalModel filesOriginalModel;
+
+    @Inject
+    public MongoDbFilesScaledModel(ApplicationLifecycle appLifecycle) {
+        appLifecycle.addStopHook(() -> {
+            executor.shutdown();
+            return CompletableFuture.completedFuture(null);
+        });
+    }
 
     @Override
     protected Datastore getDs() {
@@ -44,8 +54,8 @@ public class MongoDbFilesScaledModel extends MongoDbModel<MongoDbFile> implement
     private File create(PhotoResolution.Size size, File fromOriginal) {
         byte[] scaledData;
         try {
-            scaledData = scale(fromOriginal, size);
-        } catch (IOException e) {
+            scaledData = scaleQueued(fromOriginal, size).get();
+        } catch (Exception e) {
             throw new RuntimeException("Error scaling original:" + fromOriginal.getPhotoId(), e);
         }
 
@@ -61,8 +71,8 @@ public class MongoDbFilesScaledModel extends MongoDbModel<MongoDbFile> implement
     private File update(File scaled, File fromOriginal) {
         byte[] scaledData;
         try {
-            scaledData = scale(fromOriginal, scaled.getSize());
-        } catch (IOException e) {
+            scaledData = scaleQueued(fromOriginal, scaled.getSize()).get();
+        } catch (Exception e) {
             throw new RuntimeException("Error re-scaling original:" + fromOriginal.getPhotoId(), e);
         }
         if (scaledData == null) {
@@ -119,6 +129,22 @@ public class MongoDbFilesScaledModel extends MongoDbModel<MongoDbFile> implement
         writer.dispose();
 
         return byteArrayOutputStream.toByteArray();
+    }
+
+    // Don't try to scale too many photos at once, the cap is at the number of CPU cores.
+    // Trying to do more in parallel will only blow up memory usage and lead to OOM crashes
+    private static ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+    private CompletableFuture<byte[]> scaleQueued(File original, PhotoResolution.Size size) {
+        CompletableFuture<byte[]> f = new CompletableFuture<>();
+        executor.execute(() -> {
+            try {
+                f.complete(scale(original, size));
+            } catch (IOException e) {
+                throw new CompletionException(e);
+            }
+        });
+        return f;
     }
 
     @Override
