@@ -445,4 +445,19 @@ public class MongoDbPhoto implements MongoDbEntity, Photo, ContextAwareEntity {
     public String toString() {
         return "" + numId;
     }
+
+    /**
+     * Sort photos by photoDate and ID if necessary. Normally you shouldn't use this because if you use the Search object the photos will come pre-sorted from the DB.
+     * This sorts the photos by date in descending order (latest first). It's useful for photo batch operations such
+     * as edit or delete.
+     * @param photo
+     * @return
+     */
+    @Override
+    public int compareTo(Photo photo) {
+        if (photoDate != null && photo.getPhotoDate() != null && !photoDate.equals(photo.getPhotoDate())) {
+            return -photoDate.compareTo(photo.getPhotoDate());
+        }
+        return -Integer.compare(this.numId, photo.getId());
+    }
 }

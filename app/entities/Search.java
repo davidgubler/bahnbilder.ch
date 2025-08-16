@@ -431,7 +431,7 @@ public class Search {
 
     public void adjustPage(int lastPage) {
         if (page > lastPage) {
-            page = lastPage == 1 ? null : lastPage;
+            page = lastPage;
         }
     }
 

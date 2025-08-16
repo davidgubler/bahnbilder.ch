@@ -221,7 +221,7 @@ public class PhotoController extends Controller {
             throw new NotAllowedException();
         }
         List<Integer> photoIds = InputUtils.toListOfIntegers(ids, ",");
-        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds).sorted(Comparator.comparing(Photo::getPhotoDate)).toList();
+        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds).sorted().toList();
         if (photos.isEmpty()) {
             throw new NotFoundException("Photos");
         }
@@ -238,7 +238,7 @@ public class PhotoController extends Controller {
         Context context = Context.get(request);
         User user = context.getUsersModel().getFromRequest(request);
         List<Integer> photoIds = InputUtils.toListOfIntegers(ids, ",");
-        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds).sorted(Comparator.comparing(Photo::getPhotoDate)).toList();
+        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds).sorted().toList();
         if (photos.isEmpty()) {
             throw new NotFoundException("Photos");
         }
