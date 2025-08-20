@@ -1,9 +1,7 @@
 package models.context;
 
 import com.google.inject.Inject;
-import entities.Exif;
-import entities.Photo;
-import entities.Search;
+import entities.*;
 import entities.aggregations.AggregationCountryViews;
 import entities.formdata.PhotoFormData;
 import models.PhotosModel;
@@ -176,6 +174,11 @@ public class ContextPhotosModel extends ContextModel implements PhotosModel {
     @Override
     public void update(PhotoFormData data, LocalDateTime dateTime, Integer locationId, Set<String> labelsToAdd, Set<String> labelsToRemove) {
         call(() -> { photosModel.update(data, dateTime, locationId, labelsToAdd, labelsToRemove); return null; });
+    }
+
+    @Override
+    public void update(Photo photo, Operator operator, VehicleClass vehicleClass, Integer nr) {
+        call(() -> { photosModel.update(photo, operator, vehicleClass, nr); return null; });
     }
 
     @Override

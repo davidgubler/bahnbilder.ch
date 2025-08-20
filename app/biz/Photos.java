@@ -249,6 +249,35 @@ public class Photos {
         BahnbilderLogger.info(context.getRequest(), user + " updated " + data.photos);
     }
 
+    // used for the autodetection feature
+    public void update(Context context, Photo photo, Operator operator, VehicleClass vehicleClass, Integer nr, User user) throws ValidationException {
+        // ACCESS
+        if (user == null || !user.canEdit(photo)) {
+            throw new NotAllowedException();
+        }
+
+        // INPUT
+        Map<String, String> errors = new HashMap<>();
+        if (operator == null) {
+            errors.put("operator", ErrorMessages.MISSING_VALUE);
+        }
+        if (vehicleClass == null) {
+            errors.put("vehicleClass", ErrorMessages.MISSING_VALUE);
+        }
+        if (vehicleClass == null) {
+            errors.put("nr", ErrorMessages.MISSING_VALUE);
+        }
+        if (!errors.isEmpty()) {
+            throw new ValidationException(errors);
+        }
+
+        // BUSINESS
+        context.getPhotosModel().update(photo, operator, vehicleClass, nr);
+
+        // LOG
+        BahnbilderLogger.info(context.getRequest(), user + " updated " + photo);
+    }
+
     public void delete(Context context, PhotoFormData data, User user) {
         // ACCESS
         if (user == null) {

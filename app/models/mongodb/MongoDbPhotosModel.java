@@ -716,6 +716,16 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
     }
 
     @Override
+    public void update(Photo photo, Operator operator, VehicleClass vehicleClass, Integer nr) {
+        Query<MongoDbPhoto> q = query().filter(Filters.eq("numId", photo.getId()));
+        List<UpdateOperator> ops = new ArrayList<>();
+        ops.add(UpdateOperators.set("operatorId", operator.getId()));
+        ops.add(UpdateOperators.set("vehicleClassId", vehicleClass.getId()));
+        ops.add(UpdateOperators.set("nr", nr));
+        q.update(new UpdateOptions(), ops.toArray(new UpdateOperator[ops.size()]));
+    }
+
+    @Override
     public void update(Photo photo, Exif exif) {
         MongoDbPhoto mongoDbPhoto = (MongoDbPhoto)photo;
         mongoDbPhoto.setExif(exif);

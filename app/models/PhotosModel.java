@@ -1,8 +1,6 @@
 package models;
 
-import entities.Exif;
-import entities.Photo;
-import entities.Search;
+import entities.*;
 import entities.aggregations.AggregationCountryViews;
 import entities.formdata.PhotoFormData;
 
@@ -107,6 +105,8 @@ public interface PhotosModel {
     List<Integer> getUsedVehicleClassIds();
 
     void update(PhotoFormData data, LocalDateTime dateTime, Integer locationId, Set<String> labelsToAdd, Set<String> labelsToRemove);
+
+    void update(Photo photo, Operator operator, VehicleClass vehicleClass, Integer nr);
 
     void update(Photo photo, Exif exif);
 

@@ -313,17 +313,18 @@ public class PhotoController extends Controller {
         }
         Map<String, String[]> formData = request.body().asFormUrlEncoded();
         for (Photo photo : photoList) {
-            PhotoFormData data;
             try {
                 String[] solution = InputUtils.trimToNull(formData.get("" + photo.getId())).split("\\|");
                 if (solution.length != 3) {
                     continue;
                 }
-                data = new PhotoFormData(request, returnUrl, List.of(photo), Integer.parseInt(solution[0]), Integer.parseInt(solution[1]), Integer.parseInt(solution[2]));
+                Operator operator = context.getOperatorsModel().get(Integer.parseInt(solution[0]));
+                VehicleClass vehicleClass = context.getVehicleClassesModel().get(Integer.parseInt(solution[1]));
+                Integer nr = Integer.parseInt(solution[2]);
+                photos.update(context, photo, operator, vehicleClass, nr, user);
             } catch (Exception e) {
-                continue;
+                BahnbilderLogger.error(request, e);
             }
-            photos.update(context, data, user);
         }
         return redirect(returnUrl);
     }

@@ -87,25 +87,4 @@ public class PhotoFormData extends FormData<Photo> {
             }
         }
     }
-
-    public PhotoFormData(Http.Request request, String returnUrl, List<? extends Photo> photos, Integer operatorId, Integer vehicleClassId, Integer nr) {
-        super(request, returnUrl, photos.get(0));
-        this.photos = photos;
-        ids = null;
-        date = null;
-        time = null;
-        photographer = null;
-        licenseId = null;
-        photoTypeId = null;
-        countryId = null;
-        locationId = null;
-        newLocation = null;
-        this.operatorId = operatorId;
-        this.vehicleClassId = vehicleClassId;
-        this.nr = nr;
-        description = null;
-        labels = null;
-        lat = null;
-        lng = null;
-    }
 }
