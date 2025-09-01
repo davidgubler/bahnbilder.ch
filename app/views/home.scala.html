@@ -6,7 +6,7 @@
     lang: String,
 )
 
-@template(request, "bahnbilder.ch", "home", user, lang) {
+@template(request, if(lang=="en"){"rail.pictures"}else{"bahnbilder.ch"}, "home", user, lang) {
 } {
     <div class="row">
         <div class="col-md-6 order-md-2">
