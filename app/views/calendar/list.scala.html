@@ -21,7 +21,8 @@
             <table>
                 <tr>
                     <th style="padding-right: 20px;">@i18n.Txt.get(lang, "date")</th>
-                    <th style="padding-right: 20px;">@i18n.Txt.get(lang, "nrOfCalendars")</th>
+                    <th style="padding-right: 20px;">@i18n.Txt.get(lang, "nrOfRailCalendars")</th>
+                    <th style="padding-right: 20px;">@i18n.Txt.get(lang, "nrOfAnimalCalendars")</th>
                     <th style="padding-right: 20px;">@i18n.Txt.get(lang, "name")</th>
                     <th style="padding-right: 20px;">@i18n.Txt.get(lang, "addressShipping")</th>
                     <th style="padding-right: 20px;">@i18n.Txt.get(lang, "country")</th>
@@ -30,7 +31,8 @@
                 @for(order <- orders) {
                     <tr>
                         <td style="padding-right: 20px;">@order.getTimestamp()</td>
-                        <td style="padding-right: 20px;">@order.getNrOfCalendars()</td>
+                        <td style="padding-right: 20px;">@order.getNrOfRailCalendars()</td>
+                        <td style="padding-right: 20px;">@order.getNrOfAnimalCalendars()</td>
                         <td style="padding-right: 20px;">@order.getFirstName() @order.getLastName()</td>
                         <td style="padding-right: 20px;">
                             @order.getAddressStreetAndNr()<br />

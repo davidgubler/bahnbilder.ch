@@ -16,13 +16,13 @@ public class ContextCalendarOrdersModel extends ContextModel implements Calendar
     }
 
     @Override
-    public CalendarOrder orderPreview(String nrOfCalendars, String email, String firstName, String lastName, String addressStreetAndNr, String addressRemarks, String zip, String city, String country) {
-        return call(() -> calendarOrdersModel.order(nrOfCalendars, email, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country));
+    public CalendarOrder orderPreview(int nrOfRailCalendars, int nrOfAnimalCalendars, String email, String firstName, String lastName, String addressStreetAndNr, String addressRemarks, String zip, String city, String country) {
+        return call(() -> calendarOrdersModel.orderPreview(nrOfRailCalendars, nrOfAnimalCalendars, email, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country));
     }
 
     @Override
-    public CalendarOrder order(String nrOfCalendars, String email, String firstName, String lastName, String addressStreetAndNr, String addressRemarks, String zip, String city, String country) {
-        return call(() -> calendarOrdersModel.order(nrOfCalendars, email, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country));
+    public CalendarOrder order(int nrOfRailCalendars, int nrOfAnimalCalendars, String email, String firstName, String lastName, String addressStreetAndNr, String addressRemarks, String zip, String city, String country) {
+        return call(() -> calendarOrdersModel.order(nrOfRailCalendars, nrOfAnimalCalendars, email, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country));
     }
 
     @Override

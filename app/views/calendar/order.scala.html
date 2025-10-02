@@ -3,8 +3,8 @@
     priceEur: Integer,
     shippingChf: Integer,
     shippingEur: Integer,
-    nrOfCalendars: String,
-    nrOfCalendarsOther: String,
+    nrOfRailCalendars: Integer,
+    nrOfAnimalCalendars: Integer,
     email: String,
     emailConfirm: String,
     firstName: String,
@@ -29,14 +29,22 @@
     @form(request) {
         <div class='row'>
             <div class='col-xl-6'>
-                @formSelect(i18n.Txt.get(lang, "nrOfCalendars"), "nrOfCalendars", true, errors) {
-                    @for(i <- List.of(1, 2, 3, 4)) {
-                        <option value='@i' @if(nrOfCalendars==""+i){selected="selected"}>@i (CHF @(priceChf * i)/&euro; @{priceEur * i})</option>
+                @formSelect(i18n.Txt.get(lang, "nrOfRailCalendars"), "nrOfRailCalendars", true, errors) {
+                    @for(i <- List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)) {
+                        <option value='@i' @if(nrOfRailCalendars==i){selected="selected"}>@i (CHF @(priceChf * i)/&euro; @{priceEur * i})</option>
                     }
-                    <option value='other' @if(nrOfCalendars=="other"){selected="selected"}>@i18n.Txt.get(lang, "other")</option>
                 }
-                <span id="nrOfCalendarsOtherWrapper" @if(nrOfCalendars!="other"){style="display: none"}>@formInputText("", "nrOfCalendarsOther", nrOfCalendarsOther, false, errors, lang)</span>
-                <br />
+                @formSelect(i18n.Txt.get(lang, "nrOfAnimalCalendars"), "nrOfAnimalCalendars", true, errors) {
+                    @for(i <- List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)) {
+                        <option value='@i' @if(nrOfAnimalCalendars==i){selected="selected"}>@i (CHF @(priceChf * i)/&euro; @{priceEur * i})</option>
+                    }
+                }
+                <div class="form-group row">
+                    <label class="col-xl-3 col-lg-4 col-md-12 col-form-label"></label>
+                    <div class="col-xl-9 col-lg-8 col-md-12">
+                        <small>@i18n.Txt.get(lang, "nrOfAnimalCalendarsExplanation")</small>
+                    </div>
+                </div>
                 @formInputText(i18n.Txt.get(lang, "email"), "email", email, false, errors, lang)
                 @formInputText(i18n.Txt.get(lang, "emailConfirm"), "emailConfirm", emailConfirm, false, errors, lang)
                 <br />

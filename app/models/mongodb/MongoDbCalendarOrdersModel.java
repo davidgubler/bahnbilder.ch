@@ -15,13 +15,13 @@ import java.util.List;
 public class MongoDbCalendarOrdersModel extends MongoDbModel<MongoDbCalendarOrder> implements CalendarOrdersModel {
 
     @Override
-    public CalendarOrder orderPreview(String nrOfCalendars, String email, String firstName, String lastName, String addressStreetAndNr, String addressRemarks, String zip, String city, String country) {
-        return new MongoDbCalendarOrder(Config.Option.CALENDAR_YEAR.getInt(), nrOfCalendars, email, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country);
+    public CalendarOrder orderPreview(int nrOfRailCalendars, int nrOfAnimalCalendars, String email, String firstName, String lastName, String addressStreetAndNr, String addressRemarks, String zip, String city, String country) {
+        return new MongoDbCalendarOrder(Config.Option.CALENDAR_YEAR.getInt(), nrOfRailCalendars, nrOfAnimalCalendars, email, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country);
     }
 
     @Override
-    public CalendarOrder order(String nrOfCalendars, String email, String firstName, String lastName, String addressStreetAndNr, String addressRemarks, String zip, String city, String country) {
-        MongoDbCalendarOrder calendarOrder = new MongoDbCalendarOrder(Config.Option.CALENDAR_YEAR.getInt(), nrOfCalendars, email, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country);
+    public CalendarOrder order(int nrOfRailCalendars, int nrOfAnimalCalendars, String email, String firstName, String lastName, String addressStreetAndNr, String addressRemarks, String zip, String city, String country) {
+        MongoDbCalendarOrder calendarOrder = new MongoDbCalendarOrder(Config.Option.CALENDAR_YEAR.getInt(), nrOfRailCalendars, nrOfAnimalCalendars, email, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country);
         mongoDb.getDs().save(calendarOrder);
         return calendarOrder;
     }

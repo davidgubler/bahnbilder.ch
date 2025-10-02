@@ -47,7 +47,7 @@ public class CalendarController extends Controller {
                 Config.Option.CALENDAR_PRICE_EUR.getInt(),
                 Config.Option.CALENDAR_SHIPPING_CHF.getInt(),
                 Config.Option.CALENDAR_SHIPPING_EUR.getInt(),
-                "1", null, null, null, null, null, null, null, null, null, null, null, false, Collections.emptyMap(), user, lang));
+                1, 0, null, null, null, null, null, null, null, null, null, null, false, Collections.emptyMap(), user, lang));
     }
 
     public Result orderPost(Http.Request request) {
@@ -57,8 +57,8 @@ public class CalendarController extends Controller {
         Map<String, String[]> data = request.body().asFormUrlEncoded();
 
         String submit = InputUtils.trimToNull(data.get("submit"));
-        String nrOfCalendars = InputUtils.trimToNull(data.get("nrOfCalendars"));
-        String nrOfCalendarsOther = InputUtils.trimToNull(data.get("nrOfCalendarsOther"));
+        Integer nrOfRailCalendars = InputUtils.toInt(data.get("nrOfRailCalendars"));
+        Integer nrOfAnimalCalendars = InputUtils.toInt(data.get("nrOfAnimalCalendars"));
         String email = InputUtils.trimToNull(data.get("email"));
         String emailConfirm = InputUtils.trimToNull(data.get("emailConfirm"));
         String firstName = InputUtils.trimToNull(data.get("firstName"));
@@ -77,11 +77,11 @@ public class CalendarController extends Controller {
                     Config.Option.CALENDAR_PRICE_EUR.getInt(),
                     Config.Option.CALENDAR_SHIPPING_CHF.getInt(),
                     Config.Option.CALENDAR_SHIPPING_EUR.getInt(),
-                    nrOfCalendars, nrOfCalendarsOther, email, emailConfirm, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country, countryOther, acceptTC, Collections.emptyMap(), user, lang));
+                    nrOfRailCalendars, nrOfAnimalCalendars, email, emailConfirm, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country, countryOther, acceptTC, Collections.emptyMap(), user, lang));
         }
         if ("order".equals(submit)) {
             try {
-                calendars.order(context, nrOfCalendars, nrOfCalendarsOther, email, emailConfirm, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country, countryOther, acceptTC, lang);
+                calendars.order(context, nrOfRailCalendars, nrOfAnimalCalendars, email, emailConfirm, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country, countryOther, acceptTC, lang);
                 return ok(views.html.calendar.orderConfirm.render(request, email, user, lang));
             } catch (ValidationException e) {
                 return ok(views.html.calendar.order.render(request,
@@ -89,20 +89,20 @@ public class CalendarController extends Controller {
                         Config.Option.CALENDAR_PRICE_EUR.getInt(),
                         Config.Option.CALENDAR_SHIPPING_CHF.getInt(),
                         Config.Option.CALENDAR_SHIPPING_EUR.getInt(),
-                        nrOfCalendars, nrOfCalendarsOther, email, emailConfirm, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country, countryOther, acceptTC, e.getErrors(), user, lang));
+                        nrOfRailCalendars, nrOfAnimalCalendars, email, emailConfirm, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country, countryOther, acceptTC, e.getErrors(), user, lang));
             }
         }
 
         try {
-            CalendarOrder orderPreview = calendars.orderPreview(context, nrOfCalendars, nrOfCalendarsOther, email, emailConfirm, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country, countryOther, acceptTC, lang);
-            return ok(views.html.calendar.orderPreview.render(request, orderPreview, nrOfCalendars, nrOfCalendarsOther, email, emailConfirm, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country, countryOther, acceptTC, user, lang));
+            CalendarOrder orderPreview = calendars.orderPreview(context, nrOfRailCalendars, nrOfAnimalCalendars, email, emailConfirm, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country, countryOther, acceptTC, lang);
+            return ok(views.html.calendar.orderPreview.render(request, orderPreview, nrOfRailCalendars, nrOfAnimalCalendars, email, emailConfirm, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country, countryOther, acceptTC, user, lang));
         } catch (ValidationException e) {
             return ok(views.html.calendar.order.render(request,
                     Config.Option.CALENDAR_PRICE_CHF.getInt(),
                     Config.Option.CALENDAR_PRICE_EUR.getInt(),
                     Config.Option.CALENDAR_SHIPPING_CHF.getInt(),
                     Config.Option.CALENDAR_SHIPPING_EUR.getInt(),
-                    nrOfCalendars, nrOfCalendarsOther, email, emailConfirm, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country, countryOther, acceptTC, e.getErrors(), user, lang));
+                    nrOfRailCalendars, nrOfAnimalCalendars, email, emailConfirm, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country, countryOther, acceptTC, e.getErrors(), user, lang));
         }
     }
 

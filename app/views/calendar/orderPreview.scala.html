@@ -1,7 +1,7 @@
 @(  implicit request: Http.Request,
     order: entities.CalendarOrder,
-    nrOfCalendars: String,
-    nrOfCalendarsOther: String,
+    nrOfRailCalendars: Integer,
+    nrOfAnimalCalendars: Integer,
     email: String,
     emailConfirm: String,
     firstName: String,
@@ -22,8 +22,8 @@
     <script src='@routes.Assets.versioned("javascripts/unload.js")'></script>
     <h1>@i18n.Txt.get(lang, "calendarOrder")</h1>
     @form(request) {
-        <input type="hidden" name="nrOfCalendars" value="@nrOfCalendars" />
-        <input type="hidden" name="nrOfCalendarsOther" value="@nrOfCalendarsOther" />
+        <input type="hidden" name="nrOfRailCalendars" value="@nrOfRailCalendars" />
+        <input type="hidden" name="nrOfAnimalCalendars" value="@nrOfAnimalCalendars" />
         <input type="hidden" name="email" value="@email" />
         <input type="hidden" name="emailConfirm" value="@emailConfirm" />
         <input type="hidden" name="firstName" value="@firstName" />
@@ -38,8 +38,12 @@
 
         <table>
             <tr>
-                <td style="padding-right: 30px;">@i18n.Txt.get(lang, "nrOfCalendars")</td>
-                <td>@if(nrOfCalendars=="other"){@nrOfCalendarsOther}else{@nrOfCalendars} (@order.getCalendarCost(lang))</td>
+                <td style="padding-right: 30px;">@i18n.Txt.get(lang, "nrOfRailCalendars")</td>
+                <td>@nrOfRailCalendars (@order.getRailCalendarCost(lang))</td>
+            </tr>
+            <tr>
+                <td style="padding-right: 30px;">@i18n.Txt.get(lang, "nrOfAnimalCalendars")</td>
+                <td>@nrOfAnimalCalendars (@order.getAnimalCalendarCost(lang))</td>
             </tr>
             <tr>
                 <td style="padding-right: 30px;">@i18n.Txt.get(lang, "name")</td>

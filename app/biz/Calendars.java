@@ -17,17 +17,14 @@ public class Calendars {
     @Inject
     private Mail mail;
 
-    public CalendarOrder orderPreview(Context context, String nrOfCalendars, String nrOfCalendarsOther, String email, String emailConfirm, String firstName, String lastName, String addressStreetAndNr, String addressRemarks, String zip, String city, String country, String countryOther, boolean acceptTC, String lang) throws ValidationException {
+    public CalendarOrder orderPreview(Context context, Integer nrOfRailCalendars, Integer nrOfAnimalCalendars, String email, String emailConfirm, String firstName, String lastName, String addressStreetAndNr, String addressRemarks, String zip, String city, String country, String countryOther, boolean acceptTC, String lang) throws ValidationException {
         // ACCESS
         // anybody can order calendars
 
         // INPUT
         Map<String, String> errors = new HashMap<>();
-        InputUtils.validateString(nrOfCalendars, "nrOfCalendars", errors);
-        if ("other".equals(nrOfCalendars)) {
-            InputUtils.validateString(nrOfCalendarsOther, "nrOfCalendarsOther", errors);
-            nrOfCalendars = nrOfCalendarsOther;
-        }
+        InputUtils.validateInt(nrOfRailCalendars, "nrOfRailCalendars", true, 0, 10, errors);
+        InputUtils.validateInt(nrOfAnimalCalendars, "nrOfAnimalCalendars", true, 0, 10, errors);
         InputUtils.validateEmail(email, "email", true, errors);
         InputUtils.validateString(emailConfirm, "emailConfirm", errors);
         if (!Objects.equals(email, emailConfirm)) {
@@ -53,7 +50,7 @@ public class Calendars {
         }
 
         // BUSINESS
-        CalendarOrder orderPreview = context.getCalendarOrdersModel().orderPreview(nrOfCalendars, email, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country);
+        CalendarOrder orderPreview = context.getCalendarOrdersModel().orderPreview(nrOfRailCalendars, nrOfAnimalCalendars, email, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country);
 
         // LOG
         // nothing yet
@@ -61,17 +58,14 @@ public class Calendars {
         return orderPreview;
     }
 
-    public void order(Context context, String nrOfCalendars, String nrOfCalendarsOther, String email, String emailConfirm, String firstName, String lastName, String addressStreetAndNr, String addressRemarks, String zip, String city, String country, String countryOther, boolean acceptTC, String lang) throws ValidationException {
+    public void order(Context context, Integer nrOfRailCalendars, Integer nrOfAnimalCalendars, String email, String emailConfirm, String firstName, String lastName, String addressStreetAndNr, String addressRemarks, String zip, String city, String country, String countryOther, boolean acceptTC, String lang) throws ValidationException {
         // ACCESS
         // anybody can order calendars
 
         // INPUT
         Map<String, String> errors = new HashMap<>();
-        InputUtils.validateString(nrOfCalendars, "nrOfCalendars", errors);
-        if ("other".equals(nrOfCalendars)) {
-            InputUtils.validateString(nrOfCalendarsOther, "nrOfCalendarsOther", errors);
-            nrOfCalendars = nrOfCalendarsOther;
-        }
+        InputUtils.validateInt(nrOfRailCalendars, "nrOfRailCalendars", true, 0, 10, errors);
+        InputUtils.validateInt(nrOfAnimalCalendars, "nrOfAnimalCalendars", true, 0, 10, errors);
         InputUtils.validateEmail(email, "email", true, errors);
         InputUtils.validateString(emailConfirm, "emailConfirm", errors);
         if (!Objects.equals(email, emailConfirm)) {
@@ -97,10 +91,10 @@ public class Calendars {
         }
 
         // BUSINESS
-        CalendarOrder order = context.getCalendarOrdersModel().order(nrOfCalendars, email, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country);
+        CalendarOrder order = context.getCalendarOrdersModel().order(nrOfRailCalendars, nrOfAnimalCalendars, email, firstName, lastName, addressStreetAndNr, addressRemarks, zip, city, country);
         mail.caledarConfirmation(order, lang);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), "Ordered calendars: " + nrOfCalendars);
+        BahnbilderLogger.info(context.getRequest(), "Ordered calendars: " + nrOfRailCalendars + ", " + nrOfAnimalCalendars);
     }
 }

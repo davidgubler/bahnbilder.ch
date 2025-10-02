@@ -355,8 +355,14 @@ public class Txt {
         en.put("nr", "Number");
         de.put("nr", "Nummer");
 
-        en.put("nrOfCalendars", "Number of Calendars");
-        de.put("nrOfCalendars", "Anzahl Kalender");
+        en.put("nrOfRailCalendars", "Number of rail calendars");
+        de.put("nrOfRailCalendars", "Anzahl Eisenbahnkalender");
+
+        en.put("nrOfAnimalCalendars", "Number of animal calendars");
+        de.put("nrOfAnimalCalendars", "Anzahl Tierkalender");
+
+        en.put("nrOfAnimalCalendarsExplanation", "The animal calendar is a private project of Daniel Wipf and can be ordered here as well");
+        de.put("nrOfAnimalCalendarsExplanation", "Der Tierkalender ist ein Privatprojekt von Daniel Wipf und kann ebenfalls hier bestellt werden");
 
         en.put("operator", "Operator");
         de.put("operator", "Betreiber");

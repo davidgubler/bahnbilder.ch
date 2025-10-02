@@ -13,7 +13,8 @@ public class MongoDbCalendarOrder implements MongoDbEntity, CalendarOrder {
     private ObjectId _id;
     private Integer orderYear;
     private Instant timestamp;
-    private String nrOfCalendars;
+    private int nrOfRailCalendars;
+    private int nrOfAnimalCalendars;
     private String firstName;
     private String lastName;
     private String email;
@@ -27,10 +28,11 @@ public class MongoDbCalendarOrder implements MongoDbEntity, CalendarOrder {
         // dummy for Morphia
     }
 
-    public MongoDbCalendarOrder(int orderYear, String nrOfCalendars, String email, String firstName, String lastName, String addressStreetAndNr, String addressRemarks, String zip, String city, String country) {
+    public MongoDbCalendarOrder(int orderYear, int nrOfRailCalendars, int nrOfAnimalCalendars, String email, String firstName, String lastName, String addressStreetAndNr, String addressRemarks, String zip, String city, String country) {
         this.orderYear = orderYear;
         this.timestamp = Instant.now();
-        this.nrOfCalendars = nrOfCalendars;
+        this.nrOfRailCalendars = nrOfRailCalendars;
+        this.nrOfAnimalCalendars = nrOfAnimalCalendars;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -53,8 +55,13 @@ public class MongoDbCalendarOrder implements MongoDbEntity, CalendarOrder {
     }
 
     @Override
-    public String getNrOfCalendars() {
-        return nrOfCalendars;
+    public int getNrOfRailCalendars() {
+        return nrOfRailCalendars;
+    }
+
+    @Override
+    public int getNrOfAnimalCalendars() {
+        return nrOfAnimalCalendars;
     }
 
     @Override

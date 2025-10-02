@@ -24,7 +24,8 @@ public class Mail {
         body += "\n";
         body += Txt.get(lang, "calendarOrderedYouHave") + ":\n";
         body += "\n";
-        body += Txt.get(lang, "nrOfCalendars") + ": " + order.getNrOfCalendars() + " (" + order.getCalendarCost(lang) + ")\n";
+        body += Txt.get(lang, "nrOfRailCalendars") + ": " + order.getNrOfRailCalendars() + " (" + order.getRailCalendarCost(lang) + ")\n";
+        body += Txt.get(lang, "nrOfAnimalCalendars") + ": " + order.getNrOfAnimalCalendars() + " (" + order.getAnimalCalendarCost(lang) + ")\n";
         body += Txt.get(lang, "addressShipping") + ":\n";
         body += order.getAddressStreetAndNr() + "\n";
         if (order.getAddressRemarks() != null) {

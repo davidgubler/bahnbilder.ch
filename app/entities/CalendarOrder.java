@@ -8,7 +8,9 @@ import java.time.Instant;
 public interface CalendarOrder {
     Instant getTimestamp();
 
-    String getNrOfCalendars();
+    int getNrOfRailCalendars();
+
+    int getNrOfAnimalCalendars();
 
     String getFirstName();
 
@@ -26,14 +28,27 @@ public interface CalendarOrder {
 
     String getCountry();
 
-    default String getCalendarCost(String lang) {
+    default String getRailCalendarCost(String lang) {
         try {
-            int nrOfCalendars = Integer.parseInt(getNrOfCalendars());
             if ("CH".equals(getCountry())) {
-                return "CHF " + nrOfCalendars * Config.Option.CALENDAR_PRICE_CHF.getInt() + ".-";
+                return "CHF " + getNrOfRailCalendars() * Config.Option.CALENDAR_PRICE_CHF.getInt() + ".-";
             }
             if ("DE".equals(getCountry()) || "AT".equals(getCountry())) {
-                return "€ " + nrOfCalendars * Config.Option.CALENDAR_PRICE_CHF.getInt() + ".-";
+                return "€ " + getNrOfRailCalendars() * Config.Option.CALENDAR_PRICE_CHF.getInt() + ".-";
+            }
+            return Txt.get(lang, "asInvoiced");
+        } catch (NumberFormatException e) {
+            return Txt.get(lang, "asInvoiced");
+        }
+    }
+
+    default String getAnimalCalendarCost(String lang) {
+        try {
+            if ("CH".equals(getCountry())) {
+                return "CHF " + getNrOfAnimalCalendars() * Config.Option.CALENDAR_PRICE_CHF.getInt() + ".-";
+            }
+            if ("DE".equals(getCountry()) || "AT".equals(getCountry())) {
+                return "€ " + getNrOfAnimalCalendars() * Config.Option.CALENDAR_PRICE_CHF.getInt() + ".-";
             }
             return Txt.get(lang, "asInvoiced");
         } catch (NumberFormatException e) {
