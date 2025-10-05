@@ -378,9 +378,9 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         }
         MorphiaCursor<AggregationDistinct> cursor = mongoDb.getDs().aggregate(MongoDbPhoto.class)
             .match(Filters.ne("locationId", null), Filters.eq("countryId", countryId))
-            .group(Group.group().field("_id", null).field("distinctIntegers", AccumulatorExpressions.addToSet(Expressions.field("locationId"))))
+            .group(Group.group().field("_id", null).field("distinct", AccumulatorExpressions.addToSet(Expressions.field("locationId"))))
             .execute(AggregationDistinct.class);
-        return cursor.hasNext() ? cursor.next().distinctIntegers : Collections.emptyList();
+        return cursor.hasNext() ? cursor.next().distinct : Collections.emptyList();
     }
 
     @Override
@@ -390,9 +390,9 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         }
         MorphiaCursor<AggregationDistinct> cursor = mongoDb.getDs().aggregate(MongoDbPhoto.class)
                 .match(Filters.ne("operatorId", null), Filters.eq("countryId", countryId))
-                .group(Group.group().field("_id", null).field("distinctIntegers", AccumulatorExpressions.addToSet(Expressions.field("operatorId"))))
+                .group(Group.group().field("_id", null).field("distinct", AccumulatorExpressions.addToSet(Expressions.field("operatorId"))))
                 .execute(AggregationDistinct.class);
-        return cursor.hasNext() ? cursor.next().distinctIntegers : Collections.emptyList();
+        return cursor.hasNext() ? cursor.next().distinct : Collections.emptyList();
     }
 
     @Override
@@ -402,9 +402,9 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         }
         MorphiaCursor<AggregationDistinct> cursor = mongoDb.getDs().aggregate(MongoDbPhoto.class)
                 .match(Filters.ne("operatorId", null), Filters.in("vehicleClassId", vehicleClassIds))
-                .group(Group.group().field("_id", null).field("distinctIntegers", AccumulatorExpressions.addToSet(Expressions.field("operatorId"))))
+                .group(Group.group().field("_id", null).field("distinct", AccumulatorExpressions.addToSet(Expressions.field("operatorId"))))
                 .execute(AggregationDistinct.class);
-        return cursor.hasNext() ? cursor.next().distinctIntegers : Collections.emptyList();
+        return cursor.hasNext() ? cursor.next().distinct : Collections.emptyList();
     }
 
     @Override
@@ -414,9 +414,9 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         }
         MorphiaCursor<AggregationDistinct> cursor = mongoDb.getDs().aggregate(MongoDbPhoto.class)
                 .match(Filters.ne("vehicleClassId", null), Filters.eq("countryId", countryId), Filters.eq("operatorId", operatorId))
-                .group(Group.group().field("_id", null).field("distinctIntegers", AccumulatorExpressions.addToSet(Expressions.field("vehicleClassId"))))
+                .group(Group.group().field("_id", null).field("distinct", AccumulatorExpressions.addToSet(Expressions.field("vehicleClassId"))))
                 .execute(AggregationDistinct.class);
-        return cursor.hasNext() ? cursor.next().distinctIntegers : Collections.emptyList();
+        return cursor.hasNext() ? cursor.next().distinct : Collections.emptyList();
     }
 
     @Override
@@ -426,9 +426,9 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         }
         MorphiaCursor<AggregationDistinct> cursor = mongoDb.getDs().aggregate(MongoDbPhoto.class)
                 .match(Filters.ne("countryId", null), Filters.eq("operatorId", operatorId), Filters.in("vehicleClassId", vehicleClassIds))
-                .group(Group.group().field("_id", null).field("distinctIntegers", AccumulatorExpressions.addToSet(Expressions.field("countryId"))))
+                .group(Group.group().field("_id", null).field("distinct", AccumulatorExpressions.addToSet(Expressions.field("countryId"))))
                 .execute(AggregationDistinct.class);
-        return cursor.hasNext() ? cursor.next().distinctIntegers : Collections.emptyList();
+        return cursor.hasNext() ? cursor.next().distinct : Collections.emptyList();
     }
 
     @Override
@@ -438,9 +438,9 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         }
         MorphiaCursor<AggregationDistinct> cursor = mongoDb.getDs().aggregate(MongoDbPhoto.class)
                 .match(Filters.ne("countryId", null), Filters.eq("operatorId", operatorId))
-                .group(Group.group().field("_id", null).field("distinctIntegers", AccumulatorExpressions.addToSet(Expressions.field("countryId"))))
+                .group(Group.group().field("_id", null).field("distinct", AccumulatorExpressions.addToSet(Expressions.field("countryId"))))
                 .execute(AggregationDistinct.class);
-        return cursor.hasNext() ? cursor.next().distinctIntegers : Collections.emptyList();
+        return cursor.hasNext() ? cursor.next().distinct : Collections.emptyList();
     }
 
     @Override
@@ -450,9 +450,9 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         }
         MorphiaCursor<AggregationDistinct> cursor = mongoDb.getDs().aggregate(MongoDbPhoto.class)
                 .match(Filters.ne("vehicleClassId", null), Filters.eq("operatorId", operatorId))
-                .group(Group.group().field("_id", null).field("distinctIntegers", AccumulatorExpressions.addToSet(Expressions.field("vehicleClassId"))))
+                .group(Group.group().field("_id", null).field("distinct", AccumulatorExpressions.addToSet(Expressions.field("vehicleClassId"))))
                 .execute(AggregationDistinct.class);
-        return cursor.hasNext() ? cursor.next().distinctIntegers : Collections.emptyList();
+        return cursor.hasNext() ? cursor.next().distinct : Collections.emptyList();
     }
 
     @Override
@@ -462,9 +462,9 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         }
         MorphiaCursor<AggregationDistinct> cursor = mongoDb.getDs().aggregate(MongoDbPhoto.class)
                 .match(Filters.ne("nr", null), Filters.eq("operatorId", operatorId), Filters.eq("vehicleClassId", vehicleClassId))
-                .group(Group.group().field("_id", null).field("distinctIntegers", AccumulatorExpressions.addToSet(Expressions.field("nr"))))
+                .group(Group.group().field("_id", null).field("distinct", AccumulatorExpressions.addToSet(Expressions.field("nr"))))
                 .execute(AggregationDistinct.class);
-        List<Integer> nrs = new ArrayList<>(cursor.hasNext() ? cursor.next().distinctIntegers : Collections.emptyList());
+        List<Integer> nrs = new ArrayList<>(cursor.hasNext() ? cursor.next().distinct : Collections.emptyList());
         Collections.sort(nrs);
         if (query().filter(Filters.eq("operatorId", operatorId), Filters.eq("vehicleClassId", vehicleClassId), Filters.eq("nr", null)).first() != null) {
             nrs.add(null);
@@ -602,22 +602,22 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
     @Override
     public List<Integer> getUsedCountryIds() {
         return mongoDb.getDs().aggregate(MongoDbPhoto.class)
-                .group(Group.group().field("_id", null).field("distinctIntegers", AccumulatorExpressions.addToSet(Expressions.field("countryId"))))
-                .execute(AggregationDistinct.class).next().distinctIntegers;
+                .group(Group.group().field("_id", null).field("distinct", AccumulatorExpressions.addToSet(Expressions.field("countryId"))))
+                .execute(AggregationDistinct.class).next().distinct;
     }
 
     @Override
     public List<Integer> getUsedOperatorIds() {
         return mongoDb.getDs().aggregate(MongoDbPhoto.class)
-                .group(Group.group().field("_id", null).field("distinctIntegers", AccumulatorExpressions.addToSet(Expressions.field("operatorId"))))
-                .execute(AggregationDistinct.class).next().distinctIntegers;
+                .group(Group.group().field("_id", null).field("distinct", AccumulatorExpressions.addToSet(Expressions.field("operatorId"))))
+                .execute(AggregationDistinct.class).next().distinct;
     }
 
     @Override
     public List<Integer> getUsedVehicleClassIds() {
         return mongoDb.getDs().aggregate(MongoDbPhoto.class)
-                .group(Group.group().field("_id", null).field("distinctIntegers", AccumulatorExpressions.addToSet(Expressions.field("vehicleClassId"))))
-                .execute(AggregationDistinct.class).next().distinctIntegers;
+                .group(Group.group().field("_id", null).field("distinct", AccumulatorExpressions.addToSet(Expressions.field("vehicleClassId"))))
+                .execute(AggregationDistinct.class).next().distinct;
     }
 
     @Override
@@ -802,6 +802,15 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
                 .count();
     }
 
+    @Override
+    public List<String> getPhotographers() {
+        MorphiaCursor<AggregationDistinct> cursor = mongoDb.getDs().aggregate(MongoDbPhoto.class)
+                .match(Filters.ne("photographer", null))
+                .group(Group.group().field("_id", null).field("distinct", AccumulatorExpressions.addToSet(Expressions.field("photographer"))))
+                .execute(AggregationDistinct.class);
+        return cursor.hasNext() ? cursor.next().distinct.stream().sorted().toList() : Collections.emptyList();
+    }
+
     @Entity
     private static class AggregationDate {
         @Id
@@ -818,9 +827,10 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
     }
 
     @Entity
-    protected static class AggregationDistinct {
+    protected static class AggregationDistinct<T> {
         @Id
         private Object _id;
-        List<Integer> distinctIntegers;
+
+        List<T> distinct;
     }
 }

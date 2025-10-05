@@ -27,6 +27,7 @@ public class SearchController extends Controller {
         injector.injectMembers(search);
 
         List<? extends User> authors = context.getUsersModel().getAll().sorted(LocalizedComparator.get(lang)).toList();
+        List<String> photographers = context.getPhotosModel().getPhotographers();
         List<? extends License> licenses = context.getLicensesModel().getAll();
         List<? extends PhotoType> photoTypes = context.getPhotoTypesModel().getAll().sorted(LocalizedComparator.get(lang)).toList();
         List<? extends Country> countries = context.getCountriesModel().getAll().sorted(LocalizedComparator.get(lang)).toList();
@@ -42,7 +43,7 @@ public class SearchController extends Controller {
 
         List<? extends Photo> photos = context.getPhotosModel().search(search);
 
-        return ok(views.html.search.search.render(request, search, authors, licenses, photoTypes, countries, locations, operators, vehicleClasses, keywords, keywordSelection, lastPage, photos, user, lang));
+        return ok(views.html.search.search.render(request, search, authors, photographers, licenses, photoTypes, countries, locations, operators, vehicleClasses, keywords, keywordSelection, lastPage, photos, user, lang));
     }
 
     public Result searchPost(Http.Request request) {

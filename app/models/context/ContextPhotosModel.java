@@ -215,4 +215,9 @@ public class ContextPhotosModel extends ContextModel implements PhotosModel {
     public long countPhotosByOperator(Photo photo, Integer operatorId) {
         return call(() -> photosModel.countPhotosByOperator(photo, operatorId));
     }
+
+    @Override
+    public List<String> getPhotographers() {
+        return call(() -> photosModel.getPhotographers());
+    }
 }

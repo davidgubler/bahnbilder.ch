@@ -29,8 +29,8 @@ public class MongoDbCalendarOrdersModel extends MongoDbModel<MongoDbCalendarOrde
     @Override
     public List<Integer> getYears() {
         List<Integer> years = mongoDb.getDs().aggregate(MongoDbCalendarOrder.class)
-                .group(Group.group().field("_id", null).field("distinctIntegers", AccumulatorExpressions.addToSet(Expressions.field("orderYear"))))
-                .execute(MongoDbPhotosModel.AggregationDistinct.class).next().distinctIntegers;
+                .group(Group.group().field("_id", null).field("distinct", AccumulatorExpressions.addToSet(Expressions.field("orderYear"))))
+                .execute(MongoDbPhotosModel.AggregationDistinct.class).next().distinct;
         Collections.sort(years);
         Collections.reverse(years);
         return years;

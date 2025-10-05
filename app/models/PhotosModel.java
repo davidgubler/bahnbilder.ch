@@ -121,4 +121,6 @@ public interface PhotosModel {
     Map<Integer, Long> getOperatorMatchesByText(Photo photo, String text);
 
     long countPhotosByOperator(Photo photo, Integer operatorId);
+
+    List<String> getPhotographers();
 }

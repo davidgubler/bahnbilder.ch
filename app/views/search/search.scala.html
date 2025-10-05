@@ -1,6 +1,7 @@
 @(  implicit request: Http.Request,
     search: entities.ModelSearch,
     authors: List[_ <: entities.User],
+    photographers: List[String],
     licenses: List[_ <: entities.License],
     photoTypes: List[_ <: entities.PhotoType],
     countries: List[_ <: entities.Country],
@@ -31,6 +32,11 @@
                             <option value=''> </option>
                             @for(author <- authors) {
                             <option @if(author.getId() == search.getAuthorId()){selected="selected"} value='@author.getId()'>@author</option>
+                            }
+                            <option disabled="disabled"></option>
+                            <option disabled="disabled">@i18n.Txt.get(lang, "photographer"):</option>
+                            @for(photographer <- photographers) {
+                            <option @if(photographer == search.getPhotographer()){selected="selected"} value='@photographer'>@photographer</option>
                             }
                         </select>
                     </div>

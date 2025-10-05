@@ -74,7 +74,11 @@ public class Search {
         if ("POST".equals(request.method())) {
             Map<String, String[]> data = request.body().asFormUrlEncoded();
             inactive = InputUtils.toBoolean(data.get("inactive"));
-            photographer = InputUtils.trimToNull(data.get("photographer"));
+            String photographerTmp = InputUtils.trimToNull(data.get("photographer"));
+            if (photographerTmp == null && InputUtils.toInt(data.get("author")) == null) {
+                photographerTmp = InputUtils.trimToNull(data.get("author"));
+            }
+            photographer = photographerTmp;
             description = InputUtils.trimToNull(data.get("description"));
             datefrom = InputUtils.parseDate(data.get("datefrom"));
             dateto = InputUtils.parseDate(data.get("dateto"));
@@ -98,7 +102,11 @@ public class Search {
             page = 1;
         } else {
             inactive = InputUtils.toBoolean(request.queryString("inactive").orElse(null));
-            photographer = InputUtils.trimToNull(request.queryString("photographer").orElse(null));
+            String photographerTmp = InputUtils.trimToNull(request.queryString("photographer").orElse(null));
+            if (photographerTmp == null && InputUtils.toInt(request.queryString("author").orElse(null)) == null) {
+                photographerTmp = InputUtils.trimToNull(request.queryString("author").orElse(null));
+            }
+            photographer = photographerTmp;
             description = InputUtils.trimToNull(request.queryString("description").orElse(null));
             datefrom = InputUtils.parseDate(request.queryString("datefrom").orElse(null));
             dateto = InputUtils.parseDate(request.queryString("dateto").orElse(null));
