@@ -37,6 +37,7 @@ public class Module extends AbstractModule {
         bind(WikidataModel.class).to(MongoDbWikidataModel.class).asEagerSingleton();
         bind(PhotosModel.class).to(MongoDbPhotosModel.class).asEagerSingleton();
         bind(ViewsModel.class).to(MongoDbViewsModel.class).asEagerSingleton();
+        bind(RequestsDailyModel.class).to(MongoDbRequestsDailyModel.class).asEagerSingleton();
         bind(LicensesModel.class).to(HardcodedLicensesModel.class);
         bind(GeocodingModel.class).to(GoogleGeocodingModel.class);
         bind(VisionModel.class).to(GoogleVisionModel.class);

@@ -134,6 +134,10 @@ public class Context {
         return getContextModel(ContextWikidataModel.class);
     }
 
+    public RequestsDailyModel getRequestsDailyModel() {
+        return getContextModel(ContextRequestsDailyModel.class);
+    }
+
     public Map<String, F.Tuple<Integer, Integer>> getCallSummary() {
         Map<String, F.Tuple<Integer, Integer>> callSummary = new HashMap<>();
         for (ContextModel cm : models.values()) {
