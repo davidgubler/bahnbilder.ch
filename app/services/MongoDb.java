@@ -83,6 +83,7 @@ public class MongoDb {
         ds.getMapper().map(MongoDbViews.class);
         ds.getMapper().map(MongoDbWikidata.class);
         ds.getMapper().map(MongoDbPhoto.class);
+        ds.getMapper().map(MongoDbRequestsDaily.class);
 
         if (isWritable()) {
             ds.ensureIndexes();
