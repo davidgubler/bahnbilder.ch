@@ -9,6 +9,7 @@ import entities.mongodb.MongoDbViews;
 import models.PhotosModel;
 import models.ViewsModel;
 import play.mvc.Http;
+import utils.InputUtils;
 
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -28,12 +29,8 @@ public class MongoDbViewsModel extends MongoDbModel<MongoDbViews> implements Vie
             // counting views isn't all that important
             return;
         }
-        Optional<String> userAgent = request.header("User-Agent");
-        if (userAgent.isPresent()) {
-            String ua = userAgent.get().toLowerCase(Locale.ROOT);
-            if (ua.contains("bot") || ua.contains("spider")) {
-                return;
-            }
+        if (InputUtils.isBot(request)) {
+            return;
         }
 
         InetAddress addr;

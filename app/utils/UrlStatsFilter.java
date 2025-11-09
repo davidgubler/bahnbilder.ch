@@ -20,6 +20,9 @@ public class UrlStatsFilter extends Filter {
     }
 
     public static void stats(Http.RequestHeader request) {
+        if (InputUtils.isBot(request)) {
+            return;
+        }
         String uri = request.uri();
         if (uri.startsWith("/assets/") || uri.startsWith("/favicon.") || uri.startsWith("/lang") || uri.contains("/_")) {
             // filter some technical URIs that aren't interesting at all

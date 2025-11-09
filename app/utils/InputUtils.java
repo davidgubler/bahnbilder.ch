@@ -1,6 +1,7 @@
 package utils;
 
 import i18n.Formatter;
+import play.mvc.Http;
 
 import javax.mail.internet.InternetAddress;
 import java.net.URL;
@@ -259,5 +260,16 @@ public class InputUtils {
         }
         List<String> tokens = Arrays.stream(tokenString.split(",")).map(String::trim).toList();
         return tokens.isEmpty() ? null : tokens;
+    }
+
+    public static boolean isBot(Http.RequestHeader req) {
+        Optional<String> userAgent = req.header("User-Agent");
+        if (userAgent.isPresent()) {
+            String ua = userAgent.get().toLowerCase(Locale.ROOT);
+            if (ua.contains("bot") || ua.contains("spider")) {
+                return true;
+            }
+        }
+        return false;
     }
 }
