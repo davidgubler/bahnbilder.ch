@@ -22,7 +22,7 @@ public class MongoDbUrlStats {
     }
 
     public String getMapKey() {
-        return new SimpleDigest().hash(url + "|" + ref).substring(0, 16);
+        return new SimpleDigest().hash(url + "|" + ref).substring(0, 12);
     }
 
     @Override

@@ -12,6 +12,10 @@ import java.time.LocalDate;
 public class MongoDbRequestsDailyModel extends MongoDbModel<MongoDbRequestsDaily> implements RequestsDailyModel {
     @Override
     public void track(String url, String referer) {
+        if (!mongoDb.isWritable()) {
+            // tracking requests isn't that important
+            return;
+        }
         LocalDate today = LocalDate.now();
         MongoDbRequestsDaily requestsDaily = query().filter(Filters.eq("date", today)).first();
         if (requestsDaily == null) {
