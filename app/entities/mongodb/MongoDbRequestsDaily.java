@@ -30,8 +30,9 @@ public class MongoDbRequestsDaily implements RequestsDaily, MongoDbEntity {
         // dummy for Morphia
     }
 
-    public MongoDbRequestsDaily(LocalDate date) {
+    public MongoDbRequestsDaily(LocalDate date, Map<String, MongoDbUrlStats> urlStats) {
         this.date = date;
+        this.urlStats = urlStats;
     }
 
     @Override

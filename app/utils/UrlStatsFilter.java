@@ -9,6 +9,8 @@ import play.mvc.Result;
 import javax.inject.Inject;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UrlStatsFilter extends Filter {
     @Inject
@@ -18,6 +20,8 @@ public class UrlStatsFilter extends Filter {
     public UrlStatsFilter(Materializer mat) {
         super(mat);
     }
+
+    private static final Pattern SCALED_URI = Pattern.compile("^/photos/(small|medium|large|xlarge|xxlarge)/([0-9]+\\.jpg)");
 
     public static void stats(Http.RequestHeader request) {
         if (InputUtils.isBot(request)) {
@@ -43,7 +47,18 @@ public class UrlStatsFilter extends Filter {
                 referer = referer.substring(0, 256);
             }
         }
-        Context.get(request).getRequestsDailyModel().track(request.uri(), referer);
+
+        // we're grouping all the requests to scaled images and ignore our own referers (not interesting)
+        // we'll however track external referers (to see hotlinking)
+        Matcher scaledUrlMatcher = SCALED_URI.matcher(uri);
+        if (scaledUrlMatcher.matches()) {
+            uri = "/photos/*/" + scaledUrlMatcher.group(2);
+            if (referer != null && (referer.startsWith("bahnbilder.ch/") || referer.startsWith("rail.pictures/") || referer.startsWith("localhost:9000/"))) {
+                referer = null;
+            }
+        }
+
+        Context.get(request).getRequestsDailyModel().track(uri, referer);
     }
 
     @Override
