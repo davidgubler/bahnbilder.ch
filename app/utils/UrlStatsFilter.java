@@ -21,7 +21,7 @@ public class UrlStatsFilter extends Filter {
         super(mat);
     }
 
-    private static final Pattern SCALED_URI = Pattern.compile("^/photos/(small|medium|large|xlarge|xxlarge)/([0-9]+\\.jpg)");
+    private static final Pattern SCALED_URI = Pattern.compile("^/(photos|pictures)/(small|medium|large|xlarge|xxlarge)/([0-9]+\\.jpg)");
 
     public static void stats(Http.RequestHeader request) {
         if (InputUtils.isBot(request)) {
@@ -52,7 +52,7 @@ public class UrlStatsFilter extends Filter {
         // we'll however track external referers (to see hotlinking)
         Matcher scaledUrlMatcher = SCALED_URI.matcher(uri);
         if (scaledUrlMatcher.matches()) {
-            uri = "/photos/*/" + scaledUrlMatcher.group(2);
+            uri = "/photos/*/" + scaledUrlMatcher.group(3);
             if (referer != null && (referer.startsWith("bahnbilder.ch/") || referer.startsWith("rail.pictures/") || referer.startsWith("localhost:9000/"))) {
                 referer = null;
             }
