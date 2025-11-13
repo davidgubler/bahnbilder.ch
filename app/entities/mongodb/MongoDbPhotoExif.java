@@ -77,7 +77,7 @@ public class MongoDbPhotoExif implements Exif {
             return "DJI Mini 4 Pro";
         }
         if ("L2D-20c".equals(camera)) {
-            return "DJI Mavic 3 Pro";
+            return "DJI Mavic 3";
         }
         return null;
     }
