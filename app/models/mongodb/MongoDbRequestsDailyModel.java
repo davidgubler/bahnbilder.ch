@@ -5,6 +5,7 @@ import dev.morphia.UpdateOptions;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.query.updates.UpdateOperators;
+import entities.RequestsDaily;
 import entities.mongodb.MongoDbRequestsDaily;
 import entities.mongodb.MongoDbUrlStats;
 import models.RequestsDailyModel;
@@ -24,10 +25,10 @@ public class MongoDbRequestsDailyModel extends MongoDbModel<MongoDbRequestsDaily
         String setBase = "urlStats." + stats.getMapKey() + ".";
 
         UpdateOperator[] ops = new UpdateOperator[ref == null ? 2 : 3];
-        ops[0] = UpdateOperators.inc(setBase + "cnt");
-        ops[1] = UpdateOperators.set(setBase + "url", url);
+        ops[0] = UpdateOperators.inc(setBase + "c");
+        ops[1] = UpdateOperators.set(setBase + "u", url);
         if (ref != null) {
-            ops[2] = UpdateOperators.set(setBase + "ref", ref);
+            ops[2] = UpdateOperators.set(setBase + "r", ref);
         }
 
         // The document with today's stats can be rather large hence we make sure we never actually load it from the server
@@ -40,5 +41,10 @@ public class MongoDbRequestsDailyModel extends MongoDbModel<MongoDbRequestsDaily
                 // may fail due to concurrent writes, it's fine
             }
         }
+    }
+
+    @Override
+    public RequestsDaily getToday() {
+        return query().filter(Filters.eq("date", LocalDate.now())).first();
     }
 }

@@ -266,7 +266,7 @@ public class InputUtils {
         Optional<String> userAgent = req.header("User-Agent");
         if (userAgent.isPresent()) {
             String ua = userAgent.get().toLowerCase(Locale.ROOT);
-            if (ua.contains("bot") || ua.contains("spider")) {
+            if (ua.contains("bot") || ua.contains("spider") || ua.contains("cloudflare")) {
                 return true;
             }
         }

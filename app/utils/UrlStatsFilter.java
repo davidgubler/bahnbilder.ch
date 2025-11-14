@@ -53,9 +53,23 @@ public class UrlStatsFilter extends Filter {
         Matcher scaledUrlMatcher = SCALED_URI.matcher(uri);
         if (scaledUrlMatcher.matches()) {
             uri = "/photos/*/" + scaledUrlMatcher.group(3);
-            if (referer != null && (referer.startsWith("bahnbilder.ch/") || referer.startsWith("rail.pictures/") || referer.startsWith("localhost:9000/"))) {
-                referer = null;
+            if (referer != null) {
+                if (Config.Option.HOST_DE.get() != null) {
+                    if (referer.equals(Config.Option.HOST_DE.get()) || referer.startsWith(Config.Option.HOST_DE.get() + "/")) {
+                        referer = null;
+                    }
+                }
+                if (Config.Option.HOST_EN.get() != null) {
+                    if (referer.equals(Config.Option.HOST_EN.get()) || referer.startsWith(Config.Option.HOST_EN.get() + "/")) {
+                        referer = null;
+                    }
+                }
             }
+        }
+
+        if (uri.startsWith("/picture/")) {
+            // combine legacy uri
+            uri = uri.substring(8);
         }
 
         Context.get(request).getRequestsDailyModel().track(uri, referer);
