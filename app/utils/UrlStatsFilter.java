@@ -67,6 +67,14 @@ public class UrlStatsFilter extends Filter {
             }
         }
 
+        // we don't care about language switcher referers
+        if (referer != null && Config.Option.HOST_DE.get() != null && referer.startsWith(Config.Option.HOST_DE.get() + "/lang")) {
+            referer = null;
+        }
+        if (referer != null && Config.Option.HOST_EN.get() != null && referer.startsWith(Config.Option.HOST_EN.get() + "/lang")) {
+            referer = null;
+        }
+
         if (uri.startsWith("/picture/")) {
             // combine legacy uri
             uri = uri.substring(8);

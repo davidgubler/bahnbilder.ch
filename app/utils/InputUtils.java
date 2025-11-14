@@ -266,7 +266,17 @@ public class InputUtils {
         Optional<String> userAgent = req.header("User-Agent");
         if (userAgent.isPresent()) {
             String ua = userAgent.get().toLowerCase(Locale.ROOT);
-            if (ua.contains("bot") || ua.contains("spider") || ua.contains("cloudflare")) {
+            if (ua.contains("bot") ||
+                ua.contains("spider") ||
+                ua.contains("cloudflare") ||
+                ua.contains("facebookexternalhit") ||
+                ua.contains("yahoo") ||
+                ua.contains("slurp") ||
+                ua.contains("bing") ||
+                ua.contains("baidu") ||
+                ua.contains("yandex") ||
+                ua.contains("chatgpt") ||
+                ua.contains("openai")) {
                 return true;
             }
         }
