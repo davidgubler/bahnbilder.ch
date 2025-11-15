@@ -1,6 +1,7 @@
 package entities.mongodb;
 
 import dev.morphia.annotations.*;
+import entities.UrlStats;
 import utils.SimpleDigest;
 
 import java.nio.charset.StandardCharsets;
@@ -8,7 +9,7 @@ import java.util.Base64;
 import java.util.Objects;
 
 @Entity(useDiscriminator = false)
-public class MongoDbUrlStats {
+public class MongoDbUrlStats implements UrlStats {
     // url
     private String u;
 
@@ -60,5 +61,13 @@ public class MongoDbUrlStats {
 
     public int getCount() {
         return c;
+    }
+
+    public String getUrl() {
+        return u;
+    }
+
+    public String getReferer() {
+        return r;
     }
 }

@@ -436,6 +436,9 @@ public class Txt {
         en.put("reallyDelete", "Yes, delete it!");
         de.put("reallyDelete", "Ja, löschen!");
 
+        en.put("requestStats", "Request Statistics");
+        de.put("requestStats", "Request-Statistik");
+
         en.put("save", "Save");
         de.put("save", "Speichern");
 
