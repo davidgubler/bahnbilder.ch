@@ -6,7 +6,7 @@
     lang: String
 )
 
-@template(request, i18n.Txt.get(lang, "newest"), "newest", user, lang) {
+@template(request, i18n.Txt.get(lang, "newest"), "newest", user, lang, robots = "noindex, follow") {
 } {
     <script src='@routes.Assets.versioned("javascripts/multiedit.js")'></script>
     <div class='row'>

@@ -16,7 +16,7 @@
     lang: String
 )
 
-@template(request, i18n.Txt.get(lang, "search"), "search", user, lang) {
+@template(request, i18n.Txt.get(lang, "search"), "search", user, lang, robots = "noindex, follow") {
 } {
     <script src='@routes.Assets.versioned("javascripts/search.js")'></script>
     <link rel='stylesheet' href='@routes.Assets.versioned("stylesheets/search.css")'/>

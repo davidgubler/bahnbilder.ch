@@ -5,7 +5,7 @@
     lang: String
 )
 
-@template(request, i18n.Txt.get(lang, "map"), "map", user, lang) {
+@template(request, i18n.Txt.get(lang, "map"), "map", user, lang, robots = "noindex, nofollow") {
 } {
     <script src='@routes.MapController.markers()?@search.toQuery()'></script>
     <script src='@routes.MapController.config()'></script>
