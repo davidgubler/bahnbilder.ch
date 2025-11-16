@@ -24,7 +24,7 @@ var onYouTubePlayerAPIReady = function() {
 	player = new YT.Player('ytplayer', {
 		width: '100%',
 		height: 'auto',
-		videoId: 'iQfNaoYTOfc',
+		videoId: 'y1GQYld14QE',
 		allow: "autoplay",
 		events: {
 			'onStateChange': onPlayerStateChange,
