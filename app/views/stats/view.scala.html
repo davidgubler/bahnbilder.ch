@@ -1,5 +1,5 @@
 @(  implicit request: Http.Request,
-    externalReferers: List[_ <: entities.UrlStats],
+    consolidatedUrlStats: Map[String, List[entities.UrlStats]],
     user: entities.User,
     lang: String
 )
@@ -7,7 +7,10 @@
 @template(request, i18n.Txt.get(lang, "requestStats"), "requestStats", user, lang) {
 } {
     <h2>@i18n.Txt.get(lang, "requestStats")</h2>
-    @for(urlStats <- externalReferers) {
-        @urlStats.getReferer()<br />
+    @for(domain <- consolidatedUrlStats.keySet()) {
+        <b>@domain</b><br />
+        @for(urlStats <- consolidatedUrlStats.get(domain)) {
+            &nbsp;&nbsp;&nbsp;@urlStats.getCount(): <a href="https://@urlStats.getReferer()" target="_blank">@if(urlStats.getReferer().length > 64){@urlStats.getReferer().substring(0, 60)...}else{@urlStats.getReferer()}</a> &rarr; @urlStats.getUrl()<br />
+        }
     }
 }
