@@ -7,12 +7,12 @@ import i18n.Lang;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
+import utils.BahnbilderLogger;
 import utils.Config;
 import utils.Context;
 import utils.NotAllowedException;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class StatsController extends Controller {
 
@@ -61,8 +61,14 @@ public class StatsController extends Controller {
                 }
                 p = domain.substring(0, p).lastIndexOf(".");
             }
-            consolidated.add(domain);
-            consolidatorLookup.put(domain, domain);
+            if (domain.startsWith("www.")) {
+                String domainShortened = domain.substring(4);
+                consolidated.add(domainShortened);
+                consolidatorLookup.put(domain, domainShortened);
+            } else {
+                consolidated.add(domain);
+                consolidatorLookup.put(domain, domain);
+            }
         });
 
         Map<String, List<UrlStats>> consolidatedRefererUrlStats = new HashMap<>();
