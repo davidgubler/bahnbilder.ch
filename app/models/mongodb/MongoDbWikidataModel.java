@@ -6,6 +6,7 @@ import dev.morphia.query.updates.UpdateOperators;
 import entities.Wikidata;
 import entities.mongodb.MongoDbWikidata;
 import models.WikidataModel;
+import utils.Config;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -17,6 +18,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
 public class MongoDbWikidataModel extends MongoDbModel<MongoDbWikidata> implements WikidataModel {
+
+    private static final String USER_AGENT = "TrainOperatorFetcher for " + Config.getSelfHost("de");
 
     private final HttpClient client;
 
@@ -30,6 +33,7 @@ public class MongoDbWikidataModel extends MongoDbModel<MongoDbWikidata> implemen
                 return null;
             }
             if (httpResponse.statusCode() < 200 || httpResponse.statusCode() >= 300) {
+                System.out.print(new String(httpResponse.body()));
                 throw new CompletionException("HTTP response " + httpResponse.statusCode(), null);
             }
             try {
@@ -47,7 +51,7 @@ public class MongoDbWikidataModel extends MongoDbModel<MongoDbWikidata> implemen
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
-        HttpRequest req = HttpRequest.newBuilder(uri).build();
+        HttpRequest req = HttpRequest.newBuilder(uri).header("User-Agent", USER_AGENT).build();
         return client.sendAsync(req, java.net.http.HttpResponse.BodyHandlers.ofByteArray()).thenApply(stringResponseHandler()).get();
     }
 
