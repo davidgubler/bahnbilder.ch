@@ -7,7 +7,6 @@ import i18n.Lang;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
-import utils.BahnbilderLogger;
 import utils.Config;
 import utils.Context;
 import utils.NotAllowedException;
