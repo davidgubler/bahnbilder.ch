@@ -23,7 +23,7 @@ public class HomeController extends Controller {
         List<? extends Travelogue> travelogues = context.getTraveloguesModel().getFeatured();
         List<? extends AggregationCountryViews> countryViews = context.getPhotosModel().getTopCountryIdsByViews();
 
-        return ok(views.html.home.render(request, featured, travelogues, countryViews, user, lang));
+        return ok(views.html.home.render(request, featured, travelogues, countryViews, Config.Option.CALENDAR_ORDER_AVAILABLE.getBool(), user, lang));
     }
 
     public Result lang(Http.Request request, String lang, String returnUrl) {

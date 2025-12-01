@@ -2,17 +2,20 @@
     featured: List[entities.Photo],
     travelogues: List[_ <: entities.Travelogue],
     countryViews: List[_ <: entities.aggregations.AggregationCountryViews],
+    calendarBanner: Boolean,
     user: entities.User,
     lang: String,
 )
 
 @template(request, if(lang=="en"){"rail.pictures"}else{"bahnbilder.ch"}, "home", user, lang) {
 } {
-    <div class="row">
-        <div class="col-12 mb-4" style="text-align: center;">
-            <a href="@routes.CalendarController.view()"><img src="/assets/images/calendar/banner.jpg" style="width: 100%; max-width: 640px; max-height: 80px; "></a>
+    @if(calendarBanner) {
+        <div class="row">
+            <div class="col-12 mb-4" style="text-align: center;">
+                <a href="@routes.CalendarController.view()"><img src="/assets/images/calendar/banner.jpg" style="width: 100%; max-width: 640px; max-height: 80px; "></a>
+            </div>
         </div>
-    </div>
+    }
 
     <div class="row">
         <div class="col-md-6 order-md-2">
