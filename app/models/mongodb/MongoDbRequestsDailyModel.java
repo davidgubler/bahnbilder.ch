@@ -12,6 +12,7 @@ import entities.mongodb.MongoDbRequestsDaily;
 import entities.mongodb.MongoDbUrlStats;
 import models.RequestsDailyModel;
 import play.inject.ApplicationLifecycle;
+import utils.BahnbilderLogger;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -55,7 +56,11 @@ public class MongoDbRequestsDailyModel extends MongoDbModel<MongoDbRequestsDaily
                         }
                         flush.add(urlStats);
                     }
-                    track(flush);
+                    try {
+                        track(flush);
+                    } catch (Exception e) {
+                        BahnbilderLogger.error(null, e);
+                    }
                 } while (trackingBuffer.size() >= FLUSH_SIZE);
             }
             terminatingFuture.complete(null);
@@ -75,7 +80,6 @@ public class MongoDbRequestsDailyModel extends MongoDbModel<MongoDbRequestsDaily
 
         for (UrlStats urlStats : urlStatsCollection) {
             urlStatsMap.put(urlStats.getMapKey(), (MongoDbUrlStats)urlStats);
-
             String setBase = "urlStats." + urlStats.getMapKey() + ".";
             updateOperators.add(UpdateOperators.inc(setBase + "c"));
             updateOperators.add(UpdateOperators.set(setBase + "u", urlStats.getUrl()));
@@ -95,7 +99,6 @@ public class MongoDbRequestsDailyModel extends MongoDbModel<MongoDbRequestsDaily
             }
         }
     }
-
 
     @Override
     public void track(String url, String referer) {
