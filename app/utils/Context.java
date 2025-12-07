@@ -126,10 +126,6 @@ public class Context {
         return getContextModel(ContextViewsModel.class);
     }
 
-    public VisionModel getVisionModel() {
-        return getContextModel(ContextVisionModel.class);
-    }
-
     public WikidataModel getWikidataModel() {
         return getContextModel(ContextWikidataModel.class);
     }

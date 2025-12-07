@@ -2,7 +2,6 @@ import biz.*;
 import com.google.inject.AbstractModule;
 import models.*;
 import models.google.GoogleGeocodingModel;
-import models.google.GoogleVisionModel;
 import models.hardcoded.HardcodedLicensesModel;
 import models.mongodb.*;
 import services.*;
@@ -40,7 +39,6 @@ public class Module extends AbstractModule {
         bind(RequestsDailyModel.class).to(MongoDbRequestsDailyModel.class).asEagerSingleton();
         bind(LicensesModel.class).to(HardcodedLicensesModel.class);
         bind(GeocodingModel.class).to(GoogleGeocodingModel.class);
-        bind(VisionModel.class).to(GoogleVisionModel.class);
         bind(Jobs.class).asEagerSingleton();
         if (Config.Option.LIVEFILES_HOSTNAME.get() != null) {
             bind(LiveFiles.class).asEagerSingleton();

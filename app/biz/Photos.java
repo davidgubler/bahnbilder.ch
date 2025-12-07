@@ -159,18 +159,6 @@ public class Photos {
         Photo photo = context.getPhotosModel().create(exif, user.getId(), fileName, Instant.now(), exif.getDateTime(), user.getDefaultLicenseId(), photoTypeId, countryId, lng, lat, operatorId, vehicleClassId, nr);
         context.getFilesOriginalModel().create(photo.getId(), fileData);
 
-        new Thread(() -> {
-            try {
-                F.Tuple<List<String>, List<String>> t = context.getVisionModel().annotate(photo);
-                // remove commas from labels because they interfere with the tokenfield UI element
-                List<String> labels = t._1.stream().map(l -> l.replace(",", "")).collect(Collectors.toUnmodifiableList());
-                List<String> texts = t._2;
-                context.getPhotosModel().updateLabelsTexts(photo, labels, texts);
-            } catch (Exception e) {
-                BahnbilderLogger.error(context.getRequest(), e);
-            }
-        }).start();
-
         // LOG
         BahnbilderLogger.info(context.getRequest(), user + " uploaded " + photo);
         return photo;
