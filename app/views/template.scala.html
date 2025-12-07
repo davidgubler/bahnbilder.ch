@@ -41,7 +41,7 @@
                 <li class='nav-item'><a @if(menu=="search"){class='active'} href='@routes.SearchController.search()'>@i18n.Txt.get(lang, "search")</a></li>
                 <li class='nav-item'><a @if(menu=="map"){class='active'} href='@routes.MapController.view()'>@i18n.Txt.get(lang, "map")</a></li>
                 <li class='nav-item'><a @if(menu=="calendar"){class='active'} href='@routes.CalendarController.view()'>@i18n.Txt.get(lang, "calendar")</a></li>
-                <li class='nav-item'><a @if(menu=="webcamzhb"){class='active'} href='/webcamzhb'>@i18n.Txt.get(lang, "webcamZHB")</a></li>
+                <!--<li class='nav-item'><a @if(menu=="webcamzhb"){class='active'} href='/webcamzhb'>@i18n.Txt.get(lang, "webcamZHB")</a></li>-->
                 <li class='nav-item'><a @if(menu=="about"){class='active'} href='/about'>@i18n.Txt.get(lang, "about")</a></li>
             </ul>
             @if(user != null) {
