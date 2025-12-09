@@ -195,7 +195,7 @@ public class PhotoController extends Controller {
         Context context = Context.get(request);
         User user = context.getUsersModel().getFromRequest(request);
         List<Integer> photoIds = InputUtils.toListOfIntegers(ids, ",");
-        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds).sorted(Comparator.comparing(Photo::getPhotoDate)).toList();
+        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds).sorted(Comparator.comparing(Photo::getId)).toList();
         if (photos.isEmpty()) {
             throw new NotFoundException("Photos");
         }
@@ -284,7 +284,7 @@ public class PhotoController extends Controller {
         }
         String lang = Lang.get(request);
         List<Integer> photoIds = InputUtils.toListOfIntegers(ids, ",");
-        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds).sorted(Comparator.comparing(Photo::getPhotoDate)).toList();
+        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds).sorted(Comparator.comparing(Photo::getId)).toList();
         if (photos.isEmpty()) {
             throw new NotFoundException("Photos");
         }
@@ -364,7 +364,7 @@ public class PhotoController extends Controller {
             throw new NotAllowedException();
         }
         List<Integer> photoIds = InputUtils.toListOfIntegers(ids, ",");
-        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds).sorted(Comparator.comparing(Photo::getPhotoDate)).toList();
+        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds).sorted(Comparator.comparing(Photo::getId)).toList();
         if (photos.isEmpty()) {
             throw new NotFoundException("Photos");
         }
@@ -395,7 +395,7 @@ public class PhotoController extends Controller {
             throw new NotAllowedException();
         }
         List<Integer> photoIds = InputUtils.toListOfIntegers(ids, ",");
-        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds).sorted(Comparator.comparing(Photo::getPhotoDate)).toList();
+        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds).sorted(Comparator.comparing(Photo::getId)).toList();
 
         for (Photo photo : photos) {
             if (photo.getCountry() != null && photo.getLat() != null && photo.getLng() != null && photo.getPhotoDate() != null) {
