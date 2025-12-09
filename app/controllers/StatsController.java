@@ -3,19 +3,20 @@ package controllers;
 import entities.RequestsDaily;
 import entities.UrlStats;
 import entities.User;
+import entities.mongodb.MongoDbRequestsDaily;
+import entities.mongodb.MongoDbUrlStats;
 import i18n.Lang;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
-import utils.Config;
-import utils.Context;
-import utils.NotAllowedException;
+import utils.*;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class StatsController extends Controller {
 
-    public Result show(Http.Request request) {
+    public Result show(Http.Request request, String period) {
         Context context = Context.get(request);
         User user = context.getUsersModel().getFromRequest(request);
         if (user == null) {
@@ -23,17 +24,52 @@ public class StatsController extends Controller {
         }
         String lang = Lang.get(request);
 
-        RequestsDaily requestsDaily = context.getRequestsDailyModel().getToday();
-        if (requestsDaily == null) {
-            System.out.println("no stats for today");
+        LocalDate from, to;
+        if ("last7".equals(period)) {
+            to = LocalDate.now();
+            from = to.minusDays(7);
+        } else if ("last30".equals(period)) {
+            to = LocalDate.now();
+            from = to.minusDays(30);
+        } else if (period == null || "today".equals(period) || InputUtils.parseDate(period + "-01") == null) {
+            from = LocalDate.now();
+            to = from.plusDays(1);
+            period = "today";
+        } else  {
+            from = InputUtils.parseDate(period + "-01");
+            to = from.plusMonths(1);
         }
-        System.out.println("stats records for today: " + requestsDaily.getUrlStats().size());
+
+        List<? extends RequestsDaily> requestsDaily = context.getRequestsDailyModel().getRange(from, to);
+        if (requestsDaily.isEmpty()) {
+            throw new NotFoundException("no stats found");
+        }
+
+        RequestsDaily accumulated = new MongoDbRequestsDaily();
+        requestsDaily.forEach(r -> {
+            r.getUrlStats().values().forEach(s -> {
+                if (!accumulated.getUrlStats().containsKey(s.getMapKey())) {
+                    accumulated.getUrlStats().put(s.getMapKey(), s);
+                } else {
+                    int count = accumulated.getUrlStats().get(s.getMapKey()).getCount();
+                    accumulated.getUrlStats().put(s.getMapKey(), new MongoDbUrlStats(s.getUrl(), s.getReferer(), s.getCount() + count));
+                }
+            });
+        });
+
+        List<String> selectableMonths = new ArrayList<>();
+        LocalDate earliestMonth = context.getRequestsDailyModel().getFirstDate().withDayOfMonth(1);
+        LocalDate month = LocalDate.now().withDayOfMonth(1);
+        do {
+            selectableMonths.add(month.toString().substring(0, 7));
+            month = month.minusMonths(1);
+        } while (!month.isBefore(earliestMonth));
 
         Set<String> domains = new HashSet<>();
 
         String hostEn = Config.Option.HOST_EN.get();
         String hostDe = Config.Option.HOST_DE.get();
-        List<? extends UrlStats> externalReferers = requestsDaily.getUrlStats().values().stream().filter(s -> {
+        List<? extends UrlStats> externalReferers = accumulated.getUrlStats().values().stream().filter(s -> {
             if (s.getReferer() == null) {
                 return false;
             }
@@ -80,6 +116,6 @@ public class StatsController extends Controller {
             consolidatedRefererUrlStats.get(consolidatedDomain).add(s);
         });
 
-        return ok(views.html.stats.view.render(request, consolidatedRefererUrlStats, user, lang));
+        return ok(views.html.stats.view.render(request, selectableMonths, period, consolidatedRefererUrlStats, user, lang));
     }
 }

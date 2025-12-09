@@ -29,6 +29,12 @@ public class MongoDbUrlStats implements UrlStats {
         this.c = 1;
     }
 
+    public MongoDbUrlStats(String url, String referer, Integer count) {
+        this.u = url;
+        this.r = referer;
+        this.c = count;
+    }
+
     @Transient
     private String mapKey = null;
 

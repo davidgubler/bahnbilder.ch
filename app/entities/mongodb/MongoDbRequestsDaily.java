@@ -39,4 +39,9 @@ public class MongoDbRequestsDaily implements RequestsDaily, MongoDbEntity {
     public Map<String, MongoDbUrlStats> getUrlStats() {
         return urlStats;
     }
+
+    @Override
+    public LocalDate getDate() {
+        return date;
+    }
 }

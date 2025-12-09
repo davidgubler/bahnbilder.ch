@@ -1,4 +1,6 @@
 @(  implicit request: Http.Request,
+    selectableMonths: List[String],
+    period: String,
     consolidatedUrlStats: Map[String, List[entities.UrlStats]],
     user: entities.User,
     lang: String
@@ -6,6 +8,26 @@
 
 @template(request, i18n.Txt.get(lang, "requestStats"), "requestStats", user, lang) {
 } {
+    <script src='@routes.Assets.versioned("javascripts/stats.js")'></script>
+    <div class='row'>
+        <div class='col-xl-6'>
+            <form id='periodSelectorForm'>
+                <div class='form-group row mb-2'>
+                    <!--<label class='col-3 col-form-label' for='author'>@i18n.Txt.get(lang, "author")</label>-->
+                    <div class='col-9 col-md-4'>
+                        <select class='form-control' id='period' name='period' >
+                            <option value='today' @if(period=="today"){selected="selected"}>@i18n.Txt.get(lang, "today")</option>
+                            <option value='last7' @if(period=="last7"){selected="selected"}>@i18n.Txt.get(lang, "last7days")</option>
+                            <option value='last30'  @if(period=="last30"){selected="selected"}>@i18n.Txt.get(lang, "last30days")</option>
+                            @for(selectableMonth <- selectableMonths) {
+                            <option value='@selectableMonth' @if(period==selectableMonth){selected="selected"}>@selectableMonth</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     <h2>@i18n.Txt.get(lang, "requestStats")</h2>
     @for(domain <- consolidatedUrlStats.keySet().toList.sorted) {
         <b>@domain</b><br />

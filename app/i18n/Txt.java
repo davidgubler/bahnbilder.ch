@@ -250,6 +250,12 @@ public class Txt {
         en.put("labels", "Labels");
         de.put("labels", "Labels");
 
+        en.put("last7days", "Last 7 days");
+        de.put("last7days", "Letzte 7 Tage");
+
+        en.put("last30days", "Last 30 days");
+        de.put("last30days", "Letzte 30 Tage");
+
         en.put("lastName", "Last Name");
         de.put("lastName", "Nachname");
 
@@ -552,6 +558,9 @@ public class Txt {
 
         en.put("to", "to");
         de.put("to", "bis");
+
+        en.put("today", "Today");
+        de.put("today", "Heute");
 
         en.put("total", "Total");
         de.put("total", "Total");

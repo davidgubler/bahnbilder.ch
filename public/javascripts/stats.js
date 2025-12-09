@@ -1,0 +1,5 @@
+$(document).ready(function() {
+	$("select[name=period]").change(function() {
+        window.location.href = "/stats/" + $("select[name=period]").val();
+	});
+});

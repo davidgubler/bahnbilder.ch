@@ -70,7 +70,8 @@ GET     /manage/:country/:operator                      controllers.ManagementCo
 
 GET     /incomplete                                     controllers.IncompleteController.list(request: Request, page: Integer ?= 1)
 
-GET     /stats                                          controllers.StatsController.show(request: Request)
+GET     /stats                                          controllers.StatsController.show(request: Request, period: String ?= null)
+GET     /stats/:period                                  controllers.StatsController.show(request: Request, period: String)
 
 GET     /login                                          controllers.LoginController.login(request: Request)
 POST    /login                                          controllers.LoginController.loginPost(request: Request)

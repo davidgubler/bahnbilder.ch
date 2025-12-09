@@ -3,6 +3,8 @@ package models.mongodb;
 import com.google.inject.Inject;
 import com.mongodb.client.result.UpdateResult;
 import dev.morphia.UpdateOptions;
+import dev.morphia.query.FindOptions;
+import dev.morphia.query.Sort;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.query.updates.UpdateOperators;
@@ -108,5 +110,16 @@ public class MongoDbRequestsDailyModel extends MongoDbModel<MongoDbRequestsDaily
     @Override
     public RequestsDaily getToday() {
         return query().filter(Filters.eq("date", LocalDate.now())).first();
+    }
+
+    @Override
+    public List<? extends RequestsDaily> getRange(LocalDate from, LocalDate before) {
+        return query().filter(Filters.gte("date", from), Filters.lt("date", before)).stream().toList();
+    }
+
+    @Override
+    public LocalDate getFirstDate() {
+        MongoDbRequestsDaily firstStats = query().stream(new FindOptions().projection().include("date").sort(Sort.ascending("date"))).findFirst().orElse(null);
+        return firstStats == null ? null : firstStats.getDate();
     }
 }
