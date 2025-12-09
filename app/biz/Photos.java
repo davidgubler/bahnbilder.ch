@@ -2,7 +2,6 @@ package biz;
 
 import entities.*;
 import entities.formdata.PhotoFormData;
-import play.libs.F;
 import play.mvc.Http;
 import utils.*;
 import utils.geometry.SimplePoint;
@@ -207,15 +206,17 @@ public class Photos {
             errors.put("time", ErrorMessages.MUST_SET_DATE_AND_TIME);
         }
         LocalDateTime dateTime = (date != null && time != null) ? LocalDateTime.of(date, time) : null;
+        List<String> oldLabels = InputUtils.toListOfStrings(data.labelsBefore, ",");
+        if (oldLabels == null) {
+            oldLabels = Collections.emptyList();
+        }
         List<String> newLabels = InputUtils.toListOfStrings(data.labels, ",");
         if (newLabels == null) {
             newLabels = Collections.emptyList();
         }
-        Set<String> originalLabelsSet = new HashSet<>();
-        data.photos.forEach(p -> originalLabelsSet.addAll(p.getLabels()));
         Set<String> labelsToAdd = new HashSet<>(newLabels);
-        labelsToAdd.removeAll(originalLabelsSet);
-        Set<String> labelsToRemove = new HashSet<>(originalLabelsSet);
+        labelsToAdd.removeAll(oldLabels);
+        Set<String> labelsToRemove = new HashSet<>(oldLabels);
         labelsToRemove.removeAll(newLabels);
 
         if (!errors.isEmpty()) {

@@ -24,6 +24,7 @@ public class PhotoFormData extends FormData<Photo> {
     public final Integer vehicleClassId;
     public final Integer nr;
     public final String description;
+    public final String labelsBefore;
     public final String labels;
     public final Double lat;
     public final Double lng;
@@ -46,6 +47,7 @@ public class PhotoFormData extends FormData<Photo> {
             vehicleClassId = InputUtils.toInt(data.get("vehicleClass"));
             nr = InputUtils.toInt(data.get("nr"));
             description = InputUtils.trimToNull(data.get("description"));
+            labelsBefore = InputUtils.trimToNull(data.get("labelsBefore"));
             labels = InputUtils.trimToNull(data.get("labels"));
             lat = InputUtils.toDouble(data.get("lat"));
             lng = InputUtils.toDouble(data.get("lng"));
@@ -63,6 +65,7 @@ public class PhotoFormData extends FormData<Photo> {
                 vehicleClassId = photos.get(0).getVehicleClassId();
                 nr = photos.get(0).getNr();
                 description = photos.get(0).getDescription();
+                labelsBefore = StringUtils.join(photos.get(0).getLabels(), ",");
                 labels = StringUtils.join(photos.get(0).getLabels(), ",");
                 lat = photos.get(0).getLat();
                 lng = photos.get(0).getLng();
@@ -81,7 +84,8 @@ public class PhotoFormData extends FormData<Photo> {
                 description = null;
                 Set<String> labelsSet = new HashSet<>();
                 photos.forEach(p -> labelsSet.addAll(p.getLabels()));
-                labels = StringUtils.join(labelsSet.stream().sorted().collect(Collectors.toUnmodifiableList()), ",");
+                labelsBefore = StringUtils.join(labelsSet.stream().sorted().collect(Collectors.toUnmodifiableList()), ",");
+                labels = labelsBefore;
                 lat = null;
                 lng = null;
             }

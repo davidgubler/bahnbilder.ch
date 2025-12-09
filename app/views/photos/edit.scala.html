@@ -89,6 +89,7 @@
         </div>
         <div class="col-xl-4">
             <div id='editmap' class='mb-3' style='height: 400px;'></div>
+            <input type="hidden" name="labelsBefore" value="@data.labelsBefore" />
             @formInputTokenField(i18n.Txt.get(data.lang, "labels"), "labels", data.labels, false, errors, data.lang, forceVerticalLayout = true)
         </div>
     </div>

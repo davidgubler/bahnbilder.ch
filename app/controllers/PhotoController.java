@@ -171,7 +171,7 @@ public class PhotoController extends Controller {
             throw new NotAllowedException();
         }
         List<Integer> photoIds = InputUtils.toListOfIntegers(ids, ",");
-        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds).sorted(Comparator.comparing(Photo::getPhotoDate)).toList();
+        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds).sorted(Comparator.comparing(Photo::getId)).toList();
         if (photos.isEmpty()) {
             throw new NotFoundException("Photos");
         }
