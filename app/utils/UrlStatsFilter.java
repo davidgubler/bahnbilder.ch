@@ -24,6 +24,9 @@ public class UrlStatsFilter extends Filter {
     private static final Pattern SCALED_URI = Pattern.compile("^/(photos|pictures)/(small|medium|large|xlarge|xxlarge)/([0-9]+\\.jpg)");
 
     public static void stats(Http.RequestHeader request) {
+        BahnbilderLogger.logAccess(request);
+
+
         if (InputUtils.isBot(request)) {
             return;
         }
