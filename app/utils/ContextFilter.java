@@ -17,6 +17,9 @@ import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 
 public class ContextFilter extends Filter {
+
+    private static BahnbilderLogger logger = new BahnbilderLogger(ContextFilter.class);
+
     @Inject
     private Injector injector;
 
@@ -52,7 +55,7 @@ public class ContextFilter extends Filter {
 
         String subsystemsSummary = StringUtils.join(summaries, ", ");
         if ((endTime - startTime) > 100) {
-            BahnbilderLogger.info(request, request.method() + " " + request.path() + " took " + (endTime - startTime) + " ms; " + subsystemsSummary);
+            logger.info(request, request.method() + " " + request.path() + " took " + (endTime - startTime) + " ms; " + subsystemsSummary);
             slowRequests++;
         }
     }

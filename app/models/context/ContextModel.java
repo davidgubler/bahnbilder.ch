@@ -11,6 +11,9 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public abstract class ContextModel {
+
+    private BahnbilderLogger logger = new BahnbilderLogger(ContextModel.class);
+
     private int calls;
     private int ms;
     protected Context context;
@@ -48,7 +51,7 @@ public abstract class ContextModel {
 
             return x;
         } catch (Exception e) {
-            BahnbilderLogger.error(context.getRequest(), e);
+            logger.error(context.getRequest(), e);
             throw e;
         } finally {
             calls++;

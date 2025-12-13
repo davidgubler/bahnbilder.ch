@@ -1,5 +1,6 @@
 package utils;
 
+import play.Logger;
 import play.mvc.Http;
 
 import java.time.LocalDateTime;
@@ -8,19 +9,41 @@ import java.time.format.DateTimeFormatter;
 public class BahnbilderLogger {
     private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss");
 
-    private static void log(Http.RequestHeader request, String message, String level, String callerClass) {
-        System.out.println(dateTimeFormatter.format(LocalDateTime.now()) + " " + (request == null ? "0.0.0.0" : request.remoteAddress()) + " " + level + " " + callerClass + " " + message);
+    private final Logger.ALogger logger;
+
+    public <T> BahnbilderLogger(Class<T> clazz) {
+        logger = Logger.of(clazz);
     }
 
-    public static void info(Http.RequestHeader request, String message) {
-        String callerClass = Thread.currentThread().getStackTrace()[2].getClassName();
-        log(request, message, "INFO", callerClass);
+    private String getInfo(Http.RequestHeader request) {
+        try {
+            // will throw a RuntimeException if there's no context
+            return request.remoteAddress() + " ";
+        } catch (RuntimeException e) {
+            return "127.0.0.1";
+        }
     }
 
-    public static void error(Http.RequestHeader request, Throwable e) {
-        String callerClass = Thread.currentThread().getStackTrace()[2].getClassName();
-        String message = e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage();
-        log(request, message, "ERROR", callerClass);
-        e.printStackTrace();
+    private String getAccessLogLine(Http.RequestHeader request) {
+        String ip = request.remoteAddress();
+        String time = "[" + LocalDateTime.now().toString() + "]";
+        String req = "\"" + request.method() + " " + request.uri() + " " + request.version() + "\"";
+        String status = "???";
+        String bytes = "???";
+        String referer = "\"" + request.header("Referer").orElse("") + "\"";
+        String agent = "\"" + request.header("User-Agent").orElse("") + "\"";
+        return ip + " " + time + " " + req + " " + status + " " + bytes + " " + referer + " " + agent;
+    }
+
+    public void access(Http.RequestHeader request) {
+        logger.info(getAccessLogLine(request));
+    }
+
+    public void info(Http.RequestHeader request, String message) {
+        logger.info(getInfo(request) + message);
+    }
+
+    public void error(Http.RequestHeader request, Throwable e) {
+        logger.error(getInfo(request), e);
     }
 }

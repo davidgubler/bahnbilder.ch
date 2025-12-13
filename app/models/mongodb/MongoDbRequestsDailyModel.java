@@ -23,6 +23,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class MongoDbRequestsDailyModel extends MongoDbModel<MongoDbRequestsDaily> implements RequestsDailyModel {
 
+    private BahnbilderLogger logger = new BahnbilderLogger(MongoDbRequestsDailyModel.class);
+
     private ConcurrentLinkedQueue<UrlStats> trackingBuffer = new ConcurrentLinkedQueue();
 
     private static final int FLUSH_SIZE = 1000;
@@ -61,7 +63,7 @@ public class MongoDbRequestsDailyModel extends MongoDbModel<MongoDbRequestsDaily
                     try {
                         track(flush);
                     } catch (Exception e) {
-                        BahnbilderLogger.error(null, e);
+                        logger.error(null, e);
                     }
                 } while (trackingBuffer.size() >= FLUSH_SIZE);
             }

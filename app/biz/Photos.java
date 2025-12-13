@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 
 public class Photos {
 
+    private BahnbilderLogger logger = new BahnbilderLogger(Photos.class);
+
     public void rate(Context context, Photo photo, Integer authorRating, User user) throws ValidationException {
         // ACCESS
         if (user == null || !user.canEdit(photo)) {
@@ -32,7 +34,7 @@ public class Photos {
         context.getPhotosModel().rate(photo, authorRating);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " rated " + photo);
+        logger.info(context.getRequest(), user + " rated " + photo);
     }
 
     private Integer extractCountryIdFromKeywords(Context context, String k) {
@@ -149,7 +151,7 @@ public class Photos {
                 Country country = context.getGeocodingModel().getCountryByPoint(new SimplePoint(lat, lng)).get();
                 countryId = country == null ? null : country.getId();
             } catch (Exception e) {
-                BahnbilderLogger.error(context.getRequest(), e);
+                logger.error(context.getRequest(), e);
             }
         }
         Integer operatorId = extractOperatorIdFromKeywords(context, exif.getKeywords());
@@ -159,7 +161,7 @@ public class Photos {
         context.getFilesOriginalModel().create(photo.getId(), fileData);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " uploaded " + photo);
+        logger.info(context.getRequest(), user + " uploaded " + photo);
         return photo;
     }
 
@@ -184,7 +186,7 @@ public class Photos {
         context.getFilesOriginalModel().update(photo.getId(), fileData);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " replaced " + photo);
+        logger.info(context.getRequest(), user + " replaced " + photo);
         return photo;
     }
 
@@ -235,7 +237,7 @@ public class Photos {
         context.getPhotosModel().update(data, dateTime, locationId, labelsToAdd, labelsToRemove);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " updated " + data.photos);
+        logger.info(context.getRequest(), user + " updated " + data.photos);
     }
 
     // used for the autodetection feature
@@ -264,7 +266,7 @@ public class Photos {
         context.getPhotosModel().update(photo, operator, vehicleClass, nr);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " updated " + photo);
+        logger.info(context.getRequest(), user + " updated " + photo);
     }
 
     public void delete(Context context, PhotoFormData data, User user) {
@@ -284,6 +286,6 @@ public class Photos {
         context.getPhotosModel().delete(data);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " deleted " + data.photos);
+        logger.info(context.getRequest(), user + " deleted " + data.photos);
     }
 }

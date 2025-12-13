@@ -20,6 +20,10 @@ import java.time.Instant;
 @Entity(value = "files", useDiscriminator = false)
 @Indexes({@Index(options = @IndexOptions(unique = true), fields = {@Field(value = "photoId"), @Field(value = "size")})})
 public class MongoDbFile implements MongoDbEntity, File {
+
+    @Transient
+    private BahnbilderLogger logger = new BahnbilderLogger(MongoDbFile.class);
+
     @Id
     private ObjectId _id;
 
@@ -96,14 +100,14 @@ public class MongoDbFile implements MongoDbEntity, File {
                             try {
                                 height = Integer.parseInt(tag.getDescription().split(" ")[0]);
                             } catch (Exception e) {
-                                BahnbilderLogger.info(null, "Photo " + photoId + " has unparseable data in JpegDirectory/1 (height): " + e.getMessage());
+                                logger.info(null, "Photo " + photoId + " has unparseable data in JpegDirectory/1 (height): " + e.getMessage());
                             }
                         }
                         if (tag.getTagType() == 3) {
                             try {
                                 width = Integer.parseInt(tag.getDescription().split(" ")[0]);
                             } catch (Exception e) {
-                                BahnbilderLogger.info(null, "Photo " + photoId + " has unparseable data in JpegDirectory/3 (width): " + e.getMessage());
+                                logger.info(null, "Photo " + photoId + " has unparseable data in JpegDirectory/3 (width): " + e.getMessage());
                             }
                         }
                     }

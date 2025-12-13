@@ -10,6 +10,8 @@ import java.util.Map;
 
 public class Countries implements CUDBusinessLogic<CountryFormData> {
 
+    private BahnbilderLogger logger = new BahnbilderLogger(Countries.class);
+
     @Override
     public void create(Context context, CountryFormData data, User user) throws ValidationException {
         // ACCESS
@@ -42,7 +44,7 @@ public class Countries implements CUDBusinessLogic<CountryFormData> {
         Country country = context.getCountriesModel().create(data);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " created " + country);
+        logger.info(context.getRequest(), user + " created " + country);
     }
 
     @Override
@@ -77,7 +79,7 @@ public class Countries implements CUDBusinessLogic<CountryFormData> {
         context.getCountriesModel().update(data.entity, data.nameDe, data.nameEn, data.code);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " edited " + data.entity);
+        logger.info(context.getRequest(), user + " edited " + data.entity);
     }
 
     @Override
@@ -97,6 +99,6 @@ public class Countries implements CUDBusinessLogic<CountryFormData> {
         context.getCountriesModel().delete(data.entity);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " deleted " + data.entity);
+        logger.info(context.getRequest(), user + " deleted " + data.entity);
     }
 }

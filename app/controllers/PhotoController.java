@@ -32,6 +32,8 @@ import java.util.stream.Collectors;
 
 public class PhotoController extends Controller {
 
+    private BahnbilderLogger logger = new BahnbilderLogger(PhotoController.class);
+
     @Inject
     private Photos photos;
 
@@ -323,7 +325,7 @@ public class PhotoController extends Controller {
                 Integer nr = Integer.parseInt(solution[2]);
                 photos.update(context, photo, operator, vehicleClass, nr, user);
             } catch (Exception e) {
-                BahnbilderLogger.error(request, e);
+                logger.error(request, e);
             }
         }
         return redirect(returnUrl);
@@ -380,7 +382,7 @@ public class PhotoController extends Controller {
                 try {
                     return ok(MAPPER.writeValueAsString(suggestLocations(context, new SimplePoint(photo.getLat(), photo.getLng())))).as(Http.MimeTypes.JSON);
                 } catch (Exception e) {
-                    BahnbilderLogger.error(request, e);
+                    logger.error(request, e);
                     ok("[]").as(Http.MimeTypes.JSON);
                 }
             }

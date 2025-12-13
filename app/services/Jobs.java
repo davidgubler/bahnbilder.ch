@@ -11,6 +11,8 @@ import java.util.function.Supplier;
 
 public class Jobs {
 
+    private BahnbilderLogger logger = new BahnbilderLogger(Jobs.class);
+
     @Inject
     private ViewsModel viewsModel;
 
@@ -20,7 +22,7 @@ public class Jobs {
             shutDown = true;
         });
         job(system, 4, 0, 0, () -> {
-            BahnbilderLogger.info(null, "collecting views");
+            logger.info(null, "collecting views");
             viewsModel.collect();
             return null;
         });
@@ -64,7 +66,7 @@ public class Jobs {
                 try {
                     f.get();
                 } catch (Exception e) {
-                    BahnbilderLogger.error(null, e);
+                    logger.error(null, e);
                 }
             }
         });

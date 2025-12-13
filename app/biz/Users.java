@@ -8,6 +8,8 @@ import java.util.Map;
 
 public class Users {
 
+    private BahnbilderLogger logger = new BahnbilderLogger(Users.class);
+
     public User create(Context context, String email, String name, String password, User user) throws ValidationException {
         // ACCESS
         if (user == null || !user.isAdmin()) {
@@ -33,7 +35,7 @@ public class Users {
         User createUser = context.getUsersModel().create(10, email, name, 1, password, false);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " created " + createUser);
+        logger.info(context.getRequest(), user + " created " + createUser);
         return createUser;
     }
 
@@ -56,7 +58,7 @@ public class Users {
         context.getUsersModel().update(updateUser, email, name, password);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " updated " + updateUser);
+        logger.info(context.getRequest(), user + " updated " + updateUser);
     }
 
     public void delete(Context context, User deleteUser, User user) {
@@ -72,7 +74,7 @@ public class Users {
         context.getUsersModel().delete(deleteUser);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " deleted " + deleteUser);
+        logger.info(context.getRequest(), user + " deleted " + deleteUser);
     }
 
     public void ensureAdmin(Context context) {
@@ -92,7 +94,7 @@ public class Users {
 
         // LOG
         if (createdAdmin != null) {
-            BahnbilderLogger.info(context.getRequest(), "Created admin user " + createdAdmin + " with password '" + pwd + "'");
+            logger.info(context.getRequest(), "Created admin user " + createdAdmin + " with password '" + pwd + "'");
         }
     }
 }

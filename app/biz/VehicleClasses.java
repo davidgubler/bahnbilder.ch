@@ -10,6 +10,8 @@ import java.util.Map;
 
 public class VehicleClasses implements CUDBusinessLogic<VehicleClassFormData> {
 
+    private BahnbilderLogger logger = new BahnbilderLogger(VehicleClasses.class);
+
     @Override
     public void create(Context context, VehicleClassFormData data, User user) throws ValidationException {
         // ACCESS
@@ -32,7 +34,7 @@ public class VehicleClasses implements CUDBusinessLogic<VehicleClassFormData> {
         VehicleClass vehicleClass = context.getVehicleClassesModel().create(data);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " created " + vehicleClass);
+        logger.info(context.getRequest(), user + " created " + vehicleClass);
     }
 
     @Override
@@ -57,7 +59,7 @@ public class VehicleClasses implements CUDBusinessLogic<VehicleClassFormData> {
         context.getVehicleClassesModel().update(data);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " updated " + data.entity);
+        logger.info(context.getRequest(), user + " updated " + data.entity);
     }
 
     @Override

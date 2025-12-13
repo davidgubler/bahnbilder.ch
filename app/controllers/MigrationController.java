@@ -16,6 +16,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MigrationController extends Controller {
 
+    private BahnbilderLogger logger = new BahnbilderLogger(MigrationController.class);
+
     private volatile boolean stopped = false;
 
     @Inject
@@ -81,7 +83,7 @@ public class MigrationController extends Controller {
                                         migratedModified.incrementAndGet();
                                     }
                                 } catch (Exception e) {
-                                    BahnbilderLogger.error(context.getRequest(), e);
+                                    logger.error(context.getRequest(), e);
                                     // something went wrong, sleep 10 seconds to give the server some time to recover
                                     Thread.sleep(10 * 1000l);
                                     photoSet.add(photo); // re-queue photo
@@ -98,7 +100,7 @@ public class MigrationController extends Controller {
             new Thread(() -> {
                 try {
                     while (!photoSet.isEmpty() && !stopped) {
-                        BahnbilderLogger.info(context.getRequest(), "Files migration " + (total - photoSet.size()) + " of " + total + " done (unmodified " + migratedUnmodified + ", modified " + migratedModified + ", new " + migratedNew + ", deleted " + migratedDeleted + ")");
+                        logger.info(context.getRequest(), "Files migration " + (total - photoSet.size()) + " of " + total + " done (unmodified " + migratedUnmodified + ", modified " + migratedModified + ", new " + migratedNew + ", deleted " + migratedDeleted + ")");
                         Thread.sleep(5 * 1000l);
                     }
                 } catch (InterruptedException e) {

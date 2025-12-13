@@ -11,6 +11,8 @@ import java.util.Map;
 
 public class Keywords implements CUDBusinessLogic<KeywordFormData> {
 
+    private BahnbilderLogger logger = new BahnbilderLogger(Keywords.class);
+
     @Override
     public void create(Context context, KeywordFormData data, User user) throws ValidationException {
         // ACCESS
@@ -39,7 +41,7 @@ public class Keywords implements CUDBusinessLogic<KeywordFormData> {
         Keyword keyword = context.getKeywordsModel().create(data, labels);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " created " + keyword);
+        logger.info(context.getRequest(), user + " created " + keyword);
     }
 
     @Override
@@ -70,7 +72,7 @@ public class Keywords implements CUDBusinessLogic<KeywordFormData> {
         context.getKeywordsModel().update(data, labels);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " updated " + data.entity);
+        logger.info(context.getRequest(), user + " updated " + data.entity);
     }
 
     @Override

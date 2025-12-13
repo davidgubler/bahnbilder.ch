@@ -10,6 +10,8 @@ import java.util.Map;
 
 public class Travelogues {
 
+    private BahnbilderLogger logger = new BahnbilderLogger(Travelogues.class);
+
     public Travelogue create(Context context, String title, String titlePhoto, String dateStr, String summary, String text, User user) throws ValidationException {
         // ACCESS
         if (user == null) {
@@ -32,7 +34,7 @@ public class Travelogues {
         Travelogue travelogue = context.getTraveloguesModel().create(title, titlePhotoId, date, summary, text, user);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " created travelogue " + travelogue);
+        logger.info(context.getRequest(), user + " created travelogue " + travelogue);
 
         return travelogue;
     }
@@ -59,7 +61,7 @@ public class Travelogues {
         context.getTraveloguesModel().update(travelogue, title, titlePhotoId, date, summary, text);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " updated travelogue " + travelogue);
+        logger.info(context.getRequest(), user + " updated travelogue " + travelogue);
 
         return travelogue;
     }
@@ -76,7 +78,7 @@ public class Travelogues {
         context.getTraveloguesModel().delete(travelogue);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " deleted travelogue " + travelogue);
+        logger.info(context.getRequest(), user + " deleted travelogue " + travelogue);
 
         return travelogue;
     }

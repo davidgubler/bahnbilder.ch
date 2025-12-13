@@ -14,6 +14,8 @@ import java.util.Objects;
 
 public class Calendars {
 
+    private BahnbilderLogger logger = new BahnbilderLogger(Calendars.class);
+
     @Inject
     private Mail mail;
 
@@ -95,6 +97,6 @@ public class Calendars {
         mail.caledarConfirmation(order, lang);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), "Ordered calendars: " + nrOfRailCalendars + ", " + nrOfAnimalCalendars);
+        logger.info(context.getRequest(), "Ordered calendars: " + nrOfRailCalendars + ", " + nrOfAnimalCalendars);
     }
 }

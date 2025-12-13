@@ -13,6 +13,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UrlStatsFilter extends Filter {
+
+    private BahnbilderLogger logger = new BahnbilderLogger(UrlStatsFilter.class);
+
     @Inject
     private Injector injector;
 
@@ -92,7 +95,7 @@ public class UrlStatsFilter extends Filter {
         try {
             stats(requestHeader);
         } catch (Exception e) {
-            BahnbilderLogger.info(requestHeader, "url stats failed: " + e.getMessage());
+            logger.info(requestHeader, "url stats failed: " + e.getMessage());
         }
         return nextFilter.apply(requestHeader);
     }

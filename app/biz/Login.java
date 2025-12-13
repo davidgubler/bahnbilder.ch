@@ -10,6 +10,8 @@ import java.util.Map;
 
 public class Login {
 
+    private BahnbilderLogger logger = new BahnbilderLogger(Login.class);
+
     @Inject
     private Mail mail;
 
@@ -32,7 +34,7 @@ public class Login {
         context.getUsersModel().startSession(user);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " logged in");
+        logger.info(context.getRequest(), user + " logged in");
 
         return user;
     }
@@ -48,7 +50,7 @@ public class Login {
         context.getUsersModel().killSessions(user);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " logged out");
+        logger.info(context.getRequest(), user + " logged out");
     }
 
     public User lostPassword(Context context, String email, String lang) throws ValidationException {
@@ -72,7 +74,7 @@ public class Login {
         }
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), "Requested password recovery email for " + email + ", " + (user == null ? "not sent (user unknown)" : "sent"));
+        logger.info(context.getRequest(), "Requested password recovery email for " + email + ", " + (user == null ? "not sent (user unknown)" : "sent"));
 
         return user;
     }
@@ -105,7 +107,7 @@ public class Login {
         context.getUsersModel().startSession(user);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " logged in via email link");
+        logger.info(context.getRequest(), user + " logged in via email link");
 
         return user;
     }
@@ -135,7 +137,7 @@ public class Login {
         context.getUsersModel().updatePassword(user, password);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " created a new password");
+        logger.info(context.getRequest(), user + " created a new password");
 
         return password;
     }

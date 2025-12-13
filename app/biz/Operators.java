@@ -1,10 +1,8 @@
 package biz;
 
-import com.google.inject.Inject;
 import entities.Operator;
 import entities.User;
 import entities.formdata.OperatorFormData;
-import models.OperatorsModel;
 import utils.*;
 
 import java.util.HashMap;
@@ -12,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Operators implements CUDBusinessLogic<OperatorFormData> {
+
+    private BahnbilderLogger logger = new BahnbilderLogger(Operators.class);
 
     @Override
     public void create(Context context, OperatorFormData data, User user) throws ValidationException {
@@ -37,7 +37,7 @@ public class Operators implements CUDBusinessLogic<OperatorFormData> {
         Operator operator = context.getOperatorsModel().create(data.name, data.abbr, wikiDataIds);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " created " + operator);
+        logger.info(context.getRequest(), user + " created " + operator);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class Operators implements CUDBusinessLogic<OperatorFormData> {
         context.getOperatorsModel().update(data.entity, data.name, data.abbr, wikiDataIds);
 
         // LOG
-        BahnbilderLogger.info(context.getRequest(), user + " updated " + data.entity);
+        logger.info(context.getRequest(), user + " updated " + data.entity);
     }
 
     @Override

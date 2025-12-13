@@ -13,6 +13,8 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ErrorHandler implements HttpErrorHandler {
+    private BahnbilderLogger logger = new BahnbilderLogger(ErrorHandler.class);
+
     private String extractLang(RequestHeader request) {
         if (request.host() == null || request.host().endsWith("bahnbilder.ch")) {
             return "de";
@@ -41,7 +43,7 @@ public class ErrorHandler implements HttpErrorHandler {
         if (exception instanceof AlreadyInProgressException) {
             return CompletableFuture.completedFuture(Results.internalServerError(views.html.error.render(request, "500: " + exception.getMessage(), extractLang(request))));
         }
-        BahnbilderLogger.error(request, exception);
+        logger.error(request, exception);
         return CompletableFuture.completedFuture(Results.internalServerError(views.html.error.render(request, "500: Whoops, something went wrong", extractLang(request))));
     }
 }
