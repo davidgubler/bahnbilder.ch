@@ -14,9 +14,9 @@
   </appender>
 
   <appender name="ACCESS" class="ch.qos.logback.core.FileAppender">
-    <file>${application.home:-.}/logs/access.log</file>
+    <file>${application.home:-.}/../logs/access.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>${application.home:-.}/logs/access-%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+      <fileNamePattern>${application.home:-.}/../logs/access-%d{yyyy-MM-dd}.log.gz</fileNamePattern>
       <maxHistory>30</maxHistory>
     </rollingPolicy>
     <encoder>
