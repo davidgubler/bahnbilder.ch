@@ -31,7 +31,7 @@ var hideInfoWindow = function () {
 	}
 };
 
-$(document).ready(function() {
+var init = function() {
     var mapOptions = {
         gestureHandling: 'greedy'
     };
@@ -57,4 +57,14 @@ $(document).ready(function() {
     markerData.map(addMarker);
     var mcOptions = { gridSize: 50, maxZoom: 10 };
     var mc = new MarkerClusterer(map, markers, mcOptions);
+}
+
+$(document).ready(function() {
+    jQuery.ajax({
+        url: "https://maps.googleapis.com/maps/api/js?key=" + mapsKey,
+        dataType: 'script',
+        async: true,
+        success: init,
+        async: true
+    });
 });

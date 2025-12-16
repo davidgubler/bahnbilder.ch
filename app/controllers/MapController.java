@@ -63,7 +63,7 @@ public class MapController extends Controller {
     public Result config(Http.Request request) {
         Context context = Context.get(request);
         String lang = Lang.get(request);
-        return ok("var txtMore = \"" + Txt.get(lang, "more") + "\";").as(Http.MimeTypes.JAVASCRIPT);
+        return ok("var txtMore = \"" + Txt.get(lang, "more") + "\";\nvar mapsKey = \"" + Config.Option.GOOGLE_MAPS_JS_KEY.get() + "\";").as(Http.MimeTypes.JAVASCRIPT);
     }
 
     private static class Marker {
