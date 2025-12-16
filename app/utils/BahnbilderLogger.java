@@ -30,7 +30,7 @@ public class BahnbilderLogger {
         String time = "[" + LocalDateTime.now().toString() + "]";
         String req = "\"" + request.method() + " " + request.uri() + " " + request.version() + "\"";
         String status = "" + result.status();
-        String bytes = "???";
+        String bytes = "" + result.body().contentLength().orElse(0l);
         String referer = "\"" + request.header("Referer").orElse("") + "\"";
         String agent = "\"" + request.header("User-Agent").orElse("") + "\"";
         return ip + " " + time + " " + req + " " + status + " " + bytes + " " + referer + " " + agent;
