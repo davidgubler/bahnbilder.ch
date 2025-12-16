@@ -24,7 +24,9 @@ public class AccessLogFilter extends Filter {
 
     @Override
     public CompletionStage<Result> apply(Function<Http.RequestHeader, CompletionStage<Result>> nextFilter, Http.RequestHeader requestHeader) {
-        logger.access(requestHeader);
-        return nextFilter.apply(requestHeader);
+        return nextFilter.apply(requestHeader).thenApply(result -> {
+            logger.access(requestHeader, result);
+            return result;
+        });
     }
 }

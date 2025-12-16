@@ -2,6 +2,7 @@ package utils;
 
 import play.Logger;
 import play.mvc.Http;
+import play.mvc.Result;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,19 +25,19 @@ public class BahnbilderLogger {
         }
     }
 
-    private String getAccessLogLine(Http.RequestHeader request) {
+    private String getAccessLogLine(Http.RequestHeader request, Result result) {
         String ip = request.remoteAddress();
         String time = "[" + LocalDateTime.now().toString() + "]";
         String req = "\"" + request.method() + " " + request.uri() + " " + request.version() + "\"";
-        String status = "???";
+        String status = "" + result.status();
         String bytes = "???";
         String referer = "\"" + request.header("Referer").orElse("") + "\"";
         String agent = "\"" + request.header("User-Agent").orElse("") + "\"";
         return ip + " " + time + " " + req + " " + status + " " + bytes + " " + referer + " " + agent;
     }
 
-    public void access(Http.RequestHeader request) {
-        logger.info(getAccessLogLine(request));
+    public void access(Http.RequestHeader request, Result result) {
+        logger.info(getAccessLogLine(request, result));
     }
 
     public void info(Http.RequestHeader request, String message) {
