@@ -30,9 +30,13 @@
     </div>
     <h2>@i18n.Txt.get(lang, "requestStats")</h2>
     @for(domain <- consolidatedUrlStats.keySet().toList.sorted) {
-        <b>@domain</b><br />
+        <div>
+        <span style="font-weight: bold; cursor: pointer;" class="request-domain">@domain</span><br />
+        <div style="display: none;" class="request-list">
         @for(urlStats <- consolidatedUrlStats.get(domain)) {
             &nbsp;&nbsp;&nbsp;@urlStats.getCount(): <a href="https://@urlStats.getReferer()" target="_blank">@if(urlStats.getReferer().length > 64){@urlStats.getReferer().substring(0, 60)...}else{@urlStats.getReferer()}</a> &rarr; @urlStats.getUrl()<br />
         }
+        </div>
+        </div>
     }
 }
