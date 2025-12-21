@@ -47,7 +47,7 @@
             <table class="stats">
                 @for(cv <- countryViews) {
                     <tr>
-                        <td><span><a href="@routes.BrowseController.browse(1, cv.getCountry().getId, null, null)" ><div class='flag'><img src='@routes.Assets.versioned("images/flags/" + cv.getCountry().getCode() + ".png")' title='@cv.getCountry().getName(lang)' /></div>@cv.getCountry().getName(lang)</a></span></td>
+                        <td><span><a href="@routes.BrowseController.browse(1, cv.getCountry().getId, null, null)" >@flag(cv.getCountry().getCode(), cv.getCountry().getName(lang))@cv.getCountry().getName(lang)</a></span></td>
                         <td>@(cv.getViews() / 1000L)&nbsp;k</td>
                     </tr>
                 }
