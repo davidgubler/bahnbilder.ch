@@ -13,6 +13,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 import utils.Config;
 import utils.Context;
+import utils.InputUtils;
 import utils.Json;
 import utils.geometry.NearbyMap;
 import utils.geometry.Point;
@@ -61,6 +62,10 @@ public class MapController extends Controller {
     }
 
     public Result config(Http.Request request) {
+        if (InputUtils.isBot(request)) {
+            // don't give the Google Maps key to bots to reduce cost
+            return forbidden();
+        }
         Context context = Context.get(request);
         String lang = Lang.get(request);
         return ok("var txtMore = \"" + Txt.get(lang, "more") + "\";\nvar mapsKey = \"" + Config.Option.GOOGLE_MAPS_JS_KEY.get() + "\";").as(Http.MimeTypes.JAVASCRIPT);

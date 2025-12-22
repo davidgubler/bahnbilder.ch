@@ -268,15 +268,18 @@ public class InputUtils {
             String ua = userAgent.get().toLowerCase(Locale.ROOT);
             if (ua.contains("bot") ||
                 ua.contains("spider") ||
+                ua.contains("crawler") ||
                 ua.contains("cloudflare") ||
-                ua.contains("facebookexternalhit") ||
                 ua.contains("yahoo") ||
                 ua.contains("slurp") ||
                 ua.contains("bing") ||
                 ua.contains("baidu") ||
+                ua.contains("google") ||
+                ua.contains("facebook") ||
                 ua.contains("yandex") ||
                 ua.contains("chatgpt") ||
-                ua.contains("openai")) {
+                ua.contains("openai") ||
+                ua.contains("mediapartners")) {
                 return true;
             }
         }
