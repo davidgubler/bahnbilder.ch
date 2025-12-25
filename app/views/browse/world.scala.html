@@ -1,0 +1,22 @@
+@(  implicit request: Http.Request,
+    countries: List[_ <: entities.Country],
+    search: entities.ModelSearch,
+    user: entities.User,
+    lang: String
+)
+
+
+@template(request, i18n.Txt.get(lang, "browse"), "browse", user, lang) {
+} {
+    @breadCrumbs("browse", search, true, true, lang)
+    <br />
+    @if(countries != null) {
+        <h1>@i18n.Txt.get(lang, "country")</h1>
+        <div class="columns">
+            @for(country <- countries) {
+                <a href="@routes.BrowseController.country(1, country.getId)">@flag(country.getCode(), country.getName(lang))@country.getName(lang)</a><br />
+            }
+        </div>
+        <br />
+    }
+}

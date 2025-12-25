@@ -37,7 +37,7 @@
                 <li class='nav-item'><a @if(menu=="home"){class='active'} href='@routes.HomeController.home()'>@i18n.Txt.get(lang, "home")</a></li>
                 <li class='nav-item'><a @if(menu=="newest"){class='active'} href='@routes.NewestController.list()'>@i18n.Txt.get(lang, "newest")</a></li>
                 <li class='nav-item'><a @if(menu=="travelogues"){class='active'} href='@routes.TraveloguesController.list(null)'>@i18n.Txt.get(lang, "travelogues")</a></li>
-                <li class='nav-item'><a @if(menu=="browse"){class='active'} href='@routes.BrowseController.browse(1, null, null, null)'>@i18n.Txt.get(lang, "browse")</a></li>
+                <li class='nav-item'><a @if(menu=="browse"){class='active'} href='@routes.BrowseController.world()'>@i18n.Txt.get(lang, "browse")</a></li>
                 <li class='nav-item'><a @if(menu=="search"){class='active'} href='@routes.SearchController.search()'>@i18n.Txt.get(lang, "search")</a></li>
                 <li class='nav-item'><a @if(menu=="map"){class='active'} href='@routes.MapController.view()'>@i18n.Txt.get(lang, "map")</a></li>
                 <li class='nav-item'><a @if(menu=="calendar"){class='active'} href='@routes.CalendarController.view()'>@i18n.Txt.get(lang, "calendar")</a></li>

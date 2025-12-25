@@ -1,0 +1,36 @@
+@(  implicit request: Http.Request,
+    country: entities.Country,
+    operator: entities.Operator,
+    vehicleClass: entities.VehicleClass,
+    search: entities.ModelSearch,
+    lastPage: Integer,
+    results: List[_ <: entities.Photo],
+    user: entities.User,
+    lang: String
+)
+
+
+@template(request, i18n.Txt.get(lang, "browse"), "browse", user, lang) {
+} {
+    <script src='@routes.Assets.versioned("javascripts/multiedit.js")'></script>
+    @breadCrumbs("browse", search, true, true, lang)
+    <br />
+
+    <div class='row'>
+        <div class='col-12'>
+            @pageChooser(routes.BrowseController.vehicleClass(1, search.getCountryId, search.getOperatorId, search.getVehicleClassId).toString, search.getPage, lastPage)
+            <div class='fleximages'>
+                <div class="multiedit">
+                    <span id="multiedit"><i class="fas fa-edit"></i></span>
+                </div>
+                @for(photo <- results) {
+                    <a @if(user != null && user.canEdit(photo)){id='editable-@photo.getId()' class='editable'} style="--w: @photo.getResMedium.getWidth; --h: @photo.getResMedium.getHeight; position: relative" href="/@photo.getId()?menu=browse&@search.toQuery()">
+                        <img src="@photo.getUrlPublic900()">
+                        <div class='bottom-label'>@photo.getGeneratedDescription(lang, true, false, true, true, false)</div>
+                    </a>
+                }
+            </div>
+            @pageChooser(routes.BrowseController.vehicleClass(1, search.getCountryId, search.getOperatorId, search.getVehicleClassId).toString, search.getPage, lastPage)
+        </div>
+    </div>
+}

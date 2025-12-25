@@ -11,10 +11,10 @@ GET     /map                                            controllers.MapControlle
 GET     /map/_markers                                   controllers.MapController.markers(request: Request)
 GET     /map/_config                                    controllers.MapController.config(request: Request)
 
-GET     /browse                                         controllers.BrowseController.browse(request: Request, page: Integer ?= 1, country: Integer = null, operator: Integer = null, vehicleClass: Integer = null)
-GET     /browse/:country                                controllers.BrowseController.browse(request: Request, page: Integer ?= 1, country: Integer, operator: Integer = null, vehicleClass: Integer = null)
-GET     /browse/:country/:operator                      controllers.BrowseController.browse(request: Request, page: Integer ?= 1, country: Integer, operator: Integer, vehicleClass: Integer = null)
-GET     /browse/:country/:operator/:vehicleClass        controllers.BrowseController.browse(request: Request, page: Integer ?= 1, country: Integer, operator: Integer, vehicleClass: Integer)
+GET     /browse                                         controllers.BrowseController.world(request: Request)
+GET     /browse/:country                                controllers.BrowseController.country(request: Request, page: Integer ?= 1, country: Integer)
+GET     /browse/:country/:operator                      controllers.BrowseController.operator(request: Request, page: Integer ?= 1, country: Integer, operator: Integer)
+GET     /browse/:country/:operator/:vehicleClass        controllers.BrowseController.vehicleClass(request: Request, page: Integer ?= 1, country: Integer, operator: Integer, vehicleClass: Integer)
 
 GET     /operator/:id                                   controllers.VehicleOverviewController.operator(request: Request, id: Integer)
 GET     /class/:id                                      controllers.VehicleOverviewController.vehicleClass(request: Request, id: Integer)
