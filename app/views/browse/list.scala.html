@@ -13,7 +13,7 @@
 @template(request, i18n.Txt.get(lang, "browse"), "browse", user, lang) {
 } {
     <script src='@routes.Assets.versioned("javascripts/multiedit.js")'></script>
-    @breadCrumbs("browse", search, true, lang)
+    @breadCrumbs("browse", search, true, true, lang)
     <br />
     @if(countries != null) {
         <h1>@i18n.Txt.get(lang, "country")</h1>

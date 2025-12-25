@@ -1,15 +1,16 @@
 @(  link: String,
     search: entities.ModelSearch,
     showSortBy: Boolean,
+    mapButton: Boolean,
     lang: String,
 )
 @if(link == "search" && search.isActive) {
-    @breadCrumbsImpl(search, "/search?" + search.toQueryInactive(), null, null, null, null, showSortBy, lang)
+    @breadCrumbsImpl(search, "/search?" + search.toQueryInactive(), null, null, null, null, showSortBy, mapButton, lang)
 }
 @if(link == "browse") {
     @breadCrumbsImpl(search, null,
         routes.BrowseController.browse(1, null, null, null).toString,
         routes.BrowseController.browse(1, search.getCountryId, null, null).toString,
         routes.BrowseController.browse(1, search.getCountryId, search.getOperatorId, null).toString,
-        routes.BrowseController.browse(1, search.getCountryId, search.getOperatorId, search.getVehicleClassId).toString, showSortBy, lang)
+        routes.BrowseController.browse(1, search.getCountryId, search.getOperatorId, search.getVehicleClassId).toString, showSortBy, mapButton, lang)
 }

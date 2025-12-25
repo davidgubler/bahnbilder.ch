@@ -5,12 +5,13 @@
     operatorUrl: String,
     vehicleClassUrl: String,
     showSortBy: Boolean,
+    mapButton: Boolean,
     lang: String,
 )
 
 <div class='row' id='breadcrumbs'>
     <div class='col-12'>
-        <div style='float: right; text-align: right; padding-left: 10px;'><a href='/map?@search.toQuery()' title='Karte zeigen'><i class='fa fa-map-marked'></i></a></div>
+        @if(mapButton){<div style='float: right; text-align: right; padding-left: 10px;'><a href='/map?@search.toQuery()' title='Karte zeigen'><i class='fa fa-map-marked'></i></a></div>}
 
         @if(searchUrl != null) {
             <a id="modifySearch" href="@searchUrl">

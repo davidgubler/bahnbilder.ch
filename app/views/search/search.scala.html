@@ -21,7 +21,7 @@
     <script src='@routes.Assets.versioned("javascripts/search.js")'></script>
     <link rel='stylesheet' href='@routes.Assets.versioned("stylesheets/search.css")'/>
     <script src='@routes.Assets.versioned("javascripts/multiedit.js")'></script>
-    @breadCrumbs("search", search, true, lang)
+    @breadCrumbs("search", search, true, true, lang)
     <div class='row'>
         <div class='col-xl-6'>
             <form id='searchForm' method='POST' action='@routes.SearchController.search()' style='@if(search.isActive){display:none;}' >
