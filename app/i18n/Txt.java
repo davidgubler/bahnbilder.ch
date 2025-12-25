@@ -256,6 +256,9 @@ public class Txt {
         en.put("last30days", "Last 30 days");
         de.put("last30days", "Letzte 30 Tage");
 
+        en.put("lastAdded", "Last added");
+        de.put("lastAdded", "Zuletzt hinzugefügt");
+
         en.put("lastName", "Last Name");
         de.put("lastName", "Nachname");
 
@@ -627,6 +630,9 @@ public class Txt {
 
         en.put("webcamZHB", "Webcam Zürich HB");
         de.put("webcamZHB", "Webcam Zürich HB");
+
+        en.put("vehicles", "Vehicles");
+        de.put("vehicles", "Fahrzeuge");
 
         en.put("vehicleType", "Vehicle type");
         de.put("vehicleType", "Fahrzeugtyp");

@@ -123,4 +123,12 @@ public interface PhotosModel {
     long countPhotosByOperator(Photo photo, Integer operatorId);
 
     List<String> getPhotographers();
+
+    Integer getMostCommonVehicleClassByCountry(Country country);
+
+    int getVehicleClassCountByCountry(Country country);
+
+    int getVehicleCountByCountry(Country country);
+
+    List<Integer> getLatestVehicleClassIdAdditionsByCountry(Country country);
 }

@@ -811,6 +811,48 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         return cursor.hasNext() ? cursor.next().distinct.stream().sorted().toList() : Collections.emptyList();
     }
 
+    @Override
+    public Integer getMostCommonVehicleClassByCountry(Country country) {
+        List<AggregationCount> l = mongoDb.getDs().aggregate(MongoDbPhoto.class)
+                .match(Filters.eq("countryId", country.getId()), Filters.ne("vehicleClassId", null))
+                .group(Group.group().field("_id", Expressions.field("vehicleClassId")).field("count", AccumulatorExpressions.sum(Expressions.value(1))))
+                .sort(Sort.sort().descending("count"))
+                .limit(1)
+                .execute(AggregationCount.class).toList();
+        return l.stream().map(AggregationCount::getId).findFirst().orElse(null);
+    }
+
+    @Override
+    public int getVehicleClassCountByCountry(Country country) {
+        AggregationDistinct<Integer> x = mongoDb.getDs().aggregate(MongoDbPhoto.class)
+                .match(Filters.eq("countryId", country.getId()), Filters.ne("vehicleClassId", null))
+                .group(Group.group().field("_id", null).field("distinct", AccumulatorExpressions.addToSet(Expressions.field("vehicleClassId"))))
+                .execute(AggregationDistinct.class)
+                .tryNext();
+        return x == null ? 0 : x.distinct.size();
+    }
+
+    @Override
+    public int getVehicleCountByCountry(Country country) {
+        AggregationDistinct x = mongoDb.getDs().aggregate(MongoDbPhoto.class)
+                .match(Filters.eq("countryId", country.getId()), Filters.ne("vehicleClassId", null), Filters.ne("nr", null))
+                .group(Group.group().field("_id", null).field("distinct", AccumulatorExpressions.addToSet(Expressions.document().field("vehicleClassId", Expressions.field("vehicleClassId")).field("nr", Expressions.field("nr")))))
+                .execute(AggregationDistinct.class)
+                .tryNext();
+        return x == null ? 0 : x.distinct.size();
+    }
+
+    @Override
+    public List<Integer> getLatestVehicleClassIdAdditionsByCountry(Country country) {
+        List<AggregationDateByInt> l = mongoDb.getDs().aggregate(MongoDbPhoto.class)
+                .match(Filters.eq("countryId", country.getId()), Filters.ne("vehicleClassId", null), Filters.ne("uploadDate", null))
+                .group(Group.group().field("_id", Expressions.field("vehicleClassId")).field("date", AccumulatorExpressions.min(Expressions.field("uploadDate"))))
+                .sort(Sort.sort().descending("date"))
+                .limit(5)
+                .execute(AggregationDateByInt.class).toList();
+        return l.stream().map(AggregationDateByInt::getId).toList();
+    }
+
     @Entity
     private static class AggregationDate {
         @Id
@@ -832,5 +874,38 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         private Object _id;
 
         List<T> distinct;
+    }
+
+    @Entity
+    protected static class AggregationCount {
+        @Id
+        private int _id;
+
+        public int getId() {
+            return _id;
+        }
+
+        int count;
+
+        @Override
+        public String toString() {
+            return _id + ": " + count;
+        }
+    }
+
+    @Entity
+    private static class AggregationDateByInt {
+        @Id
+        private int _id;
+
+        private LocalDateTime date;
+
+        public int getId() {
+            return _id;
+        }
+
+        public LocalDateTime getDate() {
+            return date;
+        }
     }
 }

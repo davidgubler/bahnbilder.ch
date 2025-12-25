@@ -1,6 +1,10 @@
 @(  implicit request: Http.Request,
-    country: entities.Country,
+    titlePhoto: entities.Photo,
     operators: List[_ <: entities.Operator],
+    vehicleClassCount: Integer,
+    vehicleCount: Integer,
+    photoCount: Long,
+    latestVehicleClasses: List[_ <: entities.VehicleClass],
     search: entities.ModelSearch,
     lastPage: Integer,
     results: List[_ <: entities.Photo],
@@ -9,20 +13,64 @@
 )
 
 
-@template(request, i18n.Txt.get(lang, "browse"), "browse", user, lang) {
+@template(request, search.getCountry().getName(lang), "browse", user, lang) {
 } {
     <script src='@routes.Assets.versioned("javascripts/multiedit.js")'></script>
     @breadCrumbs("browse", search, true, true, lang)
     <br />
-    @if(operators != null) {
-        <h1>@i18n.Txt.get(lang, "operator")</h1>
-        <div class="columns">
-            @for(operator <- operators) {
-                <a href="@routes.BrowseController.operator(1, search.getCountryId, operator.getId)">@operator.getName()</a><br />
+
+    <div class="row">
+        <div class="col-md-6 col-lg-4 order-md-2 mb-4">
+            <div style="background-color: #303030; padding: 20px">
+                <div style="text-align: center;">
+                    <h1>@search.getCountry().getName(lang)</h1>
+                </div>
+                <div class="mb-2" style="position: relative;">
+                    <div style="width: 30%; position: absolute; top: 0px; right: 0px;"><img src='/assets/images/flags/@{search.getCountry().getCode.toLowerCase}.svg' title='@search.getCountry().getName(lang)' style="width: 100%;" /></div>
+                    <img src="@titlePhoto.getUrlPublic900()" style="max-width: 100%" />
+                </div>
+                <div>
+                    <table class="stats">
+                        <tr>
+                            <td>@i18n.Txt.get(lang, "operators")</td>
+                            <td style="width: auto">@operators.size()</td>
+                        </tr>
+                        <tr>
+                            <td>@i18n.Txt.get(lang, "vclasses")</td>
+                            <td style="width: auto">@vehicleClassCount</td>
+                        </tr>
+                        <tr>
+                            <td>@i18n.Txt.get(lang, "vehicles")</td>
+                            <td style="width: auto">@vehicleCount</td>
+                        </tr>
+                        <tr>
+                            <td>@i18n.Txt.get(lang, "photos")</td>
+                            <td style="width: auto">@photoCount</td></td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: top">@i18n.Txt.get(lang, "lastAdded")</td>
+                            <td style="width: auto">
+                                @for(vehicleClass <- latestVehicleClasses) {
+                                    <a href="/search?country=@search.getCountryId()&vclass=@vehicleClass.getId()">@vehicleClass</a><br />
+                                }
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-8">
+            @if(operators != null) {
+                <h1>@i18n.Txt.get(lang, "operators")</h1>
+                <div class="columns">
+                    @for(operator <- operators) {
+                        <a href="@routes.BrowseController.operator(1, search.getCountryId, operator.getId)">@operator.getName()</a><br />
+                    }
+                </div>
+                <br />
             }
         </div>
-        <br />
-    }
+    </div>
 
     <div class='row'>
         <div class='col-12'>

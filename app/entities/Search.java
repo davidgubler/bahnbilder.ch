@@ -255,7 +255,7 @@ public class Search {
         series = false;
         portraitsFirst = false;
         withLocationOnly = false;
-        sortBy = SortBy.photoType;
+        sortBy = SortBy.rating;
         page = 1;
     }
 
@@ -341,6 +341,31 @@ public class Search {
         this.page = page;
     }
 
+    // used by Browse country
+    public Search(Country country, Integer vclass) {
+        photographer = null;
+        description = null;
+        datefrom = null;
+        dateto = null;
+        author = null;
+        phototype = null;
+        location = null;
+        this.country = country.getId();
+        operator = null;
+        this.vclass = vclass;
+        nr = null;
+        license = null;
+        lat = null;
+        lng = null;
+        radiusKm = Config.PHOTO_SPOT_RADIUS_KM;
+        labels = null;
+        keywords = null;
+        series = false;
+        portraitsFirst = false;
+        withLocationOnly = false;
+        sortBy = SortBy.rating;
+        page = 1;
+    }
 
     public String getPhotographer() {
         return photographer;

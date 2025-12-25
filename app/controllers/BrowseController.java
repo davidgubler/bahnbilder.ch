@@ -8,6 +8,7 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import utils.Context;
+import utils.NotFoundException;
 
 import java.util.List;
 
@@ -32,11 +33,13 @@ public class BrowseController extends Controller {
 
     public Result country(Http.Request request, int page, Integer countryId) {
         Context context = Context.get(request);
-        Country country = context.getCountriesModel().get(countryId);
         User user = context.getUsersModel().getFromRequest(request);
         String lang = Lang.get(request);
         ModelSearch search = new ModelSearch(page, countryId, null, null);
         injector.injectMembers(search);
+        if (search.getCountry() == null) {
+            throw new NotFoundException("Country");
+        }
 
         long count = context.getPhotosModel().searchCount(search);
         int lastPage = search.getLastPage(count);
@@ -48,7 +51,14 @@ public class BrowseController extends Controller {
             operators = context.getOperatorsModel().getByIds(context.getPhotosModel().getOperatorIdsByCountryId(search.getCountryId())).sorted(LocalizedComparator.get(lang)).toList();
         }
 
-        return ok(views.html.browse.country.render(request, country, operators, search, lastPage, photos, user, lang));
+        Integer mostCommonVehicleClass = context.getPhotosModel().getMostCommonVehicleClassByCountry(search.getCountry());
+        List<? extends Photo> mostPopularVehicleClassPhotos = context.getPhotosModel().search(new Search(search.getCountry(), mostCommonVehicleClass));
+
+        int vehicleClassCount = context.getPhotosModel().getVehicleClassCountByCountry(search.getCountry());
+        int vehicleCount = context.getPhotosModel().getVehicleCountByCountry(search.getCountry());
+        List<? extends VehicleClass> latestVehicleClasses = context.getVehicleClassesModel().getByIds(context.getPhotosModel().getLatestVehicleClassIdAdditionsByCountry(search.getCountry())).toList();
+
+        return ok(views.html.browse.country.render(request, mostPopularVehicleClassPhotos.get(0), operators, vehicleClassCount, vehicleCount, count, latestVehicleClasses, search, lastPage, photos, user, lang));
     }
 
     public Result operator(Http.Request request, int page, Integer countryId, Integer operatorId) {
