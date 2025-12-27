@@ -131,4 +131,6 @@ public interface PhotosModel {
     int getVehicleCountByCountry(Country country);
 
     List<Integer> getLatestVehicleClassIdAdditionsByCountry(Country country);
+
+    Map<Integer, Integer> getOperatorCountByCountry(Country country);
 }

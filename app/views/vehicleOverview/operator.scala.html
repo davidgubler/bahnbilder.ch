@@ -25,7 +25,7 @@
             }
             <div style="float: right; text-align: right; color: #a0a0a0; width: 30%; max-width: 250px;">
             </div>
-            <h3 class="dynamic-icon">@s.getName() <a href="https://wikidata.org/wiki/@s.getSourceRef()" target="_blank" title="Wikidata @s.getSourceRef()"><i class="fa fa-barcode"></i></a></h3>
+            <h3 class="dynamic-icon">@s.getName(lang) <a href="https://wikidata.org/wiki/@s.getSourceRef()" target="_blank" title="Wikidata @s.getSourceRef()"><i class="fa fa-barcode"></i></a></h3>
             @s.getInceptedYear()&nbsp;&ndash;&nbsp;@s.getDissolvedYear()<br />
             <a href="@routes.SearchController.search()?@s.getSearch().toQuery()"><i class="fa fa-camera"></i> @s.getSearchCount()</a><br />
         </div>

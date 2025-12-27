@@ -853,6 +853,15 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         return l.stream().map(AggregationDateByInt::getId).toList();
     }
 
+    @Override
+    public Map<Integer, Integer> getOperatorCountByCountry(Country country) {
+        List<AggregationCount> l = mongoDb.getDs().aggregate(MongoDbPhoto.class)
+                .match(Filters.eq("countryId", country.getId()), Filters.ne("operatorId", null))
+                .group(Group.group().field("_id", Expressions.field("operatorId")).field("count", AccumulatorExpressions.sum(Expressions.value(1))))
+                .execute(AggregationCount.class).toList();
+        return l.stream().collect(Collectors.toMap(AggregationCount::getId, AggregationCount::getCount));
+    }
+
     @Entity
     private static class AggregationDate {
         @Id
@@ -886,6 +895,10 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         }
 
         int count;
+
+        public int getCount() {
+            return count;
+        }
 
         @Override
         public String toString() {

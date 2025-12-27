@@ -116,29 +116,7 @@ public class VehicleOverviewController extends Controller {
             }
         }
 
-        List<Wikidata> wikidata = new ArrayList<>();
-        operator.getWikiDataIds().forEach(ref -> {
-            try {
-                wikidata.add(context.getWikidataModel().get(ref));
-            } catch (Exception e) {
-                // too bad
-            }
-        });
-        Collections.sort(wikidata);
-        Collections.reverse(wikidata);
-
-        List<OperatorSummary> operatorSummaries = new ArrayList<>();
-        LocalDate nextInception = null;
-        for(Wikidata d : wikidata) {
-            LocalDate dissolved = d.getDissolved();
-            if (dissolved == null && nextInception != null) {
-                dissolved = nextInception;
-            }
-            Search search = new Search(operator.getId(), d.getIncepted(), dissolved == null ? null : dissolved.plusDays(-1));
-            long count = context.getPhotosModel().searchCount(search);
-            operatorSummaries.add(new OperatorSummary(d.getName(lang), d.getLogoUrl(), d.getLogoSrc(), d.getInceptedYear(), dissolved == null ? null : dissolved.plusDays(-1).getYear(), search, count, d.getRef()));
-            nextInception = d.getIncepted();
-        };
+        List<OperatorSummary> operatorSummaries = context.getWikidataModel().getOperatorSummaries(operator);
 
         List<? extends VehicleType> vehicleTypes = summariesByVehicleType.keySet().stream().sorted().collect(Collectors.toUnmodifiableList());
         return ok(views.html.vehicleOverview.operator.render(request, operator, countries, operatorSummaries, vehicleTypes, summariesByVehicleType, user, lang));

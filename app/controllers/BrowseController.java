@@ -3,6 +3,7 @@ package controllers;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import entities.*;
+import entities.tmp.OperatorSummary;
 import i18n.Lang;
 import play.mvc.Controller;
 import play.mvc.Http;
@@ -10,7 +11,10 @@ import play.mvc.Result;
 import utils.Context;
 import utils.NotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class BrowseController extends Controller {
     @Inject
@@ -57,8 +61,17 @@ public class BrowseController extends Controller {
         int vehicleClassCount = context.getPhotosModel().getVehicleClassCountByCountry(search.getCountry());
         int vehicleCount = context.getPhotosModel().getVehicleCountByCountry(search.getCountry());
         List<? extends VehicleClass> latestVehicleClasses = context.getVehicleClassesModel().getByIds(context.getPhotosModel().getLatestVehicleClassIdAdditionsByCountry(search.getCountry())).toList();
+        Map<Integer, Integer> operatorCount = context.getPhotosModel().getOperatorCountByCountry(search.getCountry());
 
-        return ok(views.html.browse.country.render(request, mostPopularVehicleClassPhotos.get(0), operators, vehicleClassCount, vehicleCount, count, latestVehicleClasses, search, lastPage, photos, user, lang));
+        List<Integer> counts = operatorCount.values().stream().sorted((x, y) -> Integer.compare(y, x)).toList();
+        int operatorCutOff = Math.min(counts.size() > 15 ? counts.get(11) : 0, 100);
+
+        List<? extends Operator> featuredOperators = operators.stream().filter(o -> operatorCount.get(o.getId()) >= operatorCutOff).toList();
+        operators = new ArrayList<>(operators);
+        operators.removeAll(featuredOperators);
+        Map<Operator, List<OperatorSummary>> summaries = featuredOperators.stream().collect(Collectors.toMap(o -> o, o -> context.getWikidataModel().getOperatorSummaries(o)));
+
+        return ok(views.html.browse.country.render(request, mostPopularVehicleClassPhotos.get(0), featuredOperators, summaries, operators, vehicleClassCount, vehicleCount, count, latestVehicleClasses, search, lastPage, photos, user, lang));
     }
 
     public Result operator(Http.Request request, int page, Integer countryId, Integer operatorId) {

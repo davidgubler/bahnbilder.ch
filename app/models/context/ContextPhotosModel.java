@@ -240,4 +240,9 @@ public class ContextPhotosModel extends ContextModel implements PhotosModel {
     public List<Integer> getLatestVehicleClassIdAdditionsByCountry(Country country) {
         return call(() -> photosModel.getLatestVehicleClassIdAdditionsByCountry(country));
     }
+
+    @Override
+    public Map<Integer, Integer> getOperatorCountByCountry(Country country) {
+        return call(() -> photosModel.getOperatorCountByCountry(country));
+    }
 }

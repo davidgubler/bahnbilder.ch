@@ -554,3 +554,11 @@ table.simpleTable tr td, table.simpleTable tr th {
 table.simpleTable tr td:last-child, table.simpleTable tr th:last-child {
     padding-right: 0px;
 }
+
+tr.clickable {
+    cursor: pointer;
+}
+tr.clickable:hover {
+    background-color: #404040;
+    color: #ffffff;
+}

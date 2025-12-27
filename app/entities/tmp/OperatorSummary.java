@@ -1,30 +1,36 @@
 package entities.tmp;
 
+import entities.ContextAwareEntity;
 import entities.Search;
+import entities.Wikidata;
+import entities.Operator;
+import utils.Context;
 
-public class OperatorSummary {
-    private final String name;
+import java.time.LocalDate;
+
+public class OperatorSummary implements ContextAwareEntity {
+    private final Operator operator;
+    private final Wikidata data;
     private final String logoUrl;
     private final String logoSrc;
     private final Integer inceptedYear;
     private final Integer dissolvedYear;
-    private final Search search;
-    private final long searchCount;
     private final String sourceRef;
 
-    public OperatorSummary(String name, String logoUrl, String logoSrc, Integer inceptedYear, Integer dissolvedYear, Search search, long searchCount, String sourceRef) {
-        this.name = name;
+    private Context context;
+
+    public OperatorSummary(Operator operator, Wikidata data, String logoUrl, String logoSrc, Integer inceptedYear, Integer dissolvedYear, String sourceRef) {
+        this.operator = operator;
+        this.data = data;
         this.logoUrl = logoUrl;
         this.logoSrc = logoSrc;
         this.inceptedYear = inceptedYear;
         this.dissolvedYear = dissolvedYear;
-        this.search = search;
-        this.searchCount = searchCount;
         this.sourceRef = sourceRef;
     }
 
-    public String getName() {
-        return name;
+    public String getName(String lang) {
+        return data.getName(lang);
     }
 
     public String getLogoUrl() {
@@ -44,14 +50,25 @@ public class OperatorSummary {
     }
 
     public Search getSearch() {
-        return search;
+        LocalDate searchTo = getDissolvedYear() == null ? null : LocalDate.ofYearDay(getDissolvedYear() + 1, 1).plusDays(-1);
+        return new Search(operator.getId(), data.getIncepted(), searchTo);
     }
 
+    private Long count = null;
+
     public long getSearchCount() {
-        return searchCount;
+        if (count == null) {
+            count = context.getPhotosModel().searchCount(getSearch());
+        }
+        return count;
     }
 
     public String getSourceRef() {
         return sourceRef;
+    }
+
+    @Override
+    public void inject(Context context) {
+        this.context = context;
     }
 }

@@ -1,6 +1,8 @@
 @(  implicit request: Http.Request,
     titlePhoto: entities.Photo,
-    operators: List[_ <: entities.Operator],
+    featuredOperators: List[_ <: entities.Operator],
+    summaries: Map[entities.Operator, List[entities.tmp.OperatorSummary]],
+    otherOperators: List[_ <: entities.Operator],
     vehicleClassCount: Integer,
     vehicleCount: Integer,
     photoCount: Long,
@@ -16,11 +18,12 @@
 @template(request, search.getCountry().getName(lang), "browse", user, lang) {
 } {
     <script src='@routes.Assets.versioned("javascripts/multiedit.js")'></script>
+    <script src='@routes.Assets.versioned("javascripts/clickableanything.js")'></script>
     @breadCrumbs("browse", search, true, true, lang)
     <br />
 
-    <div class="row">
-        <div class="col-md-6 col-lg-4 order-md-2 mb-4">
+    <div class="row mb-4">
+        <div class="col-md-6 col-lg-4 order-md-2 mb-3">
             <div style="background-color: #303030; padding: 20px">
                 <div style="text-align: center;">
                     <h1>@search.getCountry().getName(lang)</h1>
@@ -33,7 +36,7 @@
                     <table class="stats">
                         <tr>
                             <td>@i18n.Txt.get(lang, "operators")</td>
-                            <td style="width: auto">@operators.size()</td>
+                            <td style="width: auto">@(featuredOperators.size() + otherOperators.size())</td>
                         </tr>
                         <tr>
                             <td>@i18n.Txt.get(lang, "vclasses")</td>
@@ -60,17 +63,45 @@
             </div>
         </div>
         <div class="col-md-6 col-lg-8">
-            @if(operators != null) {
-                <h1>@i18n.Txt.get(lang, "operators")</h1>
-                <div class="columns">
-                    @for(operator <- operators) {
-                        <a href="@routes.BrowseController.operator(1, search.getCountryId, operator.getId)">@operator.getName()</a><br />
-                    }
+            @if(!featuredOperators.isEmpty()) {
+            <div style="background-color: #303030; padding: 20px">
+                <div>
+                    <table style="width: 100%;">
+                        @for(operator <- featuredOperators) {
+                            <tr class="clickable" style="height: 30px;" data-href="@routes.BrowseController.operator(1, search.getCountryId, operator.getId)">
+                                <td style="padding-right: 20px; text-align: center;">
+                                    @if(summaries.containsKey(operator) && summaries.get(operator).size() > 0) {
+                                        <img src="@summaries.get(operator).get(0).getLogoUrl()" style="max-height: 24px; max-width: 100px;"/>
+                                    }
+                                </td>
+                                <td style="padding-right: 20px;">
+                                    @operator.getAbbr()
+                                </td>
+                                <td>
+                                    @operator.getName()
+                                </td>
+                            </tr>
+                        }
+                    </table>
                 </div>
-                <br />
+            </div>
             }
         </div>
     </div>
+    @if(!otherOperators.isEmpty()) {
+    <div class="row mb-3">
+        <div class="col-12">
+            <div>
+                <h3>@i18n.Txt.get(lang, "more")</h3>
+                <div class="columns">
+                    @for(operator <- otherOperators) {
+                        <a  href="@routes.BrowseController.operator(1, search.getCountryId, operator.getId)">@operator.getName()</a><br />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    }
 
     <div class='row'>
         <div class='col-12'>
