@@ -34,8 +34,8 @@ public class StringUtils {
 
     private static DateTimeFormatter hourMinuteFormatter = DateTimeFormatter.ofPattern("HH:mm");
     private static DateTimeFormatter hourMinuteSecondFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-    private static DateTimeFormatter yearMonthFormatter = DateTimeFormatter.ofPattern("MMMM YYYY");
-    private static DateTimeFormatter deDate = DateTimeFormatter.ofPattern("d.M.Y");
+    private static DateTimeFormatter yearMonthFormatter = DateTimeFormatter.ofPattern("MMMM yyyy");
+    private static DateTimeFormatter deDate = DateTimeFormatter.ofPattern("d.M.yyyy");
 
     public static String formatYearMonth(String lang, LocalDate date) {
         return date == null ? "" : date.format(yearMonthFormatter.localizedBy("de".equals(lang) ? Locale.GERMAN : Locale.ENGLISH));
