@@ -558,7 +558,7 @@ table.simpleTable tr td:last-child, table.simpleTable tr th:last-child {
 tr.clickable {
     cursor: pointer;
 }
-tr.clickable:hover {
+tr.clickable:hover, tr.clickable:hover a {
     background-color: #404040;
     color: #ffffff;
 }

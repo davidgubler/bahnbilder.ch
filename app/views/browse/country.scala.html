@@ -75,10 +75,10 @@
                                     }
                                 </td>
                                 <td style="padding-right: 20px;">
-                                    @operator.getAbbr()
+                                    <a href="@routes.BrowseController.operator(1, search.getCountryId, operator.getId)">@operator.getAbbr()</a>
                                 </td>
                                 <td>
-                                    @operator.getName()
+                                    <a href="@routes.BrowseController.operator(1, search.getCountryId, operator.getId)">@operator.getName()</a>
                                 </td>
                             </tr>
                         }
