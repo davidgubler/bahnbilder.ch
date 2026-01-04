@@ -14,7 +14,7 @@
         <h1>@i18n.Txt.get(lang, "country")</h1>
         <div class="columns">
             @for(country <- countries) {
-                <a href="@routes.BrowseController.country(1, country.getId)">@flag(country.getCode(), country.getName(lang))@country.getName(lang)</a><br />
+                <a href="@routes.BrowseController.country(1, country + "")">@flag(country + "", country.getName(lang))@country.getName(lang)</a><br />
             }
         </div>
         <br />

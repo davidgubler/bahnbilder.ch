@@ -19,7 +19,7 @@
         <h1>@i18n.Txt.get(lang, "vclass")</h1>
         <div class="columns">
             @for(vehicleClass <- vehicleClasses) {
-            <a href="@routes.BrowseController.vehicleClass(1, search.getCountryId, search.getOperatorId, vehicleClass.getId)">@vehicleClass.getName()</a><br />
+            <a href="@routes.BrowseController.vehicleClass(1, search.getCountry + "", search.getOperatorId, vehicleClass.getId)">@vehicleClass.getName()</a><br />
             }
         </div>
         <br />
@@ -27,7 +27,7 @@
 
     <div class='row'>
         <div class='col-12'>
-            @pageChooser(routes.BrowseController.operator(1, search.getCountryId, search.getOperatorId).toString, search.getPage, lastPage)
+            @pageChooser(routes.BrowseController.operator(1, search.getCountry + "", search.getOperatorId).toString, search.getPage, lastPage)
             <div class='fleximages'>
                 <div class="multiedit">
                     <span id="multiedit"><i class="fas fa-edit"></i></span>
@@ -39,7 +39,7 @@
                     </a>
                 }
             </div>
-            @pageChooser(routes.BrowseController.operator(1, search.getCountryId, search.getOperatorId).toString, search.getPage, lastPage)
+            @pageChooser(routes.BrowseController.operator(1, search.getCountry + "", search.getOperatorId).toString, search.getPage, lastPage)
         </div>
     </div>
 }

@@ -47,7 +47,7 @@
             <table class="stats">
                 @for(cv <- countryViews) {
                     <tr>
-                        <td><span><a href="@routes.BrowseController.country(1, cv.getCountry().getId)" >@flag(cv.getCountry().getCode(), cv.getCountry().getName(lang))@cv.getCountry().getName(lang)</a></span></td>
+                        <td><span><a href="@routes.BrowseController.country(1, cv.getCountry + "")" >@flag(cv.getCountry() + "", cv.getCountry().getName(lang))@cv.getCountry().getName(lang)</a></span></td>
                         <td>@(cv.getViews() / 1000L)&nbsp;k</td>
                     </tr>
                 }

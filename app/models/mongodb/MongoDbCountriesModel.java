@@ -9,6 +9,7 @@ import entities.mongodb.MongoDbCountry;
 import models.CountriesModel;
 
 import java.util.Collection;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 public class MongoDbCountriesModel extends MongoDbModel<MongoDbCountry> implements CountriesModel {
@@ -35,6 +36,18 @@ public class MongoDbCountriesModel extends MongoDbModel<MongoDbCountry> implemen
             }
         }
         return country;
+    }
+
+    @Override
+    public Country get(String id) {
+        if (id == null) {
+            return null;
+        }
+        try {
+            return get(Integer.parseInt(id));
+        } catch (NumberFormatException e) {
+            return getByCode(id.toUpperCase(Locale.ROOT));
+        }
     }
 
     @Override

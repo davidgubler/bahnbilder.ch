@@ -35,11 +35,12 @@ public class BrowseController extends Controller {
         return ok(views.html.browse.world.render(request, countries, search, user, lang));
     }
 
-    public Result country(Http.Request request, int page, Integer countryId) {
+    public Result country(Http.Request request, int page, String countryId) {
         Context context = Context.get(request);
         User user = context.getUsersModel().getFromRequest(request);
         String lang = Lang.get(request);
-        ModelSearch search = new ModelSearch(page, countryId, null, null);
+        Country country = context.getCountriesModel().get(countryId);
+        ModelSearch search = new ModelSearch(page, country == null ? null : country.getId(), null, null);
         injector.injectMembers(search);
         if (search.getCountry() == null) {
             throw new NotFoundException("Country");
@@ -74,13 +75,13 @@ public class BrowseController extends Controller {
         return ok(views.html.browse.country.render(request, mostPopularVehicleClassPhotos.get(0), featuredOperators, summaries, operators, vehicleClassCount, vehicleCount, count, latestVehicleClasses, search, lastPage, photos, user, lang));
     }
 
-    public Result operator(Http.Request request, int page, Integer countryId, Integer operatorId) {
+    public Result operator(Http.Request request, int page, String countryId, Integer operatorId) {
         Context context = Context.get(request);
         Country country = context.getCountriesModel().get(countryId);
         Operator operator = context.getOperatorsModel().get(operatorId);
         User user = context.getUsersModel().getFromRequest(request);
         String lang = Lang.get(request);
-        ModelSearch search = new ModelSearch(page, countryId, operatorId, null);
+        ModelSearch search = new ModelSearch(page, country == null ? null : country.getId(), operatorId, null);
         injector.injectMembers(search);
 
         long count = context.getPhotosModel().searchCount(search);
@@ -96,14 +97,14 @@ public class BrowseController extends Controller {
         return ok(views.html.browse.operator.render(request, country, operator, vehicleClasses, search, lastPage, photos, user, lang));
     }
 
-    public Result vehicleClass(Http.Request request, int page, Integer countryId, Integer operatorId, Integer vehicleClassId) {
+    public Result vehicleClass(Http.Request request, int page, String countryId, Integer operatorId, Integer vehicleClassId) {
         Context context = Context.get(request);
         Country country = context.getCountriesModel().get(countryId);
         Operator operator = context.getOperatorsModel().get(operatorId);
         VehicleClass vehicleClass = context.getVehicleClassesModel().get(vehicleClassId);
         User user = context.getUsersModel().getFromRequest(request);
         String lang = Lang.get(request);
-        ModelSearch search = new ModelSearch(page, countryId, operatorId, vehicleClassId);
+        ModelSearch search = new ModelSearch(page, country == null ? null : country.getId(), operatorId, vehicleClassId);
         injector.injectMembers(search);
 
         long count = context.getPhotosModel().searchCount(search);

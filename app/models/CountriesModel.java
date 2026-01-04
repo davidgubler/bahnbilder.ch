@@ -15,6 +15,8 @@ public interface CountriesModel {
 
     Country get(Integer id);
 
+    Country get(String id);
+
     Country getByCode(String code);
 
     Country getByName(String name);

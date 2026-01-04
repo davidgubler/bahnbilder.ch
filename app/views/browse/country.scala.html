@@ -29,7 +29,7 @@
                     <h1>@search.getCountry().getName(lang)</h1>
                 </div>
                 <div class="mb-2" style="position: relative;">
-                    <div style="width: 30%; position: absolute; top: 0px; right: 0px;"><img src='/assets/images/flags/@{search.getCountry().getCode.toLowerCase}.svg' title='@search.getCountry().getName(lang)' style="width: 100%;" /></div>
+                    <div style="width: 30%; position: absolute; top: 0px; right: 0px;"><img src='/assets/images/flags/@{search.getCountry() + ""}.svg' title='@search.getCountry().getName(lang)' style="width: 100%;" /></div>
                     <img src="@titlePhoto.getUrlPublic900()" style="max-width: 100%" />
                 </div>
                 <div>
@@ -68,17 +68,17 @@
                 <div>
                     <table style="width: 100%;">
                         @for(operator <- featuredOperators) {
-                            <tr class="clickable" style="height: 30px;" data-href="@routes.BrowseController.operator(1, search.getCountryId, operator.getId)">
+                            <tr class="clickable" style="height: 30px;" data-href="@routes.BrowseController.operator(1, search.getCountry + "", operator.getId)">
                                 <td style="padding-right: 20px; text-align: center;">
                                     @if(summaries.containsKey(operator) && summaries.get(operator).size() > 0) {
                                         <img src="@summaries.get(operator).get(0).getLogoUrl()" style="max-height: 24px; max-width: 100px;"/>
                                     }
                                 </td>
                                 <td style="padding-right: 20px;">
-                                    <a href="@routes.BrowseController.operator(1, search.getCountryId, operator.getId)">@operator.getAbbr()</a>
+                                    <a href="@routes.BrowseController.operator(1, search.getCountry  + "", operator.getId)">@operator.getAbbr()</a>
                                 </td>
                                 <td>
-                                    <a href="@routes.BrowseController.operator(1, search.getCountryId, operator.getId)">@operator.getName()</a>
+                                    <a href="@routes.BrowseController.operator(1, search.getCountry + "", operator.getId)">@operator.getName()</a>
                                 </td>
                             </tr>
                         }
@@ -95,7 +95,7 @@
                 <h3>@i18n.Txt.get(lang, "more")</h3>
                 <div class="columns">
                     @for(operator <- otherOperators) {
-                        <a  href="@routes.BrowseController.operator(1, search.getCountryId, operator.getId)">@operator.getName()</a><br />
+                        <a  href="@routes.BrowseController.operator(1, search.getCountry + "", operator.getId)">@operator.getName()</a><br />
                     }
                 </div>
             </div>
@@ -105,7 +105,7 @@
 
     <div class='row'>
         <div class='col-12'>
-            @pageChooser(routes.BrowseController.country(1, search.getCountryId).toString, search.getPage, lastPage)
+            @pageChooser(routes.BrowseController.country(1, search.getCountry + "").toString, search.getPage, lastPage)
             <div class='fleximages'>
                 <div class="multiedit">
                     <span id="multiedit"><i class="fas fa-edit"></i></span>
@@ -117,7 +117,7 @@
                     </a>
                 }
             </div>
-            @pageChooser(routes.BrowseController.country(1, search.getCountryId).toString, search.getPage, lastPage)
+            @pageChooser(routes.BrowseController.country(1, search.getCountry + "").toString, search.getPage, lastPage)
         </div>
     </div>
 }

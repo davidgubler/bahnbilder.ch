@@ -18,7 +18,7 @@
 
     <div class='row'>
         <div class='col-12'>
-            @pageChooser(routes.BrowseController.vehicleClass(1, search.getCountryId, search.getOperatorId, search.getVehicleClassId).toString, search.getPage, lastPage)
+            @pageChooser(routes.BrowseController.vehicleClass(1, search.getCountry + "", search.getOperatorId, search.getVehicleClassId).toString, search.getPage, lastPage)
             <div class='fleximages'>
                 <div class="multiedit">
                     <span id="multiedit"><i class="fas fa-edit"></i></span>
@@ -30,7 +30,7 @@
                     </a>
                 }
             </div>
-            @pageChooser(routes.BrowseController.vehicleClass(1, search.getCountryId, search.getOperatorId, search.getVehicleClassId).toString, search.getPage, lastPage)
+            @pageChooser(routes.BrowseController.vehicleClass(1, search.getCountry + "", search.getOperatorId, search.getVehicleClassId).toString, search.getPage, lastPage)
         </div>
     </div>
 }

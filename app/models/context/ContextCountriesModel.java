@@ -39,6 +39,11 @@ public class ContextCountriesModel extends ContextModel implements CountriesMode
     }
 
     @Override
+    public Country get(String id) {
+        return call(() -> countriesModel.get(id));
+    }
+
+    @Override
     public Country getByCode(String code) {
         return call(() -> countriesModel.getByCode(code));
     }

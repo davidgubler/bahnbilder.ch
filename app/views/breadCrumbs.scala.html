@@ -10,7 +10,7 @@
 @if(link == "browse") {
     @breadCrumbsImpl(search, null,
         routes.BrowseController.world().toString,
-        routes.BrowseController.country(1, search.getCountryId).toString,
-        routes.BrowseController.operator(1, search.getCountryId, search.getOperatorId).toString,
-        routes.BrowseController.vehicleClass(1, search.getCountryId, search.getOperatorId, search.getVehicleClassId).toString, showSortBy, mapButton, lang)
+        routes.BrowseController.country(1, search.getCountry + "").toString,
+        routes.BrowseController.operator(1, search.getCountry + "", search.getOperatorId).toString,
+        routes.BrowseController.vehicleClass(1, search.getCountry + "", search.getOperatorId, search.getVehicleClassId).toString, showSortBy, mapButton, lang)
 }

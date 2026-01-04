@@ -67,7 +67,7 @@ public class MongoDbCountry implements MongoDbEntity, Country {
 
     @Override
     public String toString() {
-        return getCode();
+        return getCode().toLowerCase(Locale.ROOT);
     }
 
     @Override
