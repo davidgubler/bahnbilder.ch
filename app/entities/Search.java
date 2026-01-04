@@ -255,7 +255,7 @@ public class Search {
         series = false;
         portraitsFirst = false;
         withLocationOnly = false;
-        sortBy = SortBy.rating;
+        sortBy = SortBy.photoType;
         page = 1;
     }
 
