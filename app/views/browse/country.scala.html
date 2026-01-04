@@ -6,7 +6,7 @@
     vehicleClassCount: Integer,
     vehicleCount: Integer,
     photoCount: Long,
-    latestVehicleClasses: List[_ <: entities.VehicleClass],
+    latestVehicleClasses: List[_ <: entities.OperatorVehicleClass],
     search: entities.ModelSearch,
     lastPage: Integer,
     results: List[_ <: entities.Photo],
@@ -53,8 +53,8 @@
                         <tr>
                             <td style="vertical-align: top">@i18n.Txt.get(lang, "lastAdded")</td>
                             <td style="width: auto">
-                                @for(vehicleClass <- latestVehicleClasses) {
-                                    <a href="/search?country=@search.getCountryId()&vclass=@vehicleClass.getId()">@vehicleClass</a><br />
+                                @for(operatorVehicleClass <- latestVehicleClasses) {
+                                    <a href="@routes.BrowseController.vehicleClass(1, search.getCountry() + "", operatorVehicleClass.getOperator().getId(), operatorVehicleClass.getVehicleClass().getId())">@operatorVehicleClass</a><br />
                                 }
                             </td>
                         </tr>

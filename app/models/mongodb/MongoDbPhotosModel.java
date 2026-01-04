@@ -22,6 +22,7 @@ import dev.morphia.aggregation.stages.Group;
 import dev.morphia.aggregation.stages.Sort;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Transient;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.query.Query;
@@ -37,6 +38,7 @@ import entities.mongodb.MongoDbPhotoExif;
 import entities.mongodb.MongoDbPhoto;
 import entities.mongodb.aggregations.MongoDbAggregationCountryViews;
 import models.*;
+import utils.Context;
 import utils.geometry.GeographicCoordinates;
 import utils.geometry.SimplePoint;
 
@@ -843,14 +845,18 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
     }
 
     @Override
-    public List<Integer> getLatestVehicleClassIdAdditionsByCountry(Country country) {
-        List<AggregationDateByInt> l = mongoDb.getDs().aggregate(MongoDbPhoto.class)
-                .match(Filters.eq("countryId", country.getId()), Filters.ne("vehicleClassId", null), Filters.ne("uploadDate", null))
-                .group(Group.group().field("_id", Expressions.field("vehicleClassId")).field("date", AccumulatorExpressions.min(Expressions.field("uploadDate"))))
+    public List<? extends OperatorVehicleClass> getLatestVehicleClassIdAdditionsByCountry(Country country) {
+        List<AggregationDateByOperatorVehicleClassId> l = mongoDb.getDs().aggregate(MongoDbPhoto.class)
+                .match(Filters.eq("countryId", country.getId()), Filters.ne("vehicleClassId", null), Filters.ne("operatorId", null), Filters.ne("uploadDate", null))
+                .group(Group.group().field("_id",
+                        Expressions.document()
+                                .field("operatorId", Expressions.field("operatorId"))
+                                .field("vehicleClassId", Expressions.field("vehicleClassId"))
+                ).field("date", AccumulatorExpressions.min(Expressions.field("uploadDate"))))
                 .sort(Sort.sort().descending("date"))
                 .limit(5)
-                .execute(AggregationDateByInt.class).toList();
-        return l.stream().map(AggregationDateByInt::getId).toList();
+                .execute(AggregationDateByOperatorVehicleClassId.class).toList();
+        return l.stream().map(AggregationDateByOperatorVehicleClassId::getId).toList();
     }
 
     @Override
@@ -919,6 +925,74 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
 
         public LocalDateTime getDate() {
             return date;
+        }
+    }
+
+    @Entity
+    private static class AggregationDateByOperatorVehicleClassId {
+        @Id
+        private MongoDbOperatorVehicleClassId _id;
+
+        private LocalDateTime date;
+
+        public MongoDbOperatorVehicleClassId getId() {
+            return _id;
+        }
+
+        public LocalDateTime getDate() {
+            return date;
+        }
+    }
+
+    @Entity
+    private static class MongoDbOperatorVehicleClassId implements OperatorVehicleClass, ContextAwareEntity {
+        @Id
+        private Object _id;
+
+        private int operatorId;
+
+        private int vehicleClassId;
+
+        @Transient
+        private Context context;
+
+        @Override
+        public void inject(Context context) {
+            this.context = context;
+        }
+
+        public int getOperatorId() {
+            return operatorId;
+        }
+
+        public int getVehicleClassId() {
+            return vehicleClassId;
+        }
+
+        @Transient
+        private Operator operator;
+
+        public Operator getOperator() {
+            if (operator == null) {
+                this.operator = context.getOperatorsModel().get(operatorId);
+            }
+            return operator;
+        }
+
+        @Transient
+        public VehicleClass vehicleClass;
+
+        public VehicleClass getVehicleClass() {
+            if (vehicleClass == null) {
+                this.vehicleClass = context.getVehicleClassesModel().get(vehicleClassId);
+            }
+            return vehicleClass;
+        }
+
+        @Override
+        public String toString() {
+            String abbr = getOperator().getAbbr();
+            return abbr + " " + getVehicleClass().getName().replace(" Typ " + abbr, "").replace(abbr + " ", "");
         }
     }
 }

@@ -61,7 +61,9 @@ public class BrowseController extends Controller {
 
         int vehicleClassCount = context.getPhotosModel().getVehicleClassCountByCountry(search.getCountry());
         int vehicleCount = context.getPhotosModel().getVehicleCountByCountry(search.getCountry());
-        List<? extends VehicleClass> latestVehicleClasses = context.getVehicleClassesModel().getByIds(context.getPhotosModel().getLatestVehicleClassIdAdditionsByCountry(search.getCountry())).toList();
+
+        List<? extends OperatorVehicleClass> latestVehicleClasses = context.getPhotosModel().getLatestVehicleClassIdAdditionsByCountry(search.getCountry());
+
         Map<Integer, Integer> operatorCount = context.getPhotosModel().getOperatorCountByCountry(search.getCountry());
 
         List<Integer> counts = operatorCount.values().stream().sorted((x, y) -> Integer.compare(y, x)).toList();
