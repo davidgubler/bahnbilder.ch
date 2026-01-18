@@ -1,5 +1,6 @@
 package entities;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface Operator extends LocalizedEntity {
@@ -13,5 +14,9 @@ public interface Operator extends LocalizedEntity {
         return getName();
     }
 
+    String getName(String lang, LocalDateTime date);
+
     List<String> getWikiDataIds();
+
+    List<? extends OperatorEra> getEras();
 }

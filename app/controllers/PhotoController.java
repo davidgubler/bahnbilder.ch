@@ -123,7 +123,7 @@ public class PhotoController extends Controller {
             }
         }
         if (photo.getOperator() != null) {
-            state.photo.operator = new OperatorInfo(photo.getOperator().getId(), photo.getOperator().getName(), views.html.photos.operatorLink.render(photo).toString());
+            state.photo.operator = new OperatorInfo(photo.getOperator().getId(), photo.getOperator().getName(lang, photo.getPhotoDate()), views.html.photos.operatorLink.render(photo, lang).toString());
         }
         if (photo.getUser() != null) {
             if (photo.getPhotographer() == null) {

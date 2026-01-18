@@ -3,23 +3,17 @@ package models.mongodb;
 import dev.morphia.UpdateOptions;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.UpdateOperators;
-import entities.Search;
 import entities.Wikidata;
-import entities.Operator;
 import entities.mongodb.MongoDbWikidata;
-import entities.tmp.OperatorSummary;
 import models.WikidataModel;
 import utils.Config;
-import utils.Context;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
@@ -41,7 +35,6 @@ public class MongoDbWikidataModel extends MongoDbModel<MongoDbWikidata> implemen
                 return null;
             }
             if (httpResponse.statusCode() < 200 || httpResponse.statusCode() >= 300) {
-                System.out.print(new String(httpResponse.body()));
                 throw new CompletionException("HTTP response " + httpResponse.statusCode(), null);
             }
             try {
@@ -81,29 +74,7 @@ public class MongoDbWikidataModel extends MongoDbModel<MongoDbWikidata> implemen
     }
 
     @Override
-    public List<OperatorSummary> getOperatorSummaries(Operator operator) {
-        List<Wikidata> wikidata = new ArrayList<>();
-        operator.getWikiDataIds().forEach(ref -> {
-            try {
-                wikidata.add(get(ref));
-            } catch (Exception e) {
-                // too bad
-            }
-        });
-        Collections.sort(wikidata);
-        Collections.reverse(wikidata);
-
-        List<OperatorSummary> operatorSummaries = new ArrayList<>();
-        LocalDate nextInception = null;
-        for(Wikidata d : wikidata) {
-            LocalDate dissolved = d.getDissolved();
-            if (dissolved == null && nextInception != null) {
-                dissolved = nextInception;
-            }
-
-            operatorSummaries.add(new OperatorSummary(operator, d, d.getLogoUrl(), d.getLogoSrc(), d.getInceptedYear(), dissolved == null ? null : dissolved.plusDays(-1).getYear(), d.getRef()));
-            nextInception = d.getIncepted();
-        };
-        return operatorSummaries;
+    public List<Wikidata> get(Collection<String> ids) {
+        return ids.stream().map(this::get).toList();
     }
 }

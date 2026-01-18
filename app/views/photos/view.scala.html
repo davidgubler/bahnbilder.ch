@@ -75,7 +75,7 @@
                     </tr>
                     <tr id='operator-container' style='@if(photo.getOperator() == null){display: none}'>
                         <td>@i18n.Txt.get(lang, "operator"):</td>
-                        <td id='operator-content'>@operatorLink(photo)</td>
+                        <td id='operator-content'>@operatorLink(photo, lang)</td>
                     </tr>
                     <tr id='photographer-container' style='@if(photo.getPhotographer() == null){display: none}'>
                         <td>@i18n.Txt.get(lang, "photographer"):</td>

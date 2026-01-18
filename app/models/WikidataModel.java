@@ -1,9 +1,8 @@
 package models;
 
-import entities.Operator;
 import entities.Wikidata;
-import entities.tmp.OperatorSummary;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface WikidataModel {
@@ -11,5 +10,5 @@ public interface WikidataModel {
 
     Wikidata get(String ref);
 
-    List<OperatorSummary> getOperatorSummaries(Operator operator);
+    List<Wikidata> get(Collection<String> ids);
 }

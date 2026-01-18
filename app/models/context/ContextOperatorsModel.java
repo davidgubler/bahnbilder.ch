@@ -2,12 +2,14 @@ package models.context;
 
 import com.google.inject.Inject;
 import entities.Operator;
+import entities.Wikidata;
 import models.OperatorsModel;
 import utils.Context;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class ContextOperatorsModel extends ContextModel implements OperatorsModel {
@@ -77,5 +79,10 @@ public class ContextOperatorsModel extends ContextModel implements OperatorsMode
     @Override
     public Stream<? extends Operator> getByAbbr(String abbr) {
         return call(() -> operatorsModel.getByAbbr(abbr));
+    }
+
+    @Override
+    public void updateEras(Operator operator, Function<Collection<String>, List<Wikidata>> fetchWikidata) {
+        call(() -> { operatorsModel.updateEras(operator, fetchWikidata); return null; });
     }
 }

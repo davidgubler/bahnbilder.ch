@@ -53,7 +53,7 @@ public class PhotoDescriptionGenerator {
 
     public static String getCustomDescription(String lang, Photo photo, boolean inclVehicleClass, boolean inclOperator, boolean inclOperatorAbbr, boolean inclLocation, boolean inclCountry) {
         String vehicleName = inclVehicleClass ? getCustomVehicleName(lang, photo.getOperator(), photo.getVehicleClass(), photo.getNr()) : null;
-        String operatorName = (inclOperator && photo.getOperator() != null) ? photo.getOperator().getName() : null;
+        String operatorName = (inclOperator && photo.getOperator() != null) ? photo.getOperator().getName(lang, photo.getPhotoDate()) : null;
         String operatorAbbr = (inclOperatorAbbr && photo.getOperator() != null) ? photo.getOperator().getAbbr() : null;
         Location location = inclLocation ? photo.getLocation() : null;
         Country country = inclCountry ? photo.getCountry() : null;

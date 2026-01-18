@@ -1,7 +1,7 @@
 @(  implicit request: Http.Request,
     titlePhoto: entities.Photo,
     featuredOperators: List[_ <: entities.Operator],
-    summaries: Map[entities.Operator, List[entities.tmp.OperatorSummary]],
+    eras: Map[entities.Operator, List[_ <: entities.OperatorEra]],
     otherOperators: List[_ <: entities.Operator],
     vehicleClassCount: Integer,
     vehicleCount: Integer,
@@ -70,8 +70,8 @@
                         @for(operator <- featuredOperators) {
                             <tr class="clickable" style="height: 30px;" data-href="@routes.BrowseController.operator(1, search.getCountry + "", operator.getId)">
                                 <td style="padding-right: 20px; text-align: center;">
-                                    @if(summaries.containsKey(operator) && summaries.get(operator).size() > 0) {
-                                        <img src="@summaries.get(operator).get(0).getLogoUrl()" style="max-height: 24px; max-width: 100px;"/>
+                                    @if(eras.containsKey(operator) && eras.get(operator).size() > 0) {
+                                        <img src="@eras.get(operator).get(0).getLogoUrl()" style="max-height: 24px; max-width: 100px;"/>
                                     }
                                 </td>
                                 <td style="padding-right: 20px;">

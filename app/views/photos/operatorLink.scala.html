@@ -1,2 +1,4 @@
-@(photo: entities.Photo)
-<a href="@routes.VehicleOverviewController.operator(photo.getOperatorId)">@photo.getOperator()</a>
+@(photo: entities.Photo,
+  lang: String,
+)
+<a href="@routes.VehicleOverviewController.operator(photo.getOperatorId)">@photo.getOperator().getName(lang, photo.getPhotoDate())</a>

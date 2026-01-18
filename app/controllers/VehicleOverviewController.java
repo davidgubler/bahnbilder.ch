@@ -1,7 +1,6 @@
 package controllers;
 
 import entities.*;
-import entities.tmp.OperatorSummary;
 import entities.tmp.OtherVehicleType;
 import entities.tmp.VehicleClassSummary;
 import i18n.Lang;
@@ -11,7 +10,6 @@ import play.mvc.Result;
 import utils.Context;
 import utils.NotFoundException;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -116,9 +114,7 @@ public class VehicleOverviewController extends Controller {
             }
         }
 
-        List<OperatorSummary> operatorSummaries = context.getWikidataModel().getOperatorSummaries(operator);
-
         List<? extends VehicleType> vehicleTypes = summariesByVehicleType.keySet().stream().sorted().collect(Collectors.toUnmodifiableList());
-        return ok(views.html.vehicleOverview.operator.render(request, operator, countries, operatorSummaries, vehicleTypes, summariesByVehicleType, user, lang));
+        return ok(views.html.vehicleOverview.operator.render(request, operator, countries, operator.getEras(), vehicleTypes, summariesByVehicleType, user, lang));
     }
 }
