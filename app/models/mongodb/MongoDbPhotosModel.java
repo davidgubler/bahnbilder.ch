@@ -118,7 +118,6 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
 
     @Override
     public List<Photo> getFeatured(VehicleClassesModel vehicleClassesModel, VehicleTypesModel vehicleTypesModel) {
-        long start = System.currentTimeMillis();
         List<AggregationDate> lastAggregationDates = mongoDb.getDs().aggregate(MongoDbPhoto.class)
                 .match(Filters.ne("photoDate", null), Filters.ne("vehicleClassId", null), Filters.ne("locationId", null))
                 .group(Group.group().field("_id", DateExpressions.dateToString().date("$photoDate").format("%Y-%m-%d")))
@@ -342,6 +341,24 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
                     Filters.and(
                             Filters.eq("authorRating", photo.getAuthorRating()),
                             Filters.eq("views", photo.getViews()),
+                            getFilter("numId", photo.getId(), forward)
+                    )));
+        } else if (search.getSortBy() == Search.SortBy.photoType) {
+            query = query.filter(Filters.or(
+                    getFilter("photoTypeId", photo.getPhotoTypeId(), !forward),
+                    Filters.and(
+                            Filters.eq("photoTypeId", photo.getPhotoTypeId()),
+                            getFilter("authorRating", photo.getAuthorRating(), forward)
+                    ),
+                    Filters.and(
+                            Filters.eq("photoTypeId", photo.getPhotoTypeId()),
+                            Filters.eq("authorRating", photo.getAuthorRating()),
+                            getFilter("photoDate", photo.getPhotoDate(), forward)
+                    ),
+                    Filters.and(
+                            Filters.eq("photoTypeId", photo.getPhotoTypeId()),
+                            Filters.eq("authorRating", photo.getAuthorRating()),
+                            Filters.eq("photoDate", photo.getPhotoDate()),
                             getFilter("numId", photo.getId(), forward)
                     )));
         } else {
@@ -771,17 +788,6 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         if (photo == null || photo.getCountryId() == null) {
             return Collections.emptyMap();
         }
-
-        /*for (Photo p : query()
-                .filter(Filters.ne("numId", photo.getId()))
-                .filter(Filters.ne("operatorId", null))
-                .filter(Filters.eq("countryId", photo.getCountryId()))
-                .filter(Filters.eq("texts", text))
-                .stream(new FindOptions()).toList() ) {
-            Operator o = operatorsModel.get(p.getOperatorId());
-            System.out.println("photo " + p.getId() + " with operator " + o + " matches text " + text);
-        }*/
-
         return query()
                 .filter(Filters.ne("numId", photo.getId()))
                 .filter(Filters.ne("operatorId", null))
