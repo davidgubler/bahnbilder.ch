@@ -27,7 +27,7 @@
             </p>
             @form(request, routes.UploadController.uploadPost(), multipart = true) {
                 @formUpload("", "files", false, errors, lang, forceVerticalLayout = true, multiple = true)
-                @formButtons("upload", null, lang)
+                @formButtons("upload", null, lang = lang)
             }
         </div>
     </div>

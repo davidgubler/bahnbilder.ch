@@ -8,6 +8,6 @@
 } {
     @form(request, routes.TraveloguesController.deletePost(travelogue.getId)) {
         <h1>@i18n.Txt.get(lang, "delete"): @travelogue.getTitle()</h1>
-        @formButtons("delete", routes.TraveloguesController.view(travelogue.getId), lang)
+        @formButtons("delete", routes.TraveloguesController.view(travelogue.getId), lang = lang)
     }
 }

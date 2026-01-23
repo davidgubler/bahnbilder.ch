@@ -1,9 +1,13 @@
 @(  key: String,
     cancel: Object = null,
+    delete: Object = null,
     lang: String,
 )
 <div class="form-group row mb-1">
     <div class="col-12 text-right">
+        @if(delete != null){
+        <a href="@delete" class="btn btn-link ps-0" style="color: #ee4444 !important;">@i18n.Txt.get(lang, "delete")</a>
+        }
         @if(cancel != null){
         <a href="@cancel" class="btn btn-link ps-0">@i18n.Txt.get(lang, "cancel")</a>
         }

@@ -18,7 +18,7 @@
                 @formInputText(i18n.Txt.get(data.lang, "nameEn"), "nameEn", data.nameEn, false, errors, data.lang)
                 @formInputTokenField(i18n.Txt.get(data.lang, "labels"), "labels", data.labels, false, errors, data.lang)
                 <div class="mt-3"></div>
-                @formButtons("save", data.returnUrl, data.lang)
+                @formButtons("save", data.returnUrl, lang = data.lang)
             }
         </div>
     </div>

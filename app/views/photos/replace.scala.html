@@ -13,7 +13,7 @@
             <h1>@i18n.Txt.get(lang, "uploadNewVersion")</h1>
             @form(request, routes.PhotoController.replacePost(photo.getId, returnUrl), multipart = true) {
                 @formUpload("", "file", false, errors, lang, forceVerticalLayout = true)
-                @formButtons("upload", returnUrl, lang)
+                @formButtons("upload", returnUrl, lang = lang)
             }
         </div>
     </div>

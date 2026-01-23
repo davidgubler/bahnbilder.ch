@@ -117,6 +117,18 @@ public class ManagementController extends Controller {
                 (user, data, errors) -> views.html.manage.editOperator.render(request, data, errors, user));
     }
 
+    public Result deleteOperator(Http.Request request, String returnUrl, Integer operatorId) {
+        Context context = Context.get(request);
+        Operator operator = context.getOperatorsModel().get(operatorId);
+        return ok();
+    }
+
+    public Result deleteOperatorPost(Http.Request request, String returnUrl, Integer operatorId) {
+        Context context = Context.get(request);
+        Operator operator = context.getOperatorsModel().get(operatorId);
+        return ok();
+    }
+
     // ============
     // VehicleClass
     // ============
