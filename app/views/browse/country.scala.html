@@ -69,8 +69,8 @@
                         @for(operator <- featuredOperators) {
                             <tr class="clickable" style="height: 30px;" data-href="@routes.BrowseController.operator(1, search.getCountry + "", operator.getId)">
                                 <td style="padding-right: 20px; text-align: center;">
-                                    @if(operator.getEras().size() > 0) {
-                                        <img src="@operator.getEras().get(0).getLogoUrl()" style="max-height: 24px; max-width: 100px;"/>
+                                    @if(operator.getLogoUrl() != null) {
+                                        <img src="@operator.getLogoUrl()" style="max-height: 24px; max-width: 100px;"/>
                                     }
                                 </td>
                                 <td style="padding-right: 20px;">

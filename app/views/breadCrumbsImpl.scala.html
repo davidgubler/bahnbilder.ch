@@ -45,9 +45,9 @@
         @if(search.getOperator() != null) {
             &nbsp;&nbsp;&gt;&nbsp;&nbsp;
             @if(operatorUrl != null) {
-                <a href="@operatorUrl">@search.getOperator()</a>
+                <a href="@operatorUrl">@if(search.getOperator().getLogoUrl() != null){<div class="logo"><img src="@search.getOperator().getLogoUrl()"/></div> }@search.getOperator()</a>
             } else {
-                @search.getOperator()
+                @if(search.getOperator().getLogoUrl() != null){<div class="logo"><img src="@search.getOperator().getLogoUrl()"/></div> }@search.getOperator()
             }
         }
 

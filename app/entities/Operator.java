@@ -19,4 +19,9 @@ public interface Operator extends LocalizedEntity {
     List<String> getWikiDataIds();
 
     List<? extends OperatorEra> getEras();
+
+    default String getLogoUrl() {
+        List<? extends OperatorEra> eras = getEras();
+        return eras == null || eras.isEmpty() ? null : eras.get(0).getLogoUrl();
+    }
 }
