@@ -71,9 +71,7 @@ public class BrowseController extends Controller {
         List<? extends Operator> featuredOperators = operators.stream().filter(o -> operatorCount.get(o.getId()) >= operatorCutOff).toList();
         operators = new ArrayList<>(operators);
         operators.removeAll(featuredOperators);
-        Map<Operator, List<? extends OperatorEra>> eras = featuredOperators.stream().collect(Collectors.toMap(o -> o, o -> o.getEras()));
-
-        return ok(views.html.browse.country.render(request, mostPopularVehicleClassPhotos.get(0), featuredOperators, eras, operators, vehicleClassCount, vehicleCount, count, latestVehicleClasses, search, lastPage, photos, user, lang));
+        return ok(views.html.browse.country.render(request, mostPopularVehicleClassPhotos.get(0), featuredOperators, operators, vehicleClassCount, vehicleCount, count, latestVehicleClasses, search, lastPage, photos, user, lang));
     }
 
     public Result operator(Http.Request request, int page, String countryId, Integer operatorId) {
