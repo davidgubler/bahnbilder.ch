@@ -218,6 +218,11 @@ public class ContextPhotosModel extends ContextModel implements PhotosModel {
     }
 
     @Override
+    public boolean isOperatorInUse(Integer operatorId) {
+        return call(() -> photosModel.isOperatorInUse(operatorId));
+    }
+
+    @Override
     public List<String> getPhotographers() {
         return call(() -> photosModel.getPhotographers());
     }

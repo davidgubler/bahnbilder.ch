@@ -157,6 +157,9 @@ public class Txt {
         en.put(ErrorMessages.ACCEPT_TC, "Our terms and conditions must be accepted");
         de.put(ErrorMessages.ACCEPT_TC, "Unsere Geschäftsbedingungen müssen akzeptiert werden");
 
+        en.put(ErrorMessages.CANNOT_DELETE_IN_USE, "Cannot delete objects that are still in use");
+        de.put(ErrorMessages.CANNOT_DELETE_IN_USE, "Objekte, die noch in Gebrauch sind, können nicht gelöscht werden");
+
         en.put(ErrorMessages.ALREADY_EXISTS, "Already exists");
         de.put(ErrorMessages.ALREADY_EXISTS, "Existiert bereits");
 

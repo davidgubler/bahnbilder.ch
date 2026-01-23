@@ -123,6 +123,8 @@ public interface PhotosModel {
 
     long countPhotosByOperator(Photo photo, Integer operatorId);
 
+    boolean isOperatorInUse(Integer operatorId);
+
     List<String> getPhotographers();
 
     Integer getMostCommonVehicleClassByCountry(Country country);

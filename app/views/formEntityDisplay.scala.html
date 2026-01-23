@@ -1,0 +1,15 @@
+@(  name: String,
+    value: String,
+    errors: Map[String, String],
+    lang: String,
+)
+
+<div class="form-group row mb-1">
+    <label for="name" class="col-xl-3 col-lg-4 col-md-12 col-form-label">@i18n.Txt.get(lang, name)</label>
+    <div class="col-xl-9 col-lg-8 col-md-12">
+        <input type="text" class="form-control @if(errors.containsKey(name)){is-invalid}" id="name" name="name" value="@value" readonly="readonly">
+        @if(errors.containsKey(name)) {
+        <div class="invalid-feedback">@i18n.Txt.get(lang, errors.get(name))</div>
+        }
+    </div>
+</div>

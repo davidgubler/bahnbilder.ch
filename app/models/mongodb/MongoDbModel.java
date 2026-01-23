@@ -68,7 +68,7 @@ public abstract class MongoDbModel<T extends MongoDbEntity> {
         return query().stream();
     }
 
-    public void delete(Object entity) {
+    public void delete(MongoDbEntity entity) {
         query(entity).delete();
     }
 

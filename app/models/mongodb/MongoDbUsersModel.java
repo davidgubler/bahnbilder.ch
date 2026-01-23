@@ -119,6 +119,11 @@ public class MongoDbUsersModel extends MongoDbModel<MongoDbUser> implements User
     }
 
     @Override
+    public void delete(User user) {
+        super.delete((MongoDbUser)user);
+    }
+
+    @Override
     public void startSession(User user) {
         MongoDbUser mongoDbUser = ((MongoDbUser)user);
         MongoDbSession mongoDbSession = mongoDbUser.startSession();

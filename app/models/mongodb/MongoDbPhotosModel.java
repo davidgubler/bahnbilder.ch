@@ -807,6 +807,13 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
     }
 
     @Override
+    public boolean isOperatorInUse(Integer operatorId) {
+        return query()
+                .filter(Filters.eq("operatorId", operatorId))
+                .stream().findFirst().isPresent();
+    }
+
+    @Override
     public List<String> getPhotographers() {
         MorphiaCursor<AggregationDistinct> cursor = mongoDb.getDs().aggregate(MongoDbPhoto.class)
                 .match(Filters.ne("photographer", null))

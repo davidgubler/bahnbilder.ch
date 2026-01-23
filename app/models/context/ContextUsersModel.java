@@ -63,8 +63,8 @@ public class ContextUsersModel extends ContextModel implements UsersModel {
     }
 
     @Override
-    public void delete(Object entity) {
-        call(() -> { usersModel.delete(entity); return null; });
+    public void delete(User user) {
+        call(() -> { usersModel.delete(user); return null; });
     }
 
     @Override

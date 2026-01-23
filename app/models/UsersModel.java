@@ -24,7 +24,7 @@ public interface UsersModel {
 
     void updatePassword(User user, String password);
 
-    void delete(Object entity);
+    void delete(User user);
 
     void startSession(User user);
 

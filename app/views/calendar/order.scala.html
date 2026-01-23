@@ -89,6 +89,6 @@
         <br />
         <br />
         @formInputCheckbox(i18n.Txt.get(lang, "acceptTC"), "acceptTC", acceptTC, errors, lang)
-        @formButtons("orderPreview", routes.CalendarController.view(), lang)
+        @formButtons("orderPreview", routes.CalendarController.view(), lang = lang)
     }
 }

@@ -12,6 +12,8 @@ import java.util.stream.Stream;
 public interface OperatorsModel {
     Operator get(Integer id);
 
+    void delete(Operator entity);
+
     Map<Integer, ? extends Operator> getByIdsAsMap(Collection<Integer> ids);
 
     Stream<? extends Operator> getByIds(Collection<Integer> ids);

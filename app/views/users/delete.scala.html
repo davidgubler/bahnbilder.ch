@@ -7,6 +7,6 @@
 @template(request, title = "Delete User: " + deleteUser.getEmail(), "manage-users", user, lang) {
 } {
     @form(request, routes.UsersController.deletePost(deleteUser.getId)) {
-        @formButtons("delete", routes.UsersController.list(), lang)
+        @formButtons("delete", routes.UsersController.list(), lang = lang)
     }
 }

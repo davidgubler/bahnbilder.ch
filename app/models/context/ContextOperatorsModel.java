@@ -27,6 +27,12 @@ public class ContextOperatorsModel extends ContextModel implements OperatorsMode
     }
 
     @Override
+    public void delete(Operator operator) {
+        call(() -> { operatorsModel.delete(operator); return null; });
+    }
+
+
+    @Override
     public Map<Integer, ? extends Operator> getByIdsAsMap(Collection<Integer> ids) {
         return call(() -> operatorsModel.getByIdsAsMap(ids));
     }

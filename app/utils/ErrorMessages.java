@@ -3,6 +3,7 @@ package utils;
 public class ErrorMessages {
     public static String ACCEPT_TC = "errorAcceptTC";
     public static String ALREADY_EXISTS = "errorAlreadyExists";
+    public static String CANNOT_DELETE_IN_USE = "errorCannotDeleteInUse";
     public static String MISSING_VALUE = "errorMissingValue";
     public static String MUST_SET_DATE_AND_TIME = "errorMustSetDateAndTime";
     public static String INVALID_VALUE = "errorInvalidValue";

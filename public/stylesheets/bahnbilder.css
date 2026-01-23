@@ -575,3 +575,10 @@ tr.clickable:hover, tr.clickable:hover a {
     background-color: #404040;
     color: #ffffff;
 }
+
+a.btn-delete, button.btn-delete {
+    color: #dd4444 !important;
+}
+a.btn-delete:hover {
+    color: #ff6666 !important;
+}

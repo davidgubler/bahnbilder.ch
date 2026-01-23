@@ -87,6 +87,30 @@ public class ManagementController extends Controller {
         }
     }
 
+    private <T extends FormData> Result delete(Http.Request request, T formData, TriFunction<User, T, Map<String, String>, Content> form) {
+        Context context = Context.get(request);
+        User user = context.getUsersModel().getFromRequest(request);
+        if (user == null) {
+            throw new NotAllowedException();
+        }
+        if (formData.entity == null) {
+            throw new NotFoundException("");
+        }
+        return ok(form.apply(user, formData, Collections.emptyMap()));
+    }
+
+    private <T extends FormData> Result deletePost(Http.Request request, T formData, CUDBusinessLogic businessLogic, TriFunction<User, T, Map<String, String>, Content> form) {
+        Context context = Context.get(request);
+        User user = context.getUsersModel().getFromRequest(request);
+        try {
+            businessLogic.delete(context, formData, user);
+            return redirect(formData.returnUrl);
+        } catch (ValidationException e) {
+            return ok(form.apply(user, formData, e.getErrors()));
+        }
+    }
+
+
     // =======
     // Country
     // =======
@@ -119,6 +143,20 @@ public class ManagementController extends Controller {
         Operator operator = context.getOperatorsModel().get(operatorId);
         return createOrUpdatePost(request, new OperatorFormData(request, returnUrl, operator), operators,
                 (user, data, errors) -> views.html.manage.editOperator.render(request, data, errors, user));
+    }
+
+    public Result deleteOperator(Http.Request request, String returnUrl, Integer operatorId) {
+        Context context = Context.get(request);
+        Operator operator = context.getOperatorsModel().get(operatorId);
+        return delete(request, new OperatorFormData(request, returnUrl, operator),
+                (user, data, errors) -> views.html.manage.delete.render(request, data, errors, user));
+    }
+
+    public Result deleteOperatorPost(Http.Request request, String returnUrl, Integer operatorId) {
+        Context context = Context.get(request);
+        Operator operator = context.getOperatorsModel().get(operatorId);
+        return deletePost(request, new OperatorFormData(request, returnUrl, operator), operators,
+                (user, data, errors) -> views.html.manage.delete.render(request, data, errors, user));
     }
 
     // ============

@@ -11,6 +11,7 @@ import entities.File;
 import entities.Photo;
 import entities.PhotoResolution;
 import entities.mongodb.MongoDbFile;
+import entities.mongodb.MongoDbPhoto;
 import entities.tmp.TmpFile;
 import models.FilesOriginalModel;
 import play.libs.F;
@@ -100,7 +101,7 @@ public class MongoDbFilesOriginalModel extends MongoDbModel<MongoDbFile> impleme
             }
         }
         if (live._2 == TmpFile.Status.DELETED) {
-            delete(photo.getId());
+            delete((MongoDbPhoto)photo);
             return TmpFile.Status.DELETED;
         }
         return TmpFile.Status.UNMODIFIED;

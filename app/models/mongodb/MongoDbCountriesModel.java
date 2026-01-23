@@ -76,6 +76,6 @@ public class MongoDbCountriesModel extends MongoDbModel<MongoDbCountry> implemen
 
     @Override
     public void delete(Country country) {
-        super.delete(country);
+        super.delete((MongoDbCountry)country);
     }
 }

@@ -69,6 +69,24 @@ public class Operators implements CUDBusinessLogic<OperatorFormData> {
 
     @Override
     public void delete(Context context, OperatorFormData data, User user) throws ValidationException {
+        // ACCESS
+        if (user == null) {
+            throw new NotAllowedException();
+        }
 
+        // INPUT
+        Map<String, String> errors = new HashMap<>();
+        if (context.getPhotosModel().isOperatorInUse(data.entity.getId())) {
+            errors.put("name", ErrorMessages.CANNOT_DELETE_IN_USE);
+        }
+        if (!errors.isEmpty()) {
+            throw new ValidationException(errors);
+        }
+
+        // BUSINESS
+        context.getOperatorsModel().delete(data.entity);
+
+        // LOG
+        logger.info(context.getRequest(), user + " deleted " + data.entity);
     }
 }

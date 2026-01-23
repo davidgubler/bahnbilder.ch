@@ -67,7 +67,7 @@ public class MongoDbTraveloguesModel extends MongoDbModel<MongoDbTravelogue> imp
 
     @Override
     public void delete(Travelogue travelogue) {
-        super.delete(travelogue);
+        super.delete((MongoDbTravelogue)travelogue);
     }
 
     @Override

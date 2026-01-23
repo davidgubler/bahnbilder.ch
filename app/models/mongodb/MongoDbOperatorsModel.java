@@ -3,8 +3,10 @@ package models.mongodb;
 import dev.morphia.UpdateOptions;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.UpdateOperators;
+import entities.Country;
 import entities.Operator;
 import entities.Wikidata;
+import entities.mongodb.MongoDbCountry;
 import entities.mongodb.MongoDbOperator;
 import entities.mongodb.MongoDbOperatorEra;
 import models.OperatorsModel;
@@ -103,5 +105,10 @@ public class MongoDbOperatorsModel extends MongoDbModel<MongoDbOperator> impleme
             }
             query(operator).update(new UpdateOptions(), UpdateOperators.set("erasLastRefresh", now), UpdateOperators.set("eras", eras));
         }).run();
+    }
+
+    @Override
+    public void delete(Operator operator) {
+        super.delete((MongoDbOperator)operator);
     }
 }
