@@ -1,51 +1,34 @@
 package entities;
 
-import com.google.inject.Inject;
-import models.*;
 import play.mvc.Http;
+import utils.Context;
 
 import java.lang.reflect.Field;
 
-public class ModelSearch extends Search {
+public class ContextSearch extends Search {
 
-    @Inject
-    private UsersModel usersModel;
+    private Context context;
 
-    @Inject
-    private LicensesModel licensesModel;
-
-    @Inject
-    private PhotoTypesModel photoTypesModel;
-
-    @Inject
-    private CountriesModel countriesModel;
-
-    @Inject
-    private LocationsModel locationsModel;
-
-    @Inject
-    private OperatorsModel operatorsModel;
-
-    @Inject
-    private VehicleClassesModel vehicleClassesModel;
-
-    public ModelSearch(Http.Request request) {
+    public ContextSearch(Http.Request request) {
         super(request);
+        context = Context.get(request);
     }
 
-    public ModelSearch(int page, Integer country, Integer operator, Integer vclass) {
+    public ContextSearch(Context context, int page, Integer country, Integer operator, Integer vclass) {
         super(page, country, operator, vclass);
+        this.context = context;
     }
 
-    public ModelSearch(Integer photoType) {
+    public ContextSearch(Context context, Integer photoType) {
         super(photoType);
+        this.context = context;
     }
 
     private User author;
 
     public User getAuthor() {
         if (author == null) {
-            author = usersModel.get(getAuthorId());
+            author = context.getUsersModel().get(getAuthorId());
         }
         return author;
     }
@@ -54,7 +37,7 @@ public class ModelSearch extends Search {
 
     public License getLicense() {
         if (license == null) {
-            license = licensesModel.get(getLicenseId());
+            license = context.getLicensesModel().get(getLicenseId());
         }
         return license;
     }
@@ -63,7 +46,7 @@ public class ModelSearch extends Search {
 
     public PhotoType getPhotoType() {
         if (photoType == null) {
-            photoType = photoTypesModel.get(getPhotoTypeId());
+            photoType = context.getPhotoTypesModel().get(getPhotoTypeId());
         }
         return photoType;
     }
@@ -72,7 +55,7 @@ public class ModelSearch extends Search {
 
     public Country getCountry() {
         if (country == null) {
-            country = countriesModel.get(getCountryId());
+            country = context.getCountriesModel().get(getCountryId());
         }
         return country;
     }
@@ -81,7 +64,7 @@ public class ModelSearch extends Search {
 
     public Location getLocation() {
         if (location == null) {
-            location = locationsModel.get(getLocationId());
+            location = context.getLocationsModel().get(getLocationId());
         }
         return location;
     }
@@ -90,7 +73,7 @@ public class ModelSearch extends Search {
 
     public Operator getOperator() {
         if (operator == null) {
-            operator = operatorsModel.get(getOperatorId());
+            operator = context.getOperatorsModel().get(getOperatorId());
         }
         return operator;
     }
@@ -99,7 +82,7 @@ public class ModelSearch extends Search {
 
     public VehicleClass getVehicleClass() {
         if (vehicleClass == null) {
-            vehicleClass = vehicleClassesModel.get(getVehicleClassId());
+            vehicleClass = context.getVehicleClassesModel().get(getVehicleClassId());
         }
         return vehicleClass;
     }

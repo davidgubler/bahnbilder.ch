@@ -13,7 +13,6 @@ import utils.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class BrowseController extends Controller {
     @Inject
@@ -23,7 +22,7 @@ public class BrowseController extends Controller {
         Context context = Context.get(request);
         User user = context.getUsersModel().getFromRequest(request);
         String lang = Lang.get(request);
-        ModelSearch search = new ModelSearch(1, null, null, null);
+        ContextSearch search = new ContextSearch(context, 1, null, null, null);
         injector.injectMembers(search);
 
         List<? extends Country> countries = null;
@@ -39,7 +38,7 @@ public class BrowseController extends Controller {
         User user = context.getUsersModel().getFromRequest(request);
         String lang = Lang.get(request);
         Country country = context.getCountriesModel().get(countryId);
-        ModelSearch search = new ModelSearch(page, country == null ? null : country.getId(), null, null);
+        ContextSearch search = new ContextSearch(context, page, country == null ? null : country.getId(), null, null);
         injector.injectMembers(search);
         if (search.getCountry() == null) {
             throw new NotFoundException("Country");
@@ -80,7 +79,7 @@ public class BrowseController extends Controller {
         Operator operator = context.getOperatorsModel().get(operatorId);
         User user = context.getUsersModel().getFromRequest(request);
         String lang = Lang.get(request);
-        ModelSearch search = new ModelSearch(page, country == null ? null : country.getId(), operatorId, null);
+        ContextSearch search = new ContextSearch(context, page, country == null ? null : country.getId(), operatorId, null);
         injector.injectMembers(search);
 
         long count = context.getPhotosModel().searchCount(search);
@@ -103,7 +102,7 @@ public class BrowseController extends Controller {
         VehicleClass vehicleClass = context.getVehicleClassesModel().get(vehicleClassId);
         User user = context.getUsersModel().getFromRequest(request);
         String lang = Lang.get(request);
-        ModelSearch search = new ModelSearch(page, country == null ? null : country.getId(), operatorId, vehicleClassId);
+        ContextSearch search = new ContextSearch(context, page, country == null ? null : country.getId(), operatorId, vehicleClassId);
         injector.injectMembers(search);
 
         long count = context.getPhotosModel().searchCount(search);

@@ -23,7 +23,7 @@ public class SearchController extends Controller {
         User user = context.getUsersModel().getFromRequest(request);
         String lang = Lang.get(request);
 
-        ModelSearch search = new ModelSearch(request);
+        ContextSearch search = new ContextSearch(request);
         injector.injectMembers(search);
 
         List<? extends User> authors = context.getUsersModel().getAll().sorted(LocalizedComparator.get(lang)).toList();

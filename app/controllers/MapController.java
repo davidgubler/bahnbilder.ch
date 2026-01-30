@@ -3,7 +3,7 @@ package controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import entities.ModelSearch;
+import entities.ContextSearch;
 import entities.Photo;
 import entities.User;
 import i18n.Lang;
@@ -30,9 +30,9 @@ public class MapController extends Controller {
         User user = context.getUsersModel().getFromRequest(request);
         String lang = Lang.get(request);
 
-        ModelSearch search = new ModelSearch(request);
+        ContextSearch search = new ContextSearch(request);
         if (!search.isActive()) {
-            search = new ModelSearch(2);
+            search = new ContextSearch(context, 2);
         }
         injector.injectMembers(search);
 
@@ -42,7 +42,7 @@ public class MapController extends Controller {
 
     public Result markers(Http.Request request) {
         Context context = Context.get(request);
-        ModelSearch search = new ModelSearch(request);
+        ContextSearch search = new ContextSearch(request);
         injector.injectMembers(search);
         NearbyMap<Photo> nearbyMap = new NearbyMap<>(Config.PHOTO_SPOT_RADIUS_KM);
         context.getPhotosModel().getCoordinates(search).forEach(p -> {
