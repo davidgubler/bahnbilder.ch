@@ -72,11 +72,11 @@ public class MongoDbTraveloguesModel extends MongoDbModel<MongoDbTravelogue> imp
 
     @Override
     public List<? extends Travelogue> getFeatured() {
-        return inject(query().filter(Filters.ne("title", null), Filters.ne("titlePhotoId", null)).stream(new FindOptions().projection().include("numId", "title", "summary", "titlePhotoId").sort(Sort.descending("numId")).limit(3)).toList());
+        return query().filter(Filters.ne("title", null), Filters.ne("titlePhotoId", null)).stream(new FindOptions().projection().include("numId", "title", "summary", "titlePhotoId").sort(Sort.descending("numId")).limit(3)).toList();
     }
 
     @Override
     public MongoDbTravelogue get(Integer id) {
-        return inject(super.get(id));
+        return super.get(id);
     }
 }

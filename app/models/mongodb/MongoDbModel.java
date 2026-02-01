@@ -1,6 +1,5 @@
 package models.mongodb;
 
-import com.google.inject.Injector;
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.query.FindOptions;
@@ -19,9 +18,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class MongoDbModel<T extends MongoDbEntity> {
-    @Inject
-    private Injector injector;
-
     @Inject
     protected MongoDb mongoDb;
 
@@ -54,14 +50,14 @@ public abstract class MongoDbModel<T extends MongoDbEntity> {
         if (id == null) {
             return null;
         }
-        return inject(query().filter(Filters.eq("numId", id)).first());
+        return query().filter(Filters.eq("numId", id)).first();
     }
 
     public Stream<T> getByIds(Collection<Integer> ids) {
         if (ids == null || ids.isEmpty()) {
             return Stream.empty();
         }
-        return query().filter(Filters.in("numId", ids)).stream().map(e -> inject(e));
+        return query().filter(Filters.in("numId", ids)).stream();
     }
 
     public Map<Integer, T> getByIdsAsMap(Collection<Integer> ids) {
@@ -69,23 +65,11 @@ public abstract class MongoDbModel<T extends MongoDbEntity> {
     }
 
     public Stream<T> getAll() {
-        return query().stream().map(e -> inject(e));
+        return query().stream();
     }
 
     public void delete(Object entity) {
         query(entity).delete();
-    }
-
-    protected <U> U inject(U entity) {
-        if (entity != null) {
-            injector.injectMembers(entity);
-        }
-        return entity;
-    }
-
-    protected <U> List<U> inject(List<U> entities) {
-        entities.forEach(e -> injector.injectMembers(e));
-        return entities;
     }
 
     public int getNextNumId() {

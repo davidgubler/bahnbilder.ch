@@ -93,7 +93,6 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
                         int views) {
         Photo photo = new MongoDbPhoto(id, null, userId, photographer, uploadFilename, uploadDate, photoDate, licenseId, photoTypeId, countryId, locationId, longitude, latitude, operatorId, vehicleClassId, nr, description, texts, labels, authorRating, views);
         mongoDb.getDs().save(photo);
-        inject(photo);
         return photo;
     }
 
@@ -112,7 +111,6 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
                 }
             }
         }
-        inject(photo);
         return photo;
     }
 
@@ -138,7 +136,7 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
                 continue; // just to catch potential race conditions - shouldn't happen normally
             }
             Collections.sort(candidates, photoComparator);
-            featured.add(inject(candidates.get(0)));
+            featured.add(candidates.get(0));
         }
         return featured;
     }
@@ -162,7 +160,7 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
                 .limit(15)
                 .execute(MongoDbAggregationCountryViews.class).toList();
 
-        return inject(topCountryIdsByViews);
+        return topCountryIdsByViews;
     }
 
     private static final DateTimeFormatter EXIF_DATE_TIME = DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm:ss");
@@ -285,8 +283,6 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
             p.setVehicleClass(vehicleClasses.get(p.getVehicleClassId()));
             p.setLocation(locations.get(p.getLocationId()));
         });
-
-        inject(photos); // may be required to determine resolutions, everything else should be prepopulated
         return photos;
     }
 

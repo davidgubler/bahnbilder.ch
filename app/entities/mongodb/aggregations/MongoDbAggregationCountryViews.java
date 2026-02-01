@@ -1,30 +1,34 @@
 package entities.mongodb.aggregations;
 
-import com.google.inject.Inject;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Transient;
+import entities.ContextAwareEntity;
 import entities.Country;
 import entities.aggregations.AggregationCountryViews;
-import models.CountriesModel;
+import utils.Context;
 
 @Entity
-public class MongoDbAggregationCountryViews implements AggregationCountryViews {
+public class MongoDbAggregationCountryViews implements AggregationCountryViews, ContextAwareEntity {
     @Id
     private int _id;
 
     private long views;
 
     @Transient
-    @Inject
-    private CountriesModel countriesModel;
+    private Context context;
+
+    @Override
+    public void inject(Context context) {
+        this.context = context;
+    }
 
     @Transient
     private Country country;
 
     public Country getCountry() {
         if (country == null) {
-            country = countriesModel.get(_id);
+            country = context.getCountriesModel().get(_id);
         }
         return country;
     }
