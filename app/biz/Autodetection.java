@@ -32,9 +32,6 @@ public class Autodetection {
     private List<Confidence<Operator>> extractOperatorsFromTexts(Context context, Photo photo) {
         Map<Integer, Double> operatorMatches = new HashMap<>();
         for (String text : photo.getTexts()) {
-            if (!CONTAINS_LETTERS.matcher(text).matches()) {
-                continue;
-            }
             Map<Integer, Long> om = context.getPhotosModel().getOperatorMatchesByText(photo, text);
             if (om.isEmpty()) {
                 continue;
@@ -58,7 +55,7 @@ public class Autodetection {
     private List<Confidence<Operator>> extractOperatorsFromAbbreviations(Context context, Photo photo) {
         Map<Integer, Double> operatorCount = new HashMap<>();
         for (String text : photo.getTexts()) {
-            if (!CONTAINS_LETTERS.matcher(text).matches()) {
+            if (!CONTAINS_LETTERS.matcher(text).find()) {
                 continue;
             }
             // try the way it's written...
@@ -115,6 +112,7 @@ public class Autodetection {
     private static final Pattern UIC_FULL = Pattern.compile("^([0-9]{3,4})[^0-9]?([0-9]{3})(-[0-9])?$");
     private static final Pattern UIC_CLASS = Pattern.compile("^([0-9]{3,4})$");
     private static final Pattern UIC_VEHICLENR = Pattern.compile("^([0-9]{3})(-[0-9])?$");
+    private static final Pattern CUSTOM_VEHICLENR = Pattern.compile("^([0-9]{4,})?$");
 
     private Set<UicNr> extractUicNrsFromTexts(List<String> texts) {
         Set<UicNr> uicNrs = new HashSet<>();
@@ -144,6 +142,14 @@ public class Autodetection {
         }
         for (String text : texts) {
             Matcher nm = UIC_VEHICLENR.matcher(text);
+            if (nm.matches()) {
+                try {
+                    vehicleNrs.add(Integer.parseInt(nm.group(1)));
+                } catch (Exception e) {
+                    // shouldn't happen
+                }
+            }
+            nm = CUSTOM_VEHICLENR.matcher(text);
             if (nm.matches()) {
                 try {
                     vehicleNrs.add(Integer.parseInt(nm.group(1)));
