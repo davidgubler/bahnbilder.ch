@@ -229,6 +229,9 @@ public class Txt {
         en.put("incomplete", "Incomplete");
         de.put("incomplete", "Unvollständig");
 
+        en.put("incompleteAutodetect", "Autodetection on incomplete");
+        de.put("incompleteAutodetect", "Auto-Erkennung unvollständiger Angaben");
+
         en.put("incompleteDeleteSelected", "Delete Selected");
         de.put("incompleteDeleteSelected", "Ausgewählte löschen");
 

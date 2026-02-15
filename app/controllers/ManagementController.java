@@ -1,19 +1,20 @@
 package controllers;
 
 import biz.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import entities.*;
 import entities.formdata.*;
+import entities.tmp.AutodetectionStatus;
 import i18n.Lang;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.twirl.api.Content;
-import utils.Context;
-import utils.NotAllowedException;
-import utils.TriFunction;
+import utils.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,9 @@ public class ManagementController extends Controller {
 
     @Inject
     private Injector injector;
+
+    @Inject
+    private Autodetection autodetection;
 
     public Result manage(Http.Request request, Integer countryId, Integer operatorId) {
         Context context = Context.get(request);
@@ -233,6 +237,56 @@ public class ManagementController extends Controller {
         String lang = Lang.get(request);
         List<? extends Operator> operators = context.getOperatorsModel().getNoWikidata().sorted(LocalizedComparator.get(lang)).toList();
         return ok(views.html.manage.noWikidata.render(request, operators, user, lang));
+    }
+
+    public Result autodetect(Http.Request request) {
+        Context context = Context.get(request);
+        User user = context.getUsersModel().getFromRequest(request);
+        if (user == null) {
+            throw new NotAllowedException();
+        }
+        String lang = Lang.get(request);
+        return ok(views.html.manage.autodetect.render(request, user, lang));
+    }
+
+    public Result autodetectCandidates(Http.Request request) {
+        Context context = Context.get(request);
+        User user = context.getUsersModel().getFromRequest(request);
+        if (user == null) {
+            throw new NotAllowedException();
+        }
+
+        List<Integer> photoIds = context.getPhotosModel().getIncompleteAutodetectionCandidates().map(Photo::getId).toList();
+        try {
+            return ok("var autodetectPhotoIds = " + Json.MAPPER.writeValueAsString(photoIds) + ";").as(Http.MimeTypes.JAVASCRIPT);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Result autodetectBatch(Http.Request request, String ids) {
+        Context context = Context.get(request);
+        User user = context.getUsersModel().getFromRequest(request);
+        if (user == null) {
+            throw new NotAllowedException();
+        }
+        List<? extends Photo> photos = context.getPhotosModel().getByIds(InputUtils.toListOfIntegers(ids, ",")).filter(p -> user.canEdit(p)).toList();
+
+        List<Integer> photoIdsWithSolution = new ArrayList<>();
+        for (Photo photo : photos) {
+            long start = System.currentTimeMillis();
+            AutodetectionStatus as = autodetection.autodetect(context, photo);
+            if (as.getSolutions().size() == 1) {
+                photoIdsWithSolution.add(photo.getId());
+                System.out.println("https://bahnbilder.ch/" + photo.getId() + "/_autodetect : " + as.getSolutions().size() + " in " + (System.currentTimeMillis() - start) + " ms");
+            }
+        }
+
+        try {
+            return ok(Json.MAPPER.writeValueAsString(photoIdsWithSolution)).as(Http.MimeTypes.JSON);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Result manageKeywords(Http.Request request) {

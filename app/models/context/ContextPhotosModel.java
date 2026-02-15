@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import entities.*;
 import entities.aggregations.AggregationCountryViews;
 import entities.formdata.PhotoFormData;
+import entities.mongodb.MongoDbPhoto;
 import models.PhotosModel;
 import models.VehicleClassesModel;
 import models.VehicleTypesModel;
@@ -244,5 +245,10 @@ public class ContextPhotosModel extends ContextModel implements PhotosModel {
     @Override
     public Map<Integer, Integer> getOperatorCountByCountry(Country country) {
         return call(() -> photosModel.getOperatorCountByCountry(country));
+    }
+
+    @Override
+    public Stream<MongoDbPhoto> getIncompleteAutodetectionCandidates() {
+        return call(() -> photosModel.getIncompleteAutodetectionCandidates());
     }
 }

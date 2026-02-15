@@ -870,6 +870,15 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         return l.stream().collect(Collectors.toMap(AggregationCount::getId, AggregationCount::getCount));
     }
 
+    @Override
+    public Stream<MongoDbPhoto> getIncompleteAutodetectionCandidates() {
+        return query()
+                .filter(Filters.in("photoTypeId", List.of(1, 2, 3)))
+                .filter(Filters.eq("nr", null))
+                .filter(Filters.ne("texts", null))
+                .stream();
+    }
+
     @Entity
     private static class AggregationDate {
         @Id

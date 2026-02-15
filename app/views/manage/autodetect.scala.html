@@ -1,0 +1,18 @@
+@(  request: Http.Request,
+    user: entities.User,
+    lang: String,
+)
+
+@template(request, i18n.Txt.get(lang, "incompleteAutodetect"), "manage", user, lang) {
+} {
+    <script src='@routes.ManagementController.autodetectCandidates()'></script>
+    <script src='@routes.Assets.versioned("/javascripts/manageAutodetect.js")'></script>
+    <h1>@i18n.Txt.get(lang, "incompleteAutodetect")</h1>
+    @manageNav("autodetect", lang)
+    Note: Only because autodetection can detect something doesn't mean it's correct! You need to verify the results yourself.
+    <div id="autodetectProgress">
+    </div>
+    <div id="autodetectPhotos">
+
+    </div>
+}

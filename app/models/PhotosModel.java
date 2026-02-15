@@ -3,6 +3,7 @@ package models;
 import entities.*;
 import entities.aggregations.AggregationCountryViews;
 import entities.formdata.PhotoFormData;
+import entities.mongodb.MongoDbPhoto;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -133,4 +134,6 @@ public interface PhotosModel {
     List<? extends OperatorVehicleClass> getLatestVehicleClassIdAdditionsByCountry(Country country);
 
     Map<Integer, Integer> getOperatorCountByCountry(Country country);
+
+    Stream<MongoDbPhoto> getIncompleteAutodetectionCandidates();
 }
