@@ -274,11 +274,9 @@ public class ManagementController extends Controller {
 
         List<Integer> photoIdsWithSolution = new ArrayList<>();
         for (Photo photo : photos) {
-            long start = System.currentTimeMillis();
             AutodetectionStatus as = autodetection.autodetect(context, photo);
             if (as.getSolutions().size() == 1) {
                 photoIdsWithSolution.add(photo.getId());
-                System.out.println("https://bahnbilder.ch/" + photo.getId() + "/_autodetect : " + as.getSolutions().size() + " in " + (System.currentTimeMillis() - start) + " ms");
             }
         }
 
