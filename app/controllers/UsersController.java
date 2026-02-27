@@ -27,7 +27,7 @@ public class UsersController extends Controller {
     public Result list(Http.Request request) {
         Context context = Context.get(request);
         User user = context.getUsersModel().getFromRequest(request);
-        if (user == null || user.isAdmin()) {
+        if (user == null || !user.isAdmin()) {
             throw new NotAllowedException();
         }
         String lang = Lang.get(request);
@@ -38,7 +38,7 @@ public class UsersController extends Controller {
     public Result create(Http.Request request) {
         Context context = Context.get(request);
         User user = context.getUsersModel().getFromRequest(request);
-        if (user == null || user.isAdmin()) {
+        if (user == null || !user.isAdmin()) {
             throw new NotAllowedException();
         }
         String lang = Lang.get(request);
@@ -64,7 +64,7 @@ public class UsersController extends Controller {
     public Result edit(Http.Request request, Integer id) {
         Context context = Context.get(request);
         User user = context.getUsersModel().getFromRequest(request);
-        if (user == null || user.isAdmin()) {
+        if (user == null || !user.isAdmin()) {
             throw new NotAllowedException();
         }
         String lang = Lang.get(request);
@@ -95,7 +95,7 @@ public class UsersController extends Controller {
     public Result delete(Http.Request request, Integer id) {
         Context context = Context.get(request);
         User user = context.getUsersModel().getFromRequest(request);
-        if (user == null || user.isAdmin()) {
+        if (user == null || !user.isAdmin()) {
             throw new NotAllowedException();
         }
         String lang = Lang.get(request);
