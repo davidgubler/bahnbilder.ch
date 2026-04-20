@@ -78,7 +78,7 @@ public class MongoDbUsersModel extends MongoDbModel<MongoDbUser> implements User
             }
         }
         Session session = user.getSessions().stream().filter(s -> s.getSessionId().equals(sessionId)).collect(Collectors.toList()).get(0);
-        if (session.getLastActive().getTime() < (new Date().getTime() - LAST_ACTIVE_REFRESH_MS)) {
+        if (session.getLastActive().getTime() < (new Date().getTime() - LAST_ACTIVE_REFRESH_MS) && mongoDb.isWritable()) {
             ((MongoDbSession)session).setLastActive(new Date());
             query().filter(Filters.eq("sessions.sessionId", sessionId)).update(new UpdateOptions(), UpdateOperators.set("sessions.$.lastActive", session.getLastActive()));
         }
