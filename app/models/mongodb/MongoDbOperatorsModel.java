@@ -76,6 +76,10 @@ public class MongoDbOperatorsModel extends MongoDbModel<MongoDbOperator> impleme
 
     @Override
     public void updateEras(Operator operator, Function<Collection<String>, List<Wikidata>> fetchWikidata) {
+        if (!mongoDb.isWritable()) {
+            // can't update eras now
+            return;
+        }
         Instant now = Instant.now();
         MongoDbOperator mongoDbOperator = (MongoDbOperator)operator;
         // avoid parallel refreshes
