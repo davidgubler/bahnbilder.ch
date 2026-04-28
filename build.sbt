@@ -9,7 +9,7 @@ Compile/packageDoc/publishArtifact := false
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava).enablePlugins(SbtWeb)
 
-scalaVersion := "2.13.15"
+scalaVersion := "2.13.18"
 
 libraryDependencies ++= Seq(
   guice,
