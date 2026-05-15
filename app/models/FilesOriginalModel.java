@@ -24,6 +24,8 @@ public interface FilesOriginalModel {
 
     File get(Photo photo, Instant ifModifiedSince, String ifNoneMatch);
 
+    boolean exists(byte[] data);
+
     TmpFile.Status ensureMigrated(Photo photo);
 
     void delete(List<Integer> photoIds);

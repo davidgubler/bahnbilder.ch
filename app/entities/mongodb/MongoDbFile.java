@@ -18,7 +18,10 @@ import java.io.InputStream;
 import java.time.Instant;
 
 @Entity(value = "files", useDiscriminator = false)
-@Indexes({@Index(options = @IndexOptions(unique = true), fields = {@Field(value = "photoId"), @Field(value = "size")})})
+@Indexes({
+        @Index(options = @IndexOptions(unique = true), fields = {@Field(value = "photoId"), @Field(value = "size")}),
+        @Index(fields = {@Field(value = "etag")})
+})
 public class MongoDbFile implements MongoDbEntity, File {
 
     @Transient
