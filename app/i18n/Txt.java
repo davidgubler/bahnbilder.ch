@@ -169,6 +169,9 @@ public class Txt {
         en.put(ErrorMessages.MISSING_VALUE, "Please fill in this field");
         de.put(ErrorMessages.MISSING_VALUE, "Bitte ausfüllen");
 
+        en.put(ErrorMessages.PHOTO_ALREADY_UPLOADED, "Photo was already uploaded");
+        de.put(ErrorMessages.PHOTO_ALREADY_UPLOADED, "Foto wurde bereits hochgeladen");
+
         en.put(ErrorMessages.PHOTO_INVALID_EXIF, "Photo has invalid EXIF data");
         de.put(ErrorMessages.PHOTO_INVALID_EXIF, "Foto hat ungültige EXIF-Daten");
 

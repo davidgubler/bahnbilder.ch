@@ -139,6 +139,9 @@ public class Photos {
         if (!"image/jpeg".equals(filePart.getContentType())) {
             throw new ValidationException(Map.of(fileName, ErrorMessages.PHOTO_WRONG_FORMAT));
         }
+        if (context.getFilesOriginalModel().exists(fileData)) {
+            throw new ValidationException(Map.of(fileName, ErrorMessages.PHOTO_ALREADY_UPLOADED));
+        }
         Exif exif = context.getPhotosModel().extractExif(fileData);
 
         // BUSINESS

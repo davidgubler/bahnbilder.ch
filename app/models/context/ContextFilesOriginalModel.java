@@ -56,6 +56,11 @@ public class ContextFilesOriginalModel extends ContextModel implements FilesOrig
     }
 
     @Override
+    public boolean exists(byte[] data) {
+        return call(() -> filesOriginalModel.exists(data));
+    }
+
+    @Override
     public TmpFile.Status ensureMigrated(Photo photo) {
         return call(() -> filesOriginalModel.ensureMigrated(photo));
     }

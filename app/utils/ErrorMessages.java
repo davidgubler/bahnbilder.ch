@@ -15,6 +15,7 @@ public class ErrorMessages {
     public static String PHOTO_INVALID_EXIF = "errorPhotoExif";
     public static String PHOTO_TOO_LARGE = "errorPhotoSize";
     public static String PHOTO_WRONG_FORMAT = "errorPhotoFormat";
+    public static String PHOTO_ALREADY_UPLOADED = "errorPhotoAlreadyUploaded";
 
     public static String MIN_VALUE_IS(String minValue) {
         return "Minimum value is " + minValue;

@@ -126,6 +126,12 @@ public class MongoDbFilesOriginalModel extends MongoDbModel<MongoDbFile> impleme
     }
 
     @Override
+    public boolean exists(byte[] data) {
+        String etag = new String(Base64.getEncoder().encode(new SimpleDigest().hash(data)));
+        return !query().filter(Filters.eq("etag", etag)).stream().findAny().isEmpty();
+    }
+
+    @Override
     public void delete(List<Integer> photoIds) {
         query().filter(Filters.in("photoId", photoIds)).delete(new DeleteOptions().multi(true));
     }
