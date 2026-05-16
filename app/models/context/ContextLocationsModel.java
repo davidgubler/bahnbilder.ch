@@ -62,4 +62,9 @@ public class ContextLocationsModel extends ContextModel implements LocationsMode
     public Map<Integer, ? extends Location> getByIdsAsMap(Collection<Integer> ids) {
         return call(() -> locationsModel.getByIdsAsMap(ids));
     }
+
+    @Override
+    public long deleteUnused(Collection<Integer> usedLocationIds) {
+        return call(() -> locationsModel.deleteUnused(usedLocationIds));
+    }
 }

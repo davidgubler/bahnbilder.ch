@@ -1,5 +1,6 @@
 package models.mongodb;
 
+import dev.morphia.DeleteOptions;
 import dev.morphia.query.filters.Filters;
 import entities.Location;
 import entities.mongodb.MongoDbLocation;
@@ -59,5 +60,10 @@ public class MongoDbLocationsModel extends MongoDbModel<MongoDbLocation> impleme
         }
         String reverseName = location.getName().substring(pos + SEPARATOR.length()) + SEPARATOR + location.getName().substring(0, pos);
         return getByName(reverseName);
+    }
+
+    @Override
+    public long deleteUnused(Collection<Integer> usedLocationIds) {
+        return query().filter(Filters.nin("numId", usedLocationIds)).delete(new DeleteOptions().multi(true)).getDeletedCount();
     }
 }
