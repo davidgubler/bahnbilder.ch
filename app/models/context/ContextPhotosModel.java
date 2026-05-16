@@ -256,4 +256,9 @@ public class ContextPhotosModel extends ContextModel implements PhotosModel {
     public Stream<MongoDbPhoto> getIncompleteAutodetectionCandidates() {
         return call(() -> photosModel.getIncompleteAutodetectionCandidates());
     }
+
+    @Override
+    public List<Integer> getLocationIds() {
+        return call(() -> photosModel.getLocationIds());
+    }
 }

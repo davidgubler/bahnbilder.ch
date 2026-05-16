@@ -238,9 +238,13 @@ public class Photos {
             locationId = location.getId();
         }
         context.getPhotosModel().update(data, dateTime, locationId, labelsToAdd, labelsToRemove);
+        long deletedLocations = context.getLocationsModel().deleteUnused(context.getPhotosModel().getLocationIds());
 
         // LOG
         logger.info(context.getRequest(), user + " updated " + data.photos);
+        if (deletedLocations > 0) {
+            logger.info(context.getRequest(), "Deleted " + deletedLocations + " unused locations");
+        }
     }
 
     // used for the autodetection feature

@@ -886,6 +886,15 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
                 .stream();
     }
 
+    @Override
+    public List<Integer> getLocationIds() {
+        MorphiaCursor<AggregationDistinct> cursor = mongoDb.getDs().aggregate(MongoDbPhoto.class)
+                .match(Filters.ne("locationId", null))
+                .group(Group.group().field("_id", null).field("distinct", AccumulatorExpressions.addToSet(Expressions.field("locationId"))))
+                .execute(AggregationDistinct.class);
+        return cursor.hasNext() ? cursor.next().distinct : Collections.emptyList();
+    }
+
     @Entity
     private static class AggregationDate {
         @Id

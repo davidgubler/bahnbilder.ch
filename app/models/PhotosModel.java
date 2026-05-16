@@ -138,4 +138,6 @@ public interface PhotosModel {
     Map<Integer, Integer> getOperatorCountByCountry(Country country);
 
     Stream<MongoDbPhoto> getIncompleteAutodetectionCandidates();
+
+    List<Integer> getLocationIds();
 }
