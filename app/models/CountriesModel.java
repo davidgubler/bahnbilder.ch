@@ -4,6 +4,7 @@ import entities.Country;
 import entities.formdata.CountryFormData;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public interface CountriesModel {
@@ -30,4 +31,6 @@ public interface CountriesModel {
     void update(Country country, String nameDe, String nameEn, String shortName);
 
     void delete(Country country);
+
+    Map<? extends Country, Float> searchFreeText(String freeText);
 }

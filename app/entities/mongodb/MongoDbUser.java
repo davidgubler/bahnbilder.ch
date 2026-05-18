@@ -1,9 +1,6 @@
 package entities.mongodb;
 
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
-import dev.morphia.annotations.IndexOptions;
-import dev.morphia.annotations.Indexed;
+import dev.morphia.annotations.*;
 import entities.Session;
 import entities.User;
 import org.bson.types.ObjectId;
@@ -15,15 +12,20 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
+import static dev.morphia.utils.IndexType.TEXT;
+
 @Entity(value = "users", useDiscriminator = false)
+@Indexes({
+        @Index(fields = @Field(value = "name", type = TEXT)),
+        @Index(fields = @Field(value = "numId"), options =  @IndexOptions(unique = true)),
+        @Index(fields = @Field(value = "email"), options =  @IndexOptions(unique = true)),
+})
 public class MongoDbUser implements MongoDbEntity, User {
     @Id
     private ObjectId _id;
 
-    @Indexed(options = @IndexOptions(unique = true))
     private int numId;
 
-    @Indexed(options = @IndexOptions(unique = true))
     private String email;
 
     private String name;
@@ -37,6 +39,8 @@ public class MongoDbUser implements MongoDbEntity, User {
     private Boolean isAdmin = null;
 
     private List<MongoDbSession> sessions = new LinkedList<>();
+
+    private Float searchScore;
 
     public MongoDbUser() {
         // constructor for Morphia
@@ -139,5 +143,9 @@ public class MongoDbUser implements MongoDbEntity, User {
     @Override
     public int hashCode() {
         return Objects.hashCode(numId);
+    }
+
+    public Float getSearchScore() {
+        return searchScore;
     }
 }

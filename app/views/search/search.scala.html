@@ -25,6 +25,7 @@
     <div class='row'>
         <div class='col-xl-6'>
             <form id='searchForm' method='POST' action='@routes.SearchController.search()' style='@if(search.isActive){display:none;}' >
+                @if(search.getFreeText() == null) {
                 <div class='form-group row mb-2'>
                     <label class='col-3 col-form-label' for='author'>@i18n.Txt.get(lang, "author")</label>
                     <div class='col-9 col-md-4'>
@@ -170,6 +171,12 @@
                         </div>
                     </div>
                 </div>
+                } else {
+                <div class="form-inline">
+                    <input type='text' class='form-control mr-2' style="width: 100%; flex-grow: 1; flex-shrink: 1; flex-basis: 0%;" id='q' name='q' value='@search.getFreeText()' autocomplete='off'>
+                    <button type='submit' name='submit' value='search' class='btn btn-primary'>@i18n.Txt.get(lang, "search")</button>
+                </div>
+                }
             </form>
             <br />
         </div>

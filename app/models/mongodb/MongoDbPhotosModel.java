@@ -1,5 +1,6 @@
 package models.mongodb;
 
+import biz.FreeTextSearch;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.lang.GeoLocation;
@@ -286,6 +287,11 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         return photos;
     }
 
+    @Override
+    public Stream<? extends Photo> searchAll(Search search) {
+        return query(search).stream();
+    }
+
     private Filter getFilter(String field, Object value, boolean forward) {
         return forward ? Filters.gt(field, value) : Filters.lt(field, value);
     }
@@ -511,6 +517,39 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
     private Query<MongoDbPhoto> query(Search search) {
         if (search instanceof IncompleteSearch) {
             return queryIncompleteSearch(search);
+        }
+
+        if (search.getFreeText() != null) {
+            List<FreeTextSearch.TokenResult> tokenResults = ((ContextSearch)search).getFreeTextSearchTokenResults();
+            Query<MongoDbPhoto> query = query();
+            for (FreeTextSearch.TokenResult tr : tokenResults) {
+                List<Filter> orFilters = new ArrayList<>();
+                if (!tr.getUsers().isEmpty()) {
+                    orFilters.add(Filters.in("userId", tr.getUsers().keySet().stream().map(User::getId).toList()));
+                }
+                if (!tr.getCountries().isEmpty()) {
+                    orFilters.add(Filters.in("countryId", tr.getCountries().keySet().stream().map(Country::getId).toList()));
+                }
+                if (!tr.getLocations().isEmpty()) {
+                    orFilters.add(Filters.in("locationId", tr.getLocations().keySet().stream().map(Location::getId).toList()));
+                }
+                if (!tr.getOperators().isEmpty()) {
+                    orFilters.add(Filters.in("operatorId", tr.getOperators().keySet().stream().map(Operator::getId).toList()));
+                }
+                if (!tr.getVehicleClasses().isEmpty()) {
+                    orFilters.add(Filters.in("vehicleClassId", tr.getVehicleClasses().keySet().stream().map(VehicleClass::getId).toList()));
+                }
+                if (!tr.getVehicleClassesBySeries().isEmpty()) {
+                    orFilters.add(Filters.in("vehicleClassId", tr.getVehicleClassesBySeries().keySet().stream().map(VehicleClass::getId).toList()));
+                }
+                if (orFilters.isEmpty()) {
+                    // if there are no filters then there shouldn't be any results, so this just adds a dummy filter which matches nothing
+                    query = query.filter(Filters.eq("_id", false));
+                } else {
+                    query = query.filter(Filters.or(orFilters.toArray(new Filter[0])));
+                }
+            }
+            return query;
         }
 
         Query<MongoDbPhoto> q = query();

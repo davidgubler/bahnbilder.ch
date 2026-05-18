@@ -457,11 +457,17 @@ public class Txt {
         en.put("requestStats", "Request Statistics");
         de.put("requestStats", "Request-Statistik");
 
+        en.put("resultsFor", "Results for");
+        de.put("resultsFor", "Resultate für");
+
         en.put("save", "Save");
         de.put("save", "Speichern");
 
         en.put("search", "Search");
         de.put("search", "Suchen");
+
+        en.put("searchFreeTextExample", "e.g. \"Re 460 Winterthur\" or \"Bardotka SK\"");
+        de.put("searchFreeTextExample", "z.B. \"Re 460 Winterthur\" oder \"Bardotka SK\"");
 
         en.put("sensitivity", "Sensitivity");
         de.put("sensitivity", "Empfindlichkeit");

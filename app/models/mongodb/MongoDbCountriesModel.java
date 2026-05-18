@@ -1,6 +1,8 @@
 package models.mongodb;
 
 import dev.morphia.UpdateOptions;
+import dev.morphia.query.FindOptions;
+import dev.morphia.query.Meta;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.UpdateOperators;
 import entities.Country;
@@ -10,6 +12,8 @@ import models.CountriesModel;
 
 import java.util.Collection;
 import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MongoDbCountriesModel extends MongoDbModel<MongoDbCountry> implements CountriesModel {
@@ -77,5 +81,16 @@ public class MongoDbCountriesModel extends MongoDbModel<MongoDbCountry> implemen
     @Override
     public void delete(Country country) {
         super.delete((MongoDbCountry)country);
+    }
+
+    @Override
+    public Map<? extends Country, Float> searchFreeText(String freeText) {
+        Map<Country, Float> results = query().filter(Filters.text(freeText)).stream(new FindOptions().projection().project(Meta.textScore("searchScore"))).collect(Collectors.toMap(c -> c, c -> c.getSearchScore()));
+        freeText = freeText.replace("\"", "");
+        Country countryByCode = getByCode(freeText.toUpperCase(Locale.ENGLISH));
+        if (countryByCode != null) {
+            results.put(countryByCode, countryByCode.getCode().equals(freeText) ? 2.0f : 1.0f);
+        }
+        return results;
     }
 }

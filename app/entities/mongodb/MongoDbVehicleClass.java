@@ -6,12 +6,17 @@ import utils.Context;
 
 import java.util.Objects;
 
+import static dev.morphia.utils.IndexType.TEXT;
+
 @Entity(value = "vehicleClasses", useDiscriminator = false)
+@Indexes({
+        @Index(fields = @Field(value = "name", type = TEXT)),
+        @Index(fields = @Field(value = "numId"), options =  @IndexOptions(unique = true)),
+})
 public class MongoDbVehicleClass implements MongoDbEntity, VehicleClass, ContextAwareEntity, Comparable<MongoDbVehicleClass> {
     @Id
     private ObjectId _id;
 
-    @Indexed(options = @IndexOptions(unique = true))
     private int numId;
 
     private String name;
@@ -23,6 +28,8 @@ public class MongoDbVehicleClass implements MongoDbEntity, VehicleClass, Context
     private Integer vehicleTypeId;
 
     private Integer vehiclePropulsionId;
+
+    private Float searchScore;
 
     @Transient
     private Context context;
@@ -155,5 +162,9 @@ public class MongoDbVehicleClass implements MongoDbEntity, VehicleClass, Context
     @Override
     public int hashCode() {
         return Objects.hashCode(_id);
+    }
+
+    public Float getSearchScore() {
+        return searchScore;
     }
 }

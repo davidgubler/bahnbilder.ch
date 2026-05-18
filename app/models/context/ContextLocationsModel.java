@@ -67,4 +67,9 @@ public class ContextLocationsModel extends ContextModel implements LocationsMode
     public long deleteUnused(Collection<Integer> usedLocationIds) {
         return call(() -> locationsModel.deleteUnused(usedLocationIds));
     }
+
+    @Override
+    public Map<? extends Location, Float> searchFreeText(String freeText) {
+        return call(() -> locationsModel.searchFreeText(freeText));
+    }
 }
