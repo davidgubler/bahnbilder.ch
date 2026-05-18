@@ -6,6 +6,7 @@ import models.UsersModel;
 import play.mvc.Http;
 import utils.Context;
 
+import java.util.Map;
 import java.util.stream.Stream;
 
 public class ContextUsersModel extends ContextModel implements UsersModel {
@@ -75,5 +76,10 @@ public class ContextUsersModel extends ContextModel implements UsersModel {
     @Override
     public void killSessions(User user) {
         call(() -> { usersModel.killSessions(user); return null; });
+    }
+
+    @Override
+    public Map<? extends User, Float> searchFreeText(String freeText) {
+        return call(() -> usersModel.searchFreeText(freeText));
     }
 }

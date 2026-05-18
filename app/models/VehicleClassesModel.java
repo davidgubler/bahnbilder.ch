@@ -1,5 +1,6 @@
 package models;
 
+import entities.Operator;
 import entities.VehicleClass;
 import entities.formdata.VehicleClassFormData;
 
@@ -33,4 +34,6 @@ public interface VehicleClassesModel {
     Stream<? extends VehicleClass> getNoSeries();
 
     Stream<? extends VehicleClass> getNoTypeProp();
+
+    Map<? extends VehicleClass, Float> searchFreeText(String freeText);
 }

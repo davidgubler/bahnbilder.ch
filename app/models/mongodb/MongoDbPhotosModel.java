@@ -286,6 +286,27 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         return photos;
     }
 
+    @Override
+    public List<? extends Photo> broadSearch(Collection<? extends User> users, Collection<? extends Country> countries, Collection<? extends Location> locations, Collection<? extends Operator> operators, Collection<? extends VehicleClass> vehicleClasses) {
+        Query<MongoDbPhoto> query = query();
+        if (!users.isEmpty()) {
+            query = query.filter(Filters.in("userId", users.stream().map(User::getId).toList()));
+        }
+        if (!countries.isEmpty()) {
+            query = query.filter(Filters.in("countryId", countries.stream().map(Country::getId).toList()));
+        }
+        if (!locations.isEmpty()) {
+            query = query.filter(Filters.in("locationId", locations.stream().map(Location::getId).toList()));
+        }
+        if (!operators.isEmpty()) {
+            query = query.filter(Filters.in("operatorId", operators.stream().map(Operator::getId).toList()));
+        }
+        if (!vehicleClasses.isEmpty()) {
+            query = query.filter(Filters.in("vehicleClassId", vehicleClasses.stream().map(VehicleClass::getId).toList()));
+        }
+        return query.stream().toList();
+    }
+
     private Filter getFilter(String field, Object value, boolean forward) {
         return forward ? Filters.gt(field, value) : Filters.lt(field, value);
     }

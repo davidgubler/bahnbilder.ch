@@ -1,5 +1,6 @@
 package models;
 
+import entities.Country;
 import entities.Operator;
 import entities.Wikidata;
 
@@ -37,4 +38,6 @@ public interface OperatorsModel {
     Stream<? extends Operator> getByAbbr(String abbr);
 
     void updateEras(Operator operator, Function<Collection<String>, List<Wikidata>> fetchWikidata);
+
+    Map<? extends Operator, Float> searchFreeText(String freeText);
 }

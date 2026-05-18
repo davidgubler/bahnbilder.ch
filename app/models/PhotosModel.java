@@ -73,6 +73,8 @@ public interface PhotosModel {
 
     List<? extends Photo> search(Search search);
 
+    List<? extends Photo> broadSearch(Collection<? extends User> users, Collection<? extends Country> countries, Collection<? extends Location> locations, Collection<? extends Operator> operators, Collection<? extends VehicleClass> vehicleClasses);
+
     Photo getNext(Photo photo, Search search);
 
     Photo getPrev(Photo photo, Search search);

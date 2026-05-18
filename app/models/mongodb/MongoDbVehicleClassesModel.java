@@ -1,14 +1,19 @@
 package models.mongodb;
 
 import dev.morphia.UpdateOptions;
+import dev.morphia.query.FindOptions;
+import dev.morphia.query.Meta;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.UpdateOperators;
+import entities.Country;
 import entities.VehicleClass;
 import entities.formdata.VehicleClassFormData;
 import entities.mongodb.MongoDbVehicleClass;
 import models.VehicleClassesModel;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MongoDbVehicleClassesModel extends MongoDbModel<MongoDbVehicleClass> implements VehicleClassesModel {
@@ -79,5 +84,10 @@ public class MongoDbVehicleClassesModel extends MongoDbModel<MongoDbVehicleClass
     @Override
     public Stream<? extends VehicleClass> getNoTypeProp() {
         return query().filter(Filters.or(Filters.eq("vehicleTypeId", null), (Filters.eq("vehiclePropulsionId", null)))).stream();
+    }
+
+    @Override
+    public Map<? extends VehicleClass, Float> searchFreeText(String freeText) {
+        return query().filter(Filters.text(freeText)).stream(new FindOptions().projection().project(Meta.textScore("searchScore"))).collect(Collectors.toMap(v -> v, v -> v.getSearchScore()));
     }
 }

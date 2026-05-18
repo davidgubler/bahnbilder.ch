@@ -93,6 +93,11 @@ public class ContextPhotosModel extends ContextModel implements PhotosModel {
     }
 
     @Override
+    public List<? extends Photo> broadSearch(Collection<? extends User> users, Collection<? extends Country> countries, Collection<? extends Location> locations, Collection<? extends Operator> operators, Collection<? extends VehicleClass> vehicleClasses) {
+        return call(() -> photosModel.broadSearch(users, countries, locations, operators, vehicleClasses));
+    }
+
+    @Override
     public Photo getNext(Photo photo, Search search) {
         return call(() -> photosModel.getNext(photo, search));
     }

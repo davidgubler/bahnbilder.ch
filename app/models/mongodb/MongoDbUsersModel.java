@@ -1,6 +1,8 @@
 package models.mongodb;
 
 import dev.morphia.UpdateOptions;
+import dev.morphia.query.FindOptions;
+import dev.morphia.query.Meta;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.query.updates.UpdateOperators;
@@ -14,6 +16,8 @@ import utils.InputUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static dev.morphia.query.Meta.textScore;
 
 public class MongoDbUsersModel extends MongoDbModel<MongoDbUser> implements UsersModel {
 
@@ -141,5 +145,10 @@ public class MongoDbUsersModel extends MongoDbModel<MongoDbUser> implements User
         MongoDbUser mongoDbUser = ((MongoDbUser)user);
         mongoDbUser.killSessions();
         query(user).update(new UpdateOptions(), UpdateOperators.unset("sessions"));
+    }
+
+    @Override
+    public Map<? extends User, Float> searchFreeText(String freeText) {
+        return query().filter(Filters.text(freeText)).stream(new FindOptions().projection().project(Meta.textScore("searchScore"))).collect(Collectors.toMap(u -> u, u -> u.getSearchScore()));
     }
 }

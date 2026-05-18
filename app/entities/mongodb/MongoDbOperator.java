@@ -15,12 +15,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import static dev.morphia.utils.IndexType.TEXT;
+
 @Entity(value = "operators", useDiscriminator = false)
+@Indexes({
+        @Index(fields = @Field(value = "name", type = TEXT)),
+        @Index(fields = @Field(value = "numId"), options =  @IndexOptions(unique = true)),
+})
 public class MongoDbOperator implements ContextAwareEntity, MongoDbEntity, Operator {
     @Id
     private ObjectId _id;
 
-    @Indexed(options = @IndexOptions(unique = true))
     private int numId;
 
     private String abbr;
@@ -32,6 +37,8 @@ public class MongoDbOperator implements ContextAwareEntity, MongoDbEntity, Opera
     private List<MongoDbOperatorEra> eras = new ArrayList();
 
     private Instant erasLastRefresh;
+
+    private Float searchScore;
 
     @Transient
     private Context context;
@@ -131,5 +138,9 @@ public class MongoDbOperator implements ContextAwareEntity, MongoDbEntity, Opera
     @Override
     public int hashCode() {
         return Objects.hashCode(_id);
+    }
+
+    public Float getSearchScore() {
+        return searchScore;
     }
 }

@@ -1,23 +1,22 @@
 package models.mongodb;
 
 import dev.morphia.UpdateOptions;
+import dev.morphia.query.FindOptions;
+import dev.morphia.query.Meta;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.UpdateOperators;
 import entities.Country;
 import entities.Operator;
 import entities.Wikidata;
-import entities.mongodb.MongoDbCountry;
 import entities.mongodb.MongoDbOperator;
 import entities.mongodb.MongoDbOperatorEra;
 import models.OperatorsModel;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MongoDbOperatorsModel extends MongoDbModel<MongoDbOperator> implements OperatorsModel {
@@ -110,5 +109,10 @@ public class MongoDbOperatorsModel extends MongoDbModel<MongoDbOperator> impleme
     @Override
     public void delete(Operator operator) {
         super.delete((MongoDbOperator)operator);
+    }
+
+    @Override
+    public Map<? extends Operator, Float> searchFreeText(String freeText) {
+        return query().filter(Filters.text(freeText)).stream(new FindOptions().projection().project(Meta.textScore("searchScore"))).collect(Collectors.toMap(o -> o, o -> o.getSearchScore()));
     }
 }

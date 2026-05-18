@@ -3,6 +3,7 @@ package models;
 import entities.User;
 import play.mvc.Http;
 
+import java.util.Map;
 import java.util.stream.Stream;
 
 public interface UsersModel {
@@ -29,4 +30,6 @@ public interface UsersModel {
     void startSession(User user);
 
     void killSessions(User user);
+
+    Map<? extends User, Float> searchFreeText(String freeText);
 }
