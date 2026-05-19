@@ -5,7 +5,6 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.query.Meta;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.UpdateOperators;
-import entities.Country;
 import entities.Operator;
 import entities.Wikidata;
 import entities.mongodb.MongoDbOperator;
@@ -113,6 +112,9 @@ public class MongoDbOperatorsModel extends MongoDbModel<MongoDbOperator> impleme
 
     @Override
     public Map<? extends Operator, Float> searchFreeText(String freeText) {
-        return query().filter(Filters.text(freeText)).stream(new FindOptions().projection().project(Meta.textScore("searchScore"))).collect(Collectors.toMap(o -> o, o -> o.getSearchScore()));
+        Map<Operator, Float> results = query().filter(Filters.text(freeText)).stream(new FindOptions().projection().project(Meta.textScore("searchScore"))).collect(Collectors.toMap(o -> o, o -> o.getSearchScore()));
+        String freeTextStripped = freeText.replace("\"", "");
+        getByAbbr(freeText.replace("\"", "").toUpperCase(Locale.ENGLISH)).forEach(o -> results.put(o, o.getAbbr().equals(freeTextStripped) ? 2.0f : 1.0f));
+        return results;
     }
 }

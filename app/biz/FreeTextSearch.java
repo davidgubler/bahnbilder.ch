@@ -1,7 +1,6 @@
 package biz;
 
 import entities.*;
-import org.apache.pekko.http.javadsl.model.headers.AcceptRanges;
 import utils.Context;
 
 import java.util.*;
@@ -20,48 +19,6 @@ public class FreeTextSearch {
             quoted = !quoted;
         }
         return tokens.stream().map(t -> t.trim()).filter(t -> !t.isEmpty()).toList();
-    }
-
-    private Map<? extends User, Float> searchUsers(Context context, String freeText) {
-        Map<? extends User, Float> users = context.getUsersModel().searchFreeText(freeText);
-        //if (users.isEmpty() && freeText.contains("\"")) {
-        //    users = context.getUsersModel().searchFreeText(removeQuoted(freeText));
-        //}
-        return users;
-    }
-
-    private Map<? extends Country, Float> searchCountries(Context context, String freeText) {
-        Map<? extends Country, Float> countries = context.getCountriesModel().searchFreeText(freeText);
-        //if (countries.isEmpty() && freeText.contains("\"")) {
-        //    countries = context.getCountriesModel().searchFreeText(removeQuoted(freeText));
-        //}
-        // FIXME: Also search by country code
-        return countries;
-    }
-
-    private Map<? extends Location, Float> searchLocations(Context context, String freeText) {
-        Map<? extends Location, Float> locations = context.getLocationsModel().searchFreeText(freeText);
-        //if (locations.isEmpty() && freeText.contains("\"")) {
-        //    locations = context.getLocationsModel().searchFreeText(removeQuoted(freeText));
-        //}
-        return locations;
-    }
-
-    private Map<? extends Operator, Float> searchOperators(Context context, String freeText) {
-        Map<? extends Operator, Float> operators = context.getOperatorsModel().searchFreeText(freeText);
-        //if (operators.isEmpty() && freeText.contains("\"")) {
-        //    operators = context.getOperatorsModel().searchFreeText(removeQuoted(freeText));
-        //}
-        // FIXME: Also search by abbreviation
-        return operators;
-    }
-
-    private Map<? extends VehicleClass, Float> searchVehicleClasses(Context context, String freeText) {
-        Map<? extends VehicleClass, Float> vehicleClasses = context.getVehicleClassesModel().searchFreeText(freeText);
-        //if (vehicleClasses.isEmpty() && freeText.contains("\"")) {
-        //    vehicleClasses = context.getVehicleClassesModel().searchFreeText(removeQuoted(freeText));
-        //}
-        return vehicleClasses;
     }
 
     // FIXME: Missing search by family, number, description, keywords, photographer, detected text, detected objects

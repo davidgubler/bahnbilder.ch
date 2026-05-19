@@ -85,6 +85,12 @@ public class MongoDbCountriesModel extends MongoDbModel<MongoDbCountry> implemen
 
     @Override
     public Map<? extends Country, Float> searchFreeText(String freeText) {
-        return query().filter(Filters.text(freeText)).stream(new FindOptions().projection().project(Meta.textScore("searchScore"))).collect(Collectors.toMap(c -> c, c -> c.getSearchScore()));
+        Map<Country, Float> results = query().filter(Filters.text(freeText)).stream(new FindOptions().projection().project(Meta.textScore("searchScore"))).collect(Collectors.toMap(c -> c, c -> c.getSearchScore()));
+        freeText = freeText.replace("\"", "");
+        Country countryByCode = getByCode(freeText.toUpperCase(Locale.ENGLISH));
+        if (countryByCode != null) {
+            results.put(countryByCode, countryByCode.getCode().equals(freeText) ? 2.0f : 1.0f);
+        }
+        return results;
     }
 }
