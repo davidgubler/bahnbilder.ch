@@ -49,7 +49,7 @@ public class SearchController extends Controller {
             photos = new FreeTextSearch().search(context, search.getFreeText());
             lastPage = search.getLastPage(photos.size());
             search.adjustPage(lastPage);
-            photos.subList((search.getPage() - 1) * 20, Math.min(search.getPage() * 20, photos.size()));
+            photos = photos.subList((search.getPage() - 1) * 20, Math.min(search.getPage() * 20, photos.size()));
         }
 
         return ok(views.html.search.search.render(request, search, authors, photographers, licenses, photoTypes, countries, locations, operators, vehicleClasses, keywords, keywordSelection, lastPage, photos, user, lang));

@@ -1,5 +1,6 @@
 package models;
 
+import biz.FreeTextSearch;
 import entities.*;
 import entities.aggregations.AggregationCountryViews;
 import entities.formdata.PhotoFormData;
@@ -73,7 +74,7 @@ public interface PhotosModel {
 
     List<? extends Photo> search(Search search);
 
-    List<? extends Photo> broadSearch(Collection<? extends User> users, Collection<? extends Country> countries, Collection<? extends Location> locations, Collection<? extends Operator> operators, Collection<? extends VehicleClass> vehicleClasses);
+    List<? extends Photo> broadSearch(Collection<FreeTextSearch.TokenResult> tokenResults);
 
     Photo getNext(Photo photo, Search search);
 

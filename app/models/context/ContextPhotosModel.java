@@ -1,5 +1,6 @@
 package models.context;
 
+import biz.FreeTextSearch;
 import com.google.inject.Inject;
 import entities.*;
 import entities.aggregations.AggregationCountryViews;
@@ -93,8 +94,8 @@ public class ContextPhotosModel extends ContextModel implements PhotosModel {
     }
 
     @Override
-    public List<? extends Photo> broadSearch(Collection<? extends User> users, Collection<? extends Country> countries, Collection<? extends Location> locations, Collection<? extends Operator> operators, Collection<? extends VehicleClass> vehicleClasses) {
-        return call(() -> photosModel.broadSearch(users, countries, locations, operators, vehicleClasses));
+    public List<? extends Photo> broadSearch(Collection<FreeTextSearch.TokenResult> tokenResults) {
+        return call(() -> photosModel.broadSearch(tokenResults));
     }
 
     @Override

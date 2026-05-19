@@ -1,5 +1,6 @@
 package models.mongodb;
 
+import biz.FreeTextSearch;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.lang.GeoLocation;
@@ -38,6 +39,7 @@ import entities.mongodb.MongoDbPhotoExif;
 import entities.mongodb.MongoDbPhoto;
 import entities.mongodb.aggregations.MongoDbAggregationCountryViews;
 import models.*;
+import play.libs.F;
 import utils.Context;
 import utils.geometry.GeographicCoordinates;
 import utils.geometry.SimplePoint;
@@ -287,23 +289,35 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
     }
 
     @Override
-    public List<? extends Photo> broadSearch(Collection<? extends User> users, Collection<? extends Country> countries, Collection<? extends Location> locations, Collection<? extends Operator> operators, Collection<? extends VehicleClass> vehicleClasses) {
+    public List<? extends Photo> broadSearch(Collection<FreeTextSearch.TokenResult> tokenResults) {
         Query<MongoDbPhoto> query = query();
-        if (!users.isEmpty()) {
-            query = query.filter(Filters.in("userId", users.stream().map(User::getId).toList()));
+
+        for (FreeTextSearch.TokenResult tr : tokenResults) {
+            List<Filter> orFilters = new ArrayList<>();
+
+            if (!tr.getUsers().isEmpty()) {
+                orFilters.add(Filters.in("userId", tr.getUsers().keySet().stream().map(User::getId).toList()));
+            }
+            if (!tr.getCountries().isEmpty()) {
+                orFilters.add(Filters.in("countryId", tr.getCountries().keySet().stream().map(Country::getId).toList()));
+            }
+            if (!tr.getLocations().isEmpty()) {
+                orFilters.add(Filters.in("locationId", tr.getLocations().keySet().stream().map(Location::getId).toList()));
+            }
+            if (!tr.getOperators().isEmpty()) {
+                orFilters.add(Filters.in("operatorId", tr.getOperators().keySet().stream().map(Operator::getId).toList()));
+            }
+            if (!tr.getVehicleClasses().isEmpty()) {
+                orFilters.add(Filters.in("vehicleClassId", tr.getVehicleClasses().keySet().stream().map(VehicleClass::getId).toList()));
+            }
+
+            if (orFilters.isEmpty()) {
+                return Collections.emptyList();
+            }
+
+            query = query.filter(Filters.or(orFilters.toArray(new Filter[0])));
         }
-        if (!countries.isEmpty()) {
-            query = query.filter(Filters.in("countryId", countries.stream().map(Country::getId).toList()));
-        }
-        if (!locations.isEmpty()) {
-            query = query.filter(Filters.in("locationId", locations.stream().map(Location::getId).toList()));
-        }
-        if (!operators.isEmpty()) {
-            query = query.filter(Filters.in("operatorId", operators.stream().map(Operator::getId).toList()));
-        }
-        if (!vehicleClasses.isEmpty()) {
-            query = query.filter(Filters.in("vehicleClassId", vehicleClasses.stream().map(VehicleClass::getId).toList()));
-        }
+
         return query.stream().toList();
     }
 
