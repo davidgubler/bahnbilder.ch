@@ -58,15 +58,7 @@ public class Autodetection {
             if (!CONTAINS_LETTERS.matcher(text).find()) {
                 continue;
             }
-            // try the way it's written...
             for (Operator operator : context.getOperatorsModel().getByAbbr(text).toList()) {
-                int count = (int)context.getPhotosModel().countPhotosByOperator(photo, operator.getId());
-                if (count > 0) {
-                    operatorCount.put(operator.getId(), operatorCount.containsKey(operator.getId()) ? (operatorCount.get(operator.getId()) + count) : count);
-                }
-            }
-            // and try uppercase
-            for (Operator operator : context.getOperatorsModel().getByAbbr(text.toUpperCase(Locale.ROOT)).toList()) {
                 int count = (int)context.getPhotosModel().countPhotosByOperator(photo, operator.getId());
                 if (count > 0) {
                     operatorCount.put(operator.getId(), operatorCount.containsKey(operator.getId()) ? (operatorCount.get(operator.getId()) + count) : count);

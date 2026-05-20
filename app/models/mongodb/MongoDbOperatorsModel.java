@@ -71,7 +71,8 @@ public class MongoDbOperatorsModel extends MongoDbModel<MongoDbOperator> impleme
 
     @Override
     public Stream<? extends Operator> getByAbbr(String abbr) {
-        return query().filter(Filters.eq("abbr", abbr)).stream();
+        // The text index may return false positives e.g. if the abbr is part of the name
+        return query().filter(Filters.text(abbr)).stream().filter(o -> o.getAbbr().equalsIgnoreCase(abbr));
     }
 
     @Override

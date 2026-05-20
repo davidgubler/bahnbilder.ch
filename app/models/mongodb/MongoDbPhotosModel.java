@@ -39,7 +39,6 @@ import entities.mongodb.MongoDbPhotoExif;
 import entities.mongodb.MongoDbPhoto;
 import entities.mongodb.aggregations.MongoDbAggregationCountryViews;
 import models.*;
-import play.libs.F;
 import utils.Context;
 import utils.geometry.GeographicCoordinates;
 import utils.geometry.SimplePoint;

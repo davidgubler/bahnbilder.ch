@@ -19,7 +19,7 @@ import static dev.morphia.utils.IndexType.TEXT;
 
 @Entity(value = "operators", useDiscriminator = false)
 @Indexes({
-        @Index(fields = @Field(value = "name", type = TEXT)),
+        @Index(fields = { @Field(value = "name", type = TEXT), @Field(value = "abbr", type = TEXT)}),
         @Index(fields = @Field(value = "numId"), options =  @IndexOptions(unique = true)),
 })
 public class MongoDbOperator implements ContextAwareEntity, MongoDbEntity, Operator {
