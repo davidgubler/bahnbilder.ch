@@ -1,6 +1,7 @@
 package controllers;
 
 import biz.Autodetection;
+import biz.FreeTextSearch;
 import biz.Photos;
 import biz.ValidationException;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -13,6 +14,7 @@ import entities.*;
 import entities.formdata.PhotoFormData;
 import entities.tmp.AutodetectionStatus;
 import entities.tmp.TmpLocation;
+import play.libs.F;
 import utils.*;
 import utils.geometry.GeographicCoordinates;
 import utils.geometry.Point;
@@ -107,11 +109,16 @@ public class PhotoController extends Controller {
         state.photo.width = photo.getResXLarge().getWidth();
         state.photo.height = photo.getResXLarge().getHeight();
 
-        Photo next = context.getPhotosModel().getNext(photo, search);
-        state.next = next == null ? null : next.getId();
-
-        Photo prev = context.getPhotosModel().getPrev(photo, search);
-        state.prev = prev == null ? null : prev.getId();
+        if (search.getFreeText() == null) {
+            Photo next = context.getPhotosModel().getNext(photo, search);
+            state.next = next == null ? null : next.getId();
+            Photo prev = context.getPhotosModel().getPrev(photo, search);
+            state.prev = prev == null ? null : prev.getId();
+        } else {
+            play.libs.F.Tuple<Photo, Photo> prevNext = FreeTextSearch.getPrevNext(context, photo, search);
+            state.next = prevNext._1 == null ? null : prevNext._1.getId();
+            state.prev = prevNext._2 == null ? null : prevNext._2.getId();
+        }
 
         if (photo.getDescription() != null) {
             state.photo.description = new DescriptionInfo(photo.getDescription(), HtmlFormat.escape(photo.getDescription()).toString());

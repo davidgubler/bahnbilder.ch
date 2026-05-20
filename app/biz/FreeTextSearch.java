@@ -1,13 +1,14 @@
 package biz;
 
 import entities.*;
+import play.libs.F;
 import utils.Context;
 
 import java.util.*;
 
 public class FreeTextSearch {
 
-    private List<String> tokenize(String freeText) {
+    private static List<String> tokenize(String freeText) {
         List<String> tokens = new ArrayList<>();
         boolean quoted = false;
         for( String s : freeText.split("\"") ) {
@@ -87,7 +88,7 @@ public class FreeTextSearch {
         }
     }
 
-    private float rank(List<TokenResult> tokenResults, Photo photo) {
+    private static float rank(List<TokenResult> tokenResults, Photo photo) {
         float[] points = new float[1]; // the lambdas want an immutable variable, hence this array hack
         points[0] = 0.0f;
 
@@ -102,7 +103,7 @@ public class FreeTextSearch {
         return points[0];
     }
 
-    public List<? extends Photo> search(Context context, String freeText) {
+    public static List<? extends Photo> search(Context context, String freeText) {
         List<String> tokens = tokenize(freeText);
         System.out.println("tokens: " + tokens);
 
@@ -130,7 +131,7 @@ public class FreeTextSearch {
         return photos;
     }
 
-    private class PhotoRankComparator implements Comparator<Photo> {
+    private static class PhotoRankComparator implements Comparator<Photo> {
         private final List<TokenResult> tokenResults;
 
         public PhotoRankComparator(List<TokenResult> tokenResults) {
@@ -152,5 +153,22 @@ public class FreeTextSearch {
             }
             return p1.getId() < p2.getId() ? 1 : -1;
         }
+    }
+
+    public static F.Tuple<Photo, Photo> getPrevNext(Context context, Photo photo, Search search) {
+        List<? extends Photo> photos = search(context, search.getFreeText());
+        int pos = photos.indexOf(photo);
+        if (pos == -1) {
+            return new F.Tuple<>(null, null);
+        }
+        Photo prev = null;
+        Photo next = null;
+        if (pos > 0) {
+            prev = photos.get(pos - 1);
+        }
+        if (pos < photos.size() - 1) {
+            next = photos.get(pos + 1);
+        }
+        return new F.Tuple<>(prev, next);
     }
 }
