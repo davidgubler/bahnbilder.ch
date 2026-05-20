@@ -93,7 +93,7 @@ public class MongoDbOperatorsModel extends MongoDbModel<MongoDbOperator> impleme
             Collections.reverse(wikidata);
             List<MongoDbOperatorEra> eras = new ArrayList<>();
             LocalDate nextInception = null;
-            for(Wikidata d : wikidata) {
+            for (Wikidata d : wikidata) {
                 LocalDate dissolved = d.getDissolved();
                 if (dissolved == null && nextInception != null) {
                     dissolved = nextInception;

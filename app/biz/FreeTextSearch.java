@@ -87,6 +87,21 @@ public class FreeTextSearch {
         }
     }
 
+    private float rank(List<TokenResult> tokenResults, Photo photo) {
+        float[] points = new float[1]; // the lambdas want an immutable variable, hence this array hack
+        points[0] = 0.0f;
+
+        for (TokenResult r : tokenResults) {
+            r.getUsers().keySet().stream().filter(u -> Objects.equals(u.getId(), photo.getUserId())).forEach(u -> points[0] += r.getUsers().get(u));
+            r.getCountries().keySet().stream().filter(c -> Objects.equals(c.getId(), photo.getCountryId())).forEach(c -> points[0] += r.getCountries().get(c));
+            r.getLocations().keySet().stream().filter(l -> Objects.equals(l.getId(), photo.getLocationId())).forEach(l -> points[0] += r.getLocations().get(l));
+            r.getOperators().keySet().stream().filter(o -> Objects.equals(o.getId(), photo.getOperatorId())).forEach(o -> points[0] += r.getOperators().get(o));
+            r.getVehicleClasses().keySet().stream().filter(v -> Objects.equals(v.getId(), photo.getVehicleClassId())).forEach(v -> points[0] += r.getVehicleClasses().get(v));
+        }
+
+        return points[0];
+    }
+
     public List<? extends Photo> search(Context context, String freeText) {
         List<String> tokens = tokenize(freeText);
         System.out.println("tokens: " + tokens);
@@ -94,21 +109,48 @@ public class FreeTextSearch {
         List<TokenResult> tokenResults = new ArrayList<>();
         for (String token : tokens) {
             String quotedToken = token.contains(" ") ? "\"" + token + "\"" : token;
-            tokenResults.add(new TokenResult(
+            tokenResults.add(
+                new TokenResult(
                     token,
                     context.getUsersModel().searchFreeText(quotedToken),
                     context.getCountriesModel().searchFreeText(quotedToken),
                     context.getLocationsModel().searchFreeText(quotedToken),
                     context.getOperatorsModel().searchFreeText(quotedToken),
                     context.getVehicleClassesModel().searchFreeText(quotedToken)
-                    )
+                )
             );
         }
 
         System.out.println(tokenResults);
 
-        List<? extends Photo> photos = context.getPhotosModel().broadSearch(tokenResults);
+        List<? extends Photo> photos = new ArrayList<>(context.getPhotosModel().broadSearch(tokenResults));
+
+        Collections.sort(photos, new PhotoRankComparator(tokenResults));
 
         return photos;
+    }
+
+    private class PhotoRankComparator implements Comparator<Photo> {
+        private final List<TokenResult> tokenResults;
+
+        public PhotoRankComparator(List<TokenResult> tokenResults) {
+            this.tokenResults = tokenResults;
+        }
+
+        @Override
+        public int compare(Photo p1, Photo p2) {
+            float r1 = rank(tokenResults, p1);
+            float r2 = rank(tokenResults, p2);
+            if (r1 != r2) {
+                return r1 < r2 ? 1 : -1;
+            }
+            if (p1.getAuthorRating() != p2.getAuthorRating()) {
+                return p1.getAuthorRating() < p2.getAuthorRating() ? 1 : -1;
+            }
+            if (p1.getViews() != p2.getViews()) {
+                return p1.getViews() < p2.getViews() ? 1 : -1;
+            }
+            return p1.getId() < p2.getId() ? 1 : -1;
+        }
     }
 }
