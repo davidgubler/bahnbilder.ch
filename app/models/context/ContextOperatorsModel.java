@@ -1,6 +1,7 @@
 package models.context;
 
 import com.google.inject.Inject;
+import entities.Country;
 import entities.Operator;
 import entities.Wikidata;
 import models.OperatorsModel;
@@ -90,5 +91,10 @@ public class ContextOperatorsModel extends ContextModel implements OperatorsMode
     @Override
     public void updateEras(Operator operator, Function<Collection<String>, List<Wikidata>> fetchWikidata) {
         call(() -> { operatorsModel.updateEras(operator, fetchWikidata); return null; });
+    }
+
+    @Override
+    public Map<? extends Operator, Float> searchFreeText(String freeText) {
+        return call(() -> operatorsModel.searchFreeText(freeText));
     }
 }

@@ -1,5 +1,6 @@
 package controllers;
 
+import biz.FreeTextSearch;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -24,7 +25,6 @@ public class SearchController extends Controller {
         String lang = Lang.get(request);
 
         ContextSearch search = new ContextSearch(request);
-        injector.injectMembers(search);
 
         List<? extends User> authors = context.getUsersModel().getAll().sorted(LocalizedComparator.get(lang)).toList();
         List<String> photographers = context.getPhotosModel().getPhotographers();
@@ -37,17 +37,24 @@ public class SearchController extends Controller {
         List<? extends Keyword> keywords = context.getKeywordsModel().getAll().sorted(LocalizedComparator.get(lang)).toList();
         Map<Keyword, Boolean> keywordSelection = context.getKeywordsModel().getKeywordsMap(search.getKeywords());
 
-        long resultsCount = context.getPhotosModel().searchCount(search);
-        int lastPage = search.getLastPage(resultsCount);
-        search.adjustPage(lastPage);
-
-        List<? extends Photo> photos = context.getPhotosModel().search(search);
+        int lastPage;
+        List<? extends Photo> photos;
+        if (search.getFreeText() == null) {
+            long resultsCount = context.getPhotosModel().searchCount(search);
+            lastPage = search.getLastPage(resultsCount);
+            search.adjustPage(lastPage);
+            photos = context.getPhotosModel().search(search);
+        } else  {
+            photos = new FreeTextSearch().search(context, search);
+            lastPage = search.getLastPage(photos.size());
+            search.adjustPage(lastPage);
+            photos = photos.subList((search.getPage() - 1) * 20, Math.min(search.getPage() * 20, photos.size()));
+        }
 
         return ok(views.html.search.search.render(request, search, authors, photographers, licenses, photoTypes, countries, locations, operators, vehicleClasses, keywords, keywordSelection, lastPage, photos, user, lang));
     }
 
     public Result searchPost(Http.Request request) {
-        Context context = Context.get(request);
         Search search = new Search(request);
         return redirect("/search?" + search.toQuery());
     }

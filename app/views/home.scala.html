@@ -43,15 +43,25 @@
 
 
         <div class="col-md-3 order-md-3 sidebar">
-            <h2>@i18n.Txt.get(lang, "countriesByViews")</h2>
-            <table class="stats">
-                @for(cv <- countryViews) {
-                    <tr>
-                        <td><span><a href="@routes.BrowseController.country(1, cv.getCountry + "")" >@flag(cv.getCountry() + "", cv.getCountry().getName(lang))@cv.getCountry().getName(lang)</a></span></td>
-                        <td>@(cv.getViews() / 1000L)&nbsp;k</td>
-                    </tr>
-                }
-            </table>
+            <div>
+                <h2>@i18n.Txt.get(lang, "countriesByViews")</h2>
+                <table class="stats">
+                    @for(cv <- countryViews) {
+                        <tr>
+                            <td><span><a href="@routes.BrowseController.country(1, cv.getCountry + "")" >@flag(cv.getCountry() + "", cv.getCountry().getName(lang))@cv.getCountry().getName(lang)</a></span></td>
+                            <td>@(cv.getViews() / 1000L)&nbsp;k</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+            <div class="mt-4">
+                <h2></h2>
+                <form action="@routes.SearchController.search()" style="text-align: left;">
+                    <input type="text" class="form-control" id="q" name="q">
+                    <button class="btn btn-primary mt-1" style="float: right;" type="submit" value="search">@i18n.Txt.get(lang, "search")!</button>
+                    <small>@i18n.Txt.get(lang, "searchFreeTextExample")</small>
+                </form>
+            </div>
         </div>
 
     </div>

@@ -24,6 +24,8 @@ public interface VehicleClassesModel {
 
     Stream<? extends VehicleClass> getByVehicleSeriesId(Integer vehicleSeriesId);
 
+    Stream<? extends VehicleClass> getByVehicleSeriesIds(Collection<Integer> vehicleSeriesIds);
+
     Map<Integer, ? extends VehicleClass> getByIdsAsMap(Collection<Integer> ids);
 
     Stream<? extends VehicleClass> getByIds(Collection<Integer> ids);
@@ -33,4 +35,6 @@ public interface VehicleClassesModel {
     Stream<? extends VehicleClass> getNoSeries();
 
     Stream<? extends VehicleClass> getNoTypeProp();
+
+    Map<? extends VehicleClass, Float> searchFreeText(String freeText);
 }

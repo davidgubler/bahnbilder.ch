@@ -9,7 +9,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
+import static dev.morphia.utils.IndexType.TEXT;
+
 @Entity(value = "countries", useDiscriminator = false)
+@Indexes({
+        @Index(fields = { @Field(value = "names.de", type = TEXT), @Field(value = "names.en", type = TEXT) }),
+        @Index(fields = @Field(value = "numId"), options =  @IndexOptions(unique = true)),
+        @Index(fields = @Field(value = "code"), options =  @IndexOptions(unique = true)),
+})
 public class MongoDbCountry implements MongoDbEntity, Country {
     @Id
     private ObjectId _id;
@@ -21,6 +28,8 @@ public class MongoDbCountry implements MongoDbEntity, Country {
     private String code;
 
     private Map<String, String> names = new HashMap<>();
+
+    private Float searchScore;
 
     public MongoDbCountry() {
         // dummy for Morphia
@@ -80,5 +89,9 @@ public class MongoDbCountry implements MongoDbEntity, Country {
     @Override
     public int hashCode() {
         return Objects.hashCode(code);
+    }
+
+    public Float getSearchScore() {
+        return searchScore;
     }
 }

@@ -1,22 +1,26 @@
 package entities.mongodb;
 
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
-import dev.morphia.annotations.IndexOptions;
-import dev.morphia.annotations.Indexed;
+import dev.morphia.annotations.*;
 import entities.VehicleSeries;
 import org.bson.types.ObjectId;
 
+import static dev.morphia.utils.IndexType.TEXT;
+
 @Entity(value = "vehicleSeries", useDiscriminator = false)
+@Indexes({
+        @Index(fields = @Field(value = "numId"), options = @IndexOptions(unique = true)),
+        @Index(fields = @Field(value = "name"), options = @IndexOptions(unique = true)),
+        @Index(fields = @Field(value = "name", type = TEXT)),
+})
 public class MongoDbVehicleSeries implements MongoDbEntity, VehicleSeries {
     @Id
     private ObjectId _id;
 
-    @Indexed(options = @IndexOptions(unique = true))
     private int numId;
 
-    @Indexed(options = @IndexOptions(unique = true))
     private String name;
+
+    private Float searchScore;
 
     public MongoDbVehicleSeries() {
         // dummy for Morphia
@@ -49,5 +53,9 @@ public class MongoDbVehicleSeries implements MongoDbEntity, VehicleSeries {
     @Override
     public String toString() {
         return getName();
+    }
+
+    public Float getSearchScore() {
+        return searchScore;
     }
 }

@@ -1,6 +1,7 @@
 package models.context;
 
 import com.google.inject.Inject;
+import entities.Operator;
 import entities.VehicleClass;
 import entities.formdata.VehicleClassFormData;
 import models.VehicleClassesModel;
@@ -68,6 +69,11 @@ public class ContextVehicleClassesModel extends ContextModel implements VehicleC
     }
 
     @Override
+    public Stream<? extends VehicleClass> getByVehicleSeriesIds(Collection<Integer> vehicleSeriesIds) {
+        return call(() -> vehicleClassesModel.getByVehicleSeriesIds(vehicleSeriesIds));
+    }
+
+    @Override
     public Map<Integer, ? extends VehicleClass> getByIdsAsMap(Collection<Integer> ids) {
         return call(() -> vehicleClassesModel.getByIdsAsMap(ids));
     }
@@ -90,5 +96,10 @@ public class ContextVehicleClassesModel extends ContextModel implements VehicleC
     @Override
     public Stream<? extends VehicleClass> getNoTypeProp() {
         return call(() -> vehicleClassesModel.getNoTypeProp());
+    }
+
+    @Override
+    public Map<? extends VehicleClass, Float> searchFreeText(String freeText) {
+        return call(() -> vehicleClassesModel.searchFreeText(freeText));
     }
 }

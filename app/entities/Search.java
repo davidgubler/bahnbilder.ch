@@ -68,6 +68,7 @@ public class Search {
     protected final boolean portraitsFirst;
     protected final boolean withLocationOnly;
     protected final SortBy sortBy;
+    protected final String q;
     protected int page;
 
     public Search(Http.Request request) {
@@ -99,6 +100,7 @@ public class Search {
             portraitsFirst = InputUtils.toBoolean(data.get("portraitsFirst"));
             withLocationOnly = InputUtils.toBoolean(data.get("withLocationOnly"));
             sortBy = SortBy.fromString(data.get("sortBy"));
+            q = InputUtils.trimToNull(data.get("q"));
             page = 1;
         } else {
             inactive = InputUtils.toBoolean(request.queryString("inactive").orElse(null));
@@ -128,6 +130,7 @@ public class Search {
             portraitsFirst = InputUtils.toBoolean(request.queryString("portraitsFirst").orElse(null));
             withLocationOnly = InputUtils.toBoolean(request.queryString("withLocationOnly").orElse(null));
             sortBy = SortBy.fromString(request.queryString("sortBy").orElse(null));
+            q = InputUtils.trimToNull(request.queryString("q").orElse(null));
             Integer pageFromReq = InputUtils.toInt(request.queryString("page").orElse(null));
             page = pageFromReq == null ? 1 : pageFromReq;
         }
@@ -154,6 +157,7 @@ public class Search {
         series = false;
         portraitsFirst = false;
         withLocationOnly = false;
+        q = null;
         this.sortBy = sortBy;
         this.page = page;
     }
@@ -179,6 +183,7 @@ public class Search {
         series = false;
         portraitsFirst = false;
         withLocationOnly = false;
+        q = null;
         this.sortBy = SortBy.photoDate;
         this.page = page;
     }
@@ -204,6 +209,7 @@ public class Search {
         series = false;
         portraitsFirst = false;
         withLocationOnly = false;
+        q = null;
         sortBy = SortBy.photoDate;
         page = 1;
     }
@@ -229,6 +235,7 @@ public class Search {
         series = false;
         portraitsFirst = false;
         withLocationOnly = false;
+        q = null;
         sortBy = SortBy.photoDate;
         page = 1;
     }
@@ -255,6 +262,7 @@ public class Search {
         series = false;
         portraitsFirst = false;
         withLocationOnly = false;
+        q = null;
         sortBy = SortBy.photoType;
         page = 1;
     }
@@ -281,6 +289,7 @@ public class Search {
         series = false;
         portraitsFirst = false;
         withLocationOnly = false;
+        q = null;
         sortBy = SortBy.photoDate;
         page = 1;
     }
@@ -311,6 +320,7 @@ public class Search {
         series = false;
         portraitsFirst = false;
         withLocationOnly = false;
+        q = null;
         sortBy = SortBy.photoDate;
         page = 1;
     }
@@ -337,6 +347,7 @@ public class Search {
         series = false;
         portraitsFirst = false;
         withLocationOnly = false;
+        q = null;
         sortBy = SortBy.photoDate;
         this.page = page;
     }
@@ -363,6 +374,7 @@ public class Search {
         series = false;
         portraitsFirst = false;
         withLocationOnly = false;
+        q = null;
         sortBy = SortBy.rating;
         page = 1;
     }
@@ -448,6 +460,10 @@ public class Search {
 
     public List<String> getKeywordsExclude() {
         return keywords.stream().filter(k -> k.startsWith("-")).map(k -> k.substring(1)).sorted().collect(Collectors.toUnmodifiableList());
+    }
+
+    public String getFreeText() {
+        return q;
     }
 
     public SortBy getSortBy() {

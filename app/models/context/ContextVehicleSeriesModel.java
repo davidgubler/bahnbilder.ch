@@ -6,6 +6,7 @@ import entities.formdata.VehicleSeriesFormData;
 import models.VehicleSeriesModel;
 import utils.Context;
 
+import java.util.Map;
 import java.util.stream.Stream;
 
 public class ContextVehicleSeriesModel extends ContextModel implements VehicleSeriesModel {
@@ -50,5 +51,10 @@ public class ContextVehicleSeriesModel extends ContextModel implements VehicleSe
     @Override
     public Stream<? extends VehicleSeries> getAll() {
         return call(() -> vehicleSeriesModel.getAll());
+    }
+
+    @Override
+    public Map<? extends VehicleSeries, Float> searchFreeText(String freeText) {
+        return call(() -> vehicleSeriesModel.searchFreeText(freeText));
     }
 }

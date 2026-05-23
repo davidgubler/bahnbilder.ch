@@ -7,6 +7,7 @@ import models.CountriesModel;
 import utils.Context;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public class ContextCountriesModel extends ContextModel implements CountriesModel {
@@ -76,5 +77,10 @@ public class ContextCountriesModel extends ContextModel implements CountriesMode
     @Override
     public void delete(Country country) {
         call(() -> { countriesModel.delete(country); return null; });
+    }
+
+    @Override
+    public Map<? extends Country, Float> searchFreeText(String freeText) {
+        return call(() -> countriesModel.searchFreeText(freeText));
     }
 }

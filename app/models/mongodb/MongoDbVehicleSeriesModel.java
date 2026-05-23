@@ -1,12 +1,17 @@
 package models.mongodb;
 
 import dev.morphia.UpdateOptions;
+import dev.morphia.query.FindOptions;
+import dev.morphia.query.Meta;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.UpdateOperators;
 import entities.VehicleSeries;
 import entities.formdata.VehicleSeriesFormData;
 import entities.mongodb.MongoDbVehicleSeries;
 import models.VehicleSeriesModel;
+
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MongoDbVehicleSeriesModel extends MongoDbModel<MongoDbVehicleSeries> implements VehicleSeriesModel {
     @Override
@@ -44,5 +49,10 @@ public class MongoDbVehicleSeriesModel extends MongoDbModel<MongoDbVehicleSeries
     @Override
     public VehicleSeries getByName(String name) {
         return query().filter(Filters.eq("name", name)).first();
+    }
+
+    @Override
+    public Map<? extends VehicleSeries, Float> searchFreeText(String freeText) {
+        return query().filter(Filters.text(freeText)).stream(new FindOptions().projection().project(Meta.textScore("searchScore"))).collect(Collectors.toMap(v -> v, v -> v.getSearchScore()));
     }
 }

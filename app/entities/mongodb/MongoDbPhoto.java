@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static dev.morphia.utils.IndexType.TEXT;
 
@@ -444,6 +445,18 @@ public class MongoDbPhoto implements MongoDbEntity, Photo, ContextAwareEntity {
     @Override
     public String toString() {
         return "" + numId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        MongoDbPhoto that = (MongoDbPhoto) o;
+        return numId == that.numId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(numId);
     }
 
     /**

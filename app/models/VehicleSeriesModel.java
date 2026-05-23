@@ -3,6 +3,7 @@ package models;
 import entities.VehicleSeries;
 import entities.formdata.VehicleSeriesFormData;
 
+import java.util.Map;
 import java.util.stream.Stream;
 
 public interface VehicleSeriesModel {
@@ -19,4 +20,6 @@ public interface VehicleSeriesModel {
     VehicleSeries getByName(String name);
 
     Stream<? extends VehicleSeries> getAll();
+
+    Map<? extends VehicleSeries, Float> searchFreeText(String freeText);
 }

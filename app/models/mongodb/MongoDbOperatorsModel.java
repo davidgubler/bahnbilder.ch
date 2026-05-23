@@ -1,23 +1,21 @@
 package models.mongodb;
 
 import dev.morphia.UpdateOptions;
+import dev.morphia.query.FindOptions;
+import dev.morphia.query.Meta;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.UpdateOperators;
-import entities.Country;
 import entities.Operator;
 import entities.Wikidata;
-import entities.mongodb.MongoDbCountry;
 import entities.mongodb.MongoDbOperator;
 import entities.mongodb.MongoDbOperatorEra;
 import models.OperatorsModel;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MongoDbOperatorsModel extends MongoDbModel<MongoDbOperator> implements OperatorsModel {
@@ -73,7 +71,8 @@ public class MongoDbOperatorsModel extends MongoDbModel<MongoDbOperator> impleme
 
     @Override
     public Stream<? extends Operator> getByAbbr(String abbr) {
-        return query().filter(Filters.eq("abbr", abbr)).stream();
+        // The text index may return false positives e.g. if the abbr is part of the name
+        return query().filter(Filters.text(abbr)).stream().filter(o -> o.getAbbr().equalsIgnoreCase(abbr));
     }
 
     @Override
@@ -95,7 +94,7 @@ public class MongoDbOperatorsModel extends MongoDbModel<MongoDbOperator> impleme
             Collections.reverse(wikidata);
             List<MongoDbOperatorEra> eras = new ArrayList<>();
             LocalDate nextInception = null;
-            for(Wikidata d : wikidata) {
+            for (Wikidata d : wikidata) {
                 LocalDate dissolved = d.getDissolved();
                 if (dissolved == null && nextInception != null) {
                     dissolved = nextInception;
@@ -110,5 +109,13 @@ public class MongoDbOperatorsModel extends MongoDbModel<MongoDbOperator> impleme
     @Override
     public void delete(Operator operator) {
         super.delete((MongoDbOperator)operator);
+    }
+
+    @Override
+    public Map<? extends Operator, Float> searchFreeText(String freeText) {
+        Map<Operator, Float> results = query().filter(Filters.text(freeText)).stream(new FindOptions().projection().project(Meta.textScore("searchScore"))).collect(Collectors.toMap(o -> o, o -> o.getSearchScore()));
+        String freeTextStripped = freeText.replace("\"", "");
+        getByAbbr(freeText.replace("\"", "").toUpperCase(Locale.ENGLISH)).forEach(o -> results.put(o, o.getAbbr().equals(freeTextStripped) ? 2.0f : 1.0f));
+        return results;
     }
 }
