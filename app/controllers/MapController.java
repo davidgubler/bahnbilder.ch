@@ -3,7 +3,7 @@ package controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import entities.ContextSearch;
+import entities.search.ContextSearch;
 import entities.Photo;
 import entities.User;
 import i18n.Lang;

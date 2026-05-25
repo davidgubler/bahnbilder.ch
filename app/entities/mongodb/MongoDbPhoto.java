@@ -85,6 +85,8 @@ public class MongoDbPhoto implements MongoDbEntity, Photo, ContextAwareEntity {
 
     private MongoDbPhotoExif exif = null;
 
+    private Float searchScore;
+
     @Transient
     private Context context;
 
@@ -384,6 +386,10 @@ public class MongoDbPhoto implements MongoDbEntity, Photo, ContextAwareEntity {
             context.getPhotosModel().fetchExif(this);
         }
         return exif == null ? new MongoDbPhotoExif() : exif;
+    }
+
+    public Float getSearchScore() {
+        return searchScore;
     }
 
     @Override

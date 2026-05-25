@@ -1,5 +1,5 @@
 @(  implicit request: Http.Request,
-    search: entities.ContextSearch,
+    search: entities.search.ContextSearch,
     authors: List[_ <: entities.User],
     photographers: List[String],
     licenses: List[_ <: entities.License],
@@ -157,10 +157,10 @@
                     <label class='col-3 col-form-label' for='sortBy'>@i18n.Txt.get(lang, "sortBy")</label>
                     <div class='col-9 col-md-4'>
                         <select class='form-control' id='sortBy' name='sortBy' >
-                            <option @if(search.getSortBy() == entities.Search.SortBy.photoDate){selected="selected"} value='photoDate'>@i18n.Txt.get(lang, "photoDate")</option>
-                            <option @if(search.getSortBy() == entities.Search.SortBy.uploadDate){selected="selected"} value='uploadDate'>@i18n.Txt.get(lang, "uploadDate")</option>
-                            <option @if(search.getSortBy() == entities.Search.SortBy.rating){selected="selected"} value='rating'>@i18n.Txt.get(lang, "rating")</option>
-                            <option @if(search.getSortBy() == entities.Search.SortBy.views){selected="selected"} value='views'>@i18n.Txt.get(lang, "views")</option>
+                            <option @if(search.getSortBy() == entities.search.Search.SortBy.photoDate){selected="selected"} value='photoDate'>@i18n.Txt.get(lang, "photoDate")</option>
+                            <option @if(search.getSortBy() == entities.search.Search.SortBy.uploadDate){selected="selected"} value='uploadDate'>@i18n.Txt.get(lang, "uploadDate")</option>
+                            <option @if(search.getSortBy() == entities.search.Search.SortBy.rating){selected="selected"} value='rating'>@i18n.Txt.get(lang, "rating")</option>
+                            <option @if(search.getSortBy() == entities.search.Search.SortBy.views){selected="selected"} value='views'>@i18n.Txt.get(lang, "views")</option>
                         </select>
                     </div>
                 </div>

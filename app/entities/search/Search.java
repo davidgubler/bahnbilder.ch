@@ -1,5 +1,7 @@
-package entities;
+package entities.search;
 
+import entities.Country;
+import entities.User;
 import play.mvc.Http;
 import utils.Config;
 import utils.InputUtils;

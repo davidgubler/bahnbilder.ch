@@ -12,6 +12,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import entities.*;
 import entities.formdata.PhotoFormData;
+import entities.search.ContextSearch;
+import entities.search.Search;
 import entities.tmp.AutodetectionStatus;
 import entities.tmp.TmpLocation;
 import utils.*;

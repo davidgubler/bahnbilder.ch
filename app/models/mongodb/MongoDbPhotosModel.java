@@ -1,6 +1,5 @@
 package models.mongodb;
 
-import biz.FreeTextSearch;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.lang.GeoLocation;
@@ -25,6 +24,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Transient;
 import dev.morphia.query.FindOptions;
+import dev.morphia.query.Meta;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.query.Query;
 import dev.morphia.query.filters.Filters;
@@ -38,6 +38,10 @@ import entities.formdata.PhotoFormData;
 import entities.mongodb.MongoDbPhotoExif;
 import entities.mongodb.MongoDbPhoto;
 import entities.mongodb.aggregations.MongoDbAggregationCountryViews;
+import entities.search.ContextSearch;
+import entities.search.IncompleteSearch;
+import entities.search.Search;
+import entities.search.TokenResult;
 import models.*;
 import utils.Context;
 import utils.geometry.GeographicCoordinates;
@@ -520,9 +524,9 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         }
 
         if (search.getFreeText() != null) {
-            List<FreeTextSearch.TokenResult> tokenResults = ((ContextSearch)search).getFreeTextSearchTokenResults();
+            List<TokenResult> tokenResults = ((ContextSearch)search).getFreeTextSearchTokenResults();
             Query<MongoDbPhoto> query = query();
-            for (FreeTextSearch.TokenResult tr : tokenResults) {
+            for (TokenResult tr : tokenResults) {
                 List<Filter> orFilters = new ArrayList<>();
                 if (!tr.getUsers().isEmpty()) {
                     orFilters.add(Filters.in("userId", tr.getUsers().keySet().stream().map(User::getId).toList()));
@@ -541,6 +545,9 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
                 }
                 if (!tr.getVehicleClassesBySeries().isEmpty()) {
                     orFilters.add(Filters.in("vehicleClassId", tr.getVehicleClassesBySeries().keySet().stream().map(VehicleClass::getId).toList()));
+                }
+                if (!tr.getPhotosByDescription().isEmpty()) {
+                    orFilters.add(Filters.in("numId", tr.getPhotosByDescription().keySet().stream().map(Photo::getId).toList()));
                 }
                 if (orFilters.isEmpty()) {
                     // if there are no filters then there shouldn't be any results, so this just adds a dummy filter which matches nothing
@@ -932,6 +939,11 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
                 .group(Group.group().field("_id", null).field("distinct", AccumulatorExpressions.addToSet(Expressions.field("locationId"))))
                 .execute(AggregationDistinct.class);
         return cursor.hasNext() ? cursor.next().distinct : Collections.emptyList();
+    }
+
+    @Override
+    public Map<? extends Photo, Float> searchFreeText(String freeText) {
+        return query().filter(Filters.text(freeText)).stream(new FindOptions().projection().project(Meta.textScore("searchScore"))).collect(Collectors.toMap(p -> p, p -> p.getSearchScore()));
     }
 
     @Entity

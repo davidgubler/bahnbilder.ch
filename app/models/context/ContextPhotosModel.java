@@ -5,6 +5,7 @@ import entities.*;
 import entities.aggregations.AggregationCountryViews;
 import entities.formdata.PhotoFormData;
 import entities.mongodb.MongoDbPhoto;
+import entities.search.Search;
 import models.PhotosModel;
 import models.VehicleClassesModel;
 import models.VehicleTypesModel;
@@ -265,5 +266,10 @@ public class ContextPhotosModel extends ContextModel implements PhotosModel {
     @Override
     public List<Integer> getLocationIds() {
         return call(() -> photosModel.getLocationIds());
+    }
+
+    @Override
+    public Map<? extends Photo, Float> searchFreeText(String freeText) {
+        return call(() -> photosModel.searchFreeText(freeText));
     }
 }

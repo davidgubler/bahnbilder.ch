@@ -3,6 +3,7 @@ package entities.mongodb;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Transient;
 import entities.*;
+import entities.search.Search;
 import utils.Context;
 
 import java.time.LocalDate;

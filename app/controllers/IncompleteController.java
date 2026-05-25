@@ -1,8 +1,8 @@
 package controllers;
 
-import entities.IncompleteSearch;
+import entities.search.IncompleteSearch;
 import entities.Photo;
-import entities.Search;
+import entities.search.Search;
 import entities.User;
 import i18n.Lang;
 import play.mvc.Controller;

@@ -1,6 +1,7 @@
 package controllers;
 
 import entities.*;
+import entities.search.Search;
 import entities.tmp.OtherVehicleType;
 import entities.tmp.VehicleClassSummary;
 import i18n.Lang;

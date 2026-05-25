@@ -3,6 +3,7 @@ package controllers;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import entities.*;
+import entities.search.Search;
 import i18n.Lang;
 import play.mvc.Controller;
 import play.mvc.Http;
