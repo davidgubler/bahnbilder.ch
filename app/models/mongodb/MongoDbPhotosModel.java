@@ -1,5 +1,6 @@
 package models.mongodb;
 
+import biz.FreeTextSearch;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.lang.GeoLocation;
@@ -527,27 +528,14 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
             List<TokenResult> tokenResults = ((ContextSearch)search).getFreeTextSearchTokenResults();
             Query<MongoDbPhoto> query = query();
             for (TokenResult tr : tokenResults) {
+                if (tr.ignored()) {
+                    continue;
+                }
                 List<Filter> orFilters = new ArrayList<>();
-                if (!tr.getUsers().isEmpty()) {
-                    orFilters.add(Filters.in("userId", tr.getUsers().keySet().stream().map(User::getId).toList()));
-                }
-                if (!tr.getCountries().isEmpty()) {
-                    orFilters.add(Filters.in("countryId", tr.getCountries().keySet().stream().map(Country::getId).toList()));
-                }
-                if (!tr.getLocations().isEmpty()) {
-                    orFilters.add(Filters.in("locationId", tr.getLocations().keySet().stream().map(Location::getId).toList()));
-                }
-                if (!tr.getOperators().isEmpty()) {
-                    orFilters.add(Filters.in("operatorId", tr.getOperators().keySet().stream().map(Operator::getId).toList()));
-                }
-                if (!tr.getVehicleClasses().isEmpty()) {
-                    orFilters.add(Filters.in("vehicleClassId", tr.getVehicleClasses().keySet().stream().map(VehicleClass::getId).toList()));
-                }
-                if (!tr.getVehicleClassesBySeries().isEmpty()) {
-                    orFilters.add(Filters.in("vehicleClassId", tr.getVehicleClassesBySeries().keySet().stream().map(VehicleClass::getId).toList()));
-                }
-                if (!tr.getPhotosByDescription().isEmpty()) {
-                    orFilters.add(Filters.in("numId", tr.getPhotosByDescription().keySet().stream().map(Photo::getId).toList()));
+                for (FreeTextSearch.SearchCriterion sc : FreeTextSearch.SEARCH_CRITERIA) {
+                    if (!tr.get(sc).isEmpty()) {
+                        orFilters.add(Filters.in(sc.getField(), tr.get(sc).keySet().stream().map(NumIdEntity::getId).toList()));
+                    }
                 }
                 if (orFilters.isEmpty()) {
                     // if there are no filters then there shouldn't be any results, so this just adds a dummy filter which matches nothing

@@ -2,7 +2,7 @@ package entities;
 
 import java.util.List;
 
-public interface User extends LocalizedEntity {
+public interface User extends LocalizedEntity, NumIdEntity {
     int getId();
 
     String getName();

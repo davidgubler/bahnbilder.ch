@@ -1,6 +1,6 @@
 package entities;
 
-public interface Country extends LocalizedEntity {
+public interface Country extends LocalizedEntity, NumIdEntity {
     int getId();
 
     String getCode();

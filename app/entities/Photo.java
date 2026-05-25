@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public interface Photo extends Comparable<Photo> {
+public interface Photo extends Comparable<Photo>, NumIdEntity {
     int getId();
 
     int getUserId();

@@ -1,6 +1,6 @@
 package entities;
 
-public interface VehicleClass extends LocalizedEntity {
+public interface VehicleClass extends LocalizedEntity, NumIdEntity {
     int getId();
 
     String getName();

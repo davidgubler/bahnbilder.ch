@@ -1,8 +1,10 @@
 package entities.search;
 
+import biz.FreeTextSearch;
 import entities.*;
 import play.mvc.Http;
 import utils.Context;
+import utils.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -120,16 +122,6 @@ public class ContextSearch extends Search {
 
     private List<TokenResult> freeTextSearchTokenResults = null;
 
-    private Map<? extends VehicleClass, Float> vehicleSeriesToClassMap(Context context, Map<? extends VehicleSeries, Float> vehicleSeriesMap) {
-        Map<VehicleClass, Float> vehicleClasses = new HashMap<>();
-        for (VehicleSeries vehicleSeries : vehicleSeriesMap.keySet()) {
-            context.getVehicleClassesModel().getByVehicleSeriesId(vehicleSeries.getId()).forEach(vc -> {
-                vehicleClasses.put(vc, vehicleSeriesMap.get(vehicleSeries));
-            });
-        }
-        return vehicleClasses;
-    }
-
     private List<String> tokenize(String freeText) {
         List<String> tokens = new ArrayList<>();
         boolean quoted = false;
@@ -151,21 +143,24 @@ public class ContextSearch extends Search {
             List<TokenResult> tokenResults = new ArrayList<>();
             for (String token : tokens) {
                 String quotedToken = token.contains(" ") ? "\"" + token + "\"" : token;
-                tokenResults.add(
-                        new TokenResult(
-                                token,
-                                context.getUsersModel().searchFreeText(quotedToken),
-                                context.getCountriesModel().searchFreeText(quotedToken),
-                                context.getLocationsModel().searchFreeText(quotedToken),
-                                context.getOperatorsModel().searchFreeText(quotedToken),
-                                context.getVehicleClassesModel().searchFreeText(quotedToken),
-                                vehicleSeriesToClassMap(context, context.getVehicleSeriesModel().searchFreeText(quotedToken)),
-                                context.getPhotosModel().searchFreeText(quotedToken)
-                        )
-                );
+
+                Map<FreeTextSearch.SearchCriterion<NumIdEntity>, Map<NumIdEntity, Float>> results = new HashMap<>();
+                for (FreeTextSearch.SearchCriterion sc : FreeTextSearch.SEARCH_CRITERIA) {
+                    results.put(sc, sc.search(context, quotedToken));
+                }
+
+                tokenResults.add(new TokenResult(token, results));
             }
             this.freeTextSearchTokenResults = tokenResults;
         }
         return freeTextSearchTokenResults;
+    }
+
+    public String getFreeTextActive() {
+        return StringUtils.join(getFreeTextSearchTokenResults().stream().filter(tr -> !tr.ignored()).map(tr -> tr.getToken()).toList(), " ");
+    }
+
+    public List<String> getFreeTextInactive() {
+        return getFreeTextSearchTokenResults().stream().filter(tr -> tr.ignored()).map(tr -> tr.getToken()).toList();
     }
 }
