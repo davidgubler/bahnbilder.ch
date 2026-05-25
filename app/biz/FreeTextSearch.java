@@ -10,7 +10,7 @@ import java.util.*;
 
 public class FreeTextSearch {
 
-    // FIXME: Missing search by number, description, keywords, photographer, detected text, detected objects
+    // FIXME: Missing search by number, keywords, photographer, detected text, detected objects
 
     private static float rank(List<TokenResult> tokenResults, Photo photo) {
         float[] points = new float[1]; // the lambdas want an immutable variable, hence this array hack
@@ -23,6 +23,7 @@ public class FreeTextSearch {
             r.getOperators().keySet().stream().filter(o -> Objects.equals(o.getId(), photo.getOperatorId())).forEach(o -> points[0] += r.getOperators().get(o));
             r.getVehicleClasses().keySet().stream().filter(v -> Objects.equals(v.getId(), photo.getVehicleClassId())).forEach(v -> points[0] += r.getVehicleClasses().get(v));
             r.getVehicleClassesBySeries().keySet().stream().filter(v -> Objects.equals(v.getId(), photo.getVehicleClassId())).forEach(v -> points[0] += r.getVehicleClassesBySeries().get(v));
+            r.getPhotosByDescription().keySet().stream().filter(p -> Objects.equals(p.getId(), photo.getId())).forEach(p -> points[0] += r.getPhotosByDescription().get(p));
         }
 
         return points[0];

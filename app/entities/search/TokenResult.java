@@ -12,6 +12,7 @@ public class TokenResult {
     private final Map<? extends Operator, Float> operators;
     private final Map<? extends VehicleClass, Float> vehicleClasses;
     private final Map<? extends VehicleClass, Float> vehicleClassesBySeries;
+    private final Map<? extends Photo, Float> photosByDescription;
 
     public TokenResult(String token,
                        Map<? extends User, Float> users,
@@ -19,7 +20,8 @@ public class TokenResult {
                        Map<? extends Location, Float> locations,
                        Map<? extends Operator, Float> operators,
                        Map<? extends VehicleClass, Float> vehicleClasses,
-                       Map<? extends VehicleClass, Float> vehicleClassesBySeries) {
+                       Map<? extends VehicleClass, Float> vehicleClassesBySeries,
+                       Map<? extends Photo, Float> photosByDescription) {
         this.token = token;
         this.users = users;
         this.countries = countries;
@@ -27,6 +29,7 @@ public class TokenResult {
         this.operators = operators;
         this.vehicleClasses = vehicleClasses;
         this.vehicleClassesBySeries = vehicleClassesBySeries;
+        this.photosByDescription = photosByDescription;
     }
 
     @Override
@@ -49,6 +52,9 @@ public class TokenResult {
         }
         if (!vehicleClassesBySeries.isEmpty()) {
             s += "->" + vehicleClassesBySeries;
+        }
+        if (!photosByDescription.isEmpty()) {
+            s += "->" + photosByDescription;
         }
         return s;
     }
@@ -75,5 +81,9 @@ public class TokenResult {
 
     public Map<? extends VehicleClass, Float> getVehicleClassesBySeries() {
         return vehicleClassesBySeries;
+    }
+
+    public Map<? extends Photo, Float> getPhotosByDescription() {
+        return photosByDescription;
     }
 }

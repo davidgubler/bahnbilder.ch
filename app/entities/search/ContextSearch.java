@@ -159,7 +159,8 @@ public class ContextSearch extends Search {
                                 context.getLocationsModel().searchFreeText(quotedToken),
                                 context.getOperatorsModel().searchFreeText(quotedToken),
                                 context.getVehicleClassesModel().searchFreeText(quotedToken),
-                                vehicleSeriesToClassMap(context, context.getVehicleSeriesModel().searchFreeText(quotedToken))
+                                vehicleSeriesToClassMap(context, context.getVehicleSeriesModel().searchFreeText(quotedToken)),
+                                context.getPhotosModel().searchFreeText(quotedToken)
                         )
                 );
             }

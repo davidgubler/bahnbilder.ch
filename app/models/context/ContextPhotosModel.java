@@ -267,4 +267,9 @@ public class ContextPhotosModel extends ContextModel implements PhotosModel {
     public List<Integer> getLocationIds() {
         return call(() -> photosModel.getLocationIds());
     }
+
+    @Override
+    public Map<? extends Photo, Float> searchFreeText(String freeText) {
+        return call(() -> photosModel.searchFreeText(freeText));
+    }
 }

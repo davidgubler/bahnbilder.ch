@@ -143,4 +143,6 @@ public interface PhotosModel {
     Stream<MongoDbPhoto> getIncompleteAutodetectionCandidates();
 
     List<Integer> getLocationIds();
+
+    Map<? extends Photo, Float> searchFreeText(String freeText);
 }

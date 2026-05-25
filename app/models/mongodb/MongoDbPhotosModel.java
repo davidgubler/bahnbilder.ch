@@ -24,6 +24,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Transient;
 import dev.morphia.query.FindOptions;
+import dev.morphia.query.Meta;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.query.Query;
 import dev.morphia.query.filters.Filters;
@@ -545,6 +546,9 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
                 if (!tr.getVehicleClassesBySeries().isEmpty()) {
                     orFilters.add(Filters.in("vehicleClassId", tr.getVehicleClassesBySeries().keySet().stream().map(VehicleClass::getId).toList()));
                 }
+                if (!tr.getPhotosByDescription().isEmpty()) {
+                    orFilters.add(Filters.in("numId", tr.getPhotosByDescription().keySet().stream().map(Photo::getId).toList()));
+                }
                 if (orFilters.isEmpty()) {
                     // if there are no filters then there shouldn't be any results, so this just adds a dummy filter which matches nothing
                     query = query.filter(Filters.eq("_id", false));
@@ -935,6 +939,11 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
                 .group(Group.group().field("_id", null).field("distinct", AccumulatorExpressions.addToSet(Expressions.field("locationId"))))
                 .execute(AggregationDistinct.class);
         return cursor.hasNext() ? cursor.next().distinct : Collections.emptyList();
+    }
+
+    @Override
+    public Map<? extends Photo, Float> searchFreeText(String freeText) {
+        return query().filter(Filters.text(freeText)).stream(new FindOptions().projection().project(Meta.textScore("searchScore"))).collect(Collectors.toMap(p -> p, p -> p.getSearchScore()));
     }
 
     @Entity
