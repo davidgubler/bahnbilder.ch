@@ -1,6 +1,6 @@
 package entities;
 
-public interface Location extends LocalizedEntity {
+public interface Location extends LocalizedEntity, NumIdEntity {
     int getId();
 
     String getName();

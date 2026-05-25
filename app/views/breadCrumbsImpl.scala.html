@@ -113,7 +113,8 @@
                 @i18n.Txt.get(lang, "sortBy"):&nbsp;@i18n.Txt.get(lang, search.getSortBy().name())
             }
         } else {
-            @i18n.Txt.get(lang, "resultsFor") <b>@search.getFreeText()</b>
+            @i18n.Txt.get(lang, "resultsFor") <b>@search.getFreeTextActive()</b>
+            @for(token <- search.getFreeTextInactive()){<small style="text-decoration: line-through;">@token</small> }
         }
 
         @if(searchUrl != null) {

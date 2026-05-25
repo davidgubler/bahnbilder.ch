@@ -3,7 +3,7 @@ package entities;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface Operator extends LocalizedEntity {
+public interface Operator extends LocalizedEntity, NumIdEntity {
     int getId();
 
     String getAbbr();
