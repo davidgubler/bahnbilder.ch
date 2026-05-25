@@ -1,6 +1,5 @@
 package models.mongodb;
 
-import biz.FreeTextSearch;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.lang.GeoLocation;
@@ -38,6 +37,10 @@ import entities.formdata.PhotoFormData;
 import entities.mongodb.MongoDbPhotoExif;
 import entities.mongodb.MongoDbPhoto;
 import entities.mongodb.aggregations.MongoDbAggregationCountryViews;
+import entities.search.ContextSearch;
+import entities.search.IncompleteSearch;
+import entities.search.Search;
+import entities.search.TokenResult;
 import models.*;
 import utils.Context;
 import utils.geometry.GeographicCoordinates;
@@ -520,9 +523,9 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         }
 
         if (search.getFreeText() != null) {
-            List<FreeTextSearch.TokenResult> tokenResults = ((ContextSearch)search).getFreeTextSearchTokenResults();
+            List<TokenResult> tokenResults = ((ContextSearch)search).getFreeTextSearchTokenResults();
             Query<MongoDbPhoto> query = query();
-            for (FreeTextSearch.TokenResult tr : tokenResults) {
+            for (TokenResult tr : tokenResults) {
                 List<Filter> orFilters = new ArrayList<>();
                 if (!tr.getUsers().isEmpty()) {
                     orFilters.add(Filters.in("userId", tr.getUsers().keySet().stream().map(User::getId).toList()));

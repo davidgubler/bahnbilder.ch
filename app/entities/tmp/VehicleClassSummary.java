@@ -1,7 +1,7 @@
 package entities.tmp;
 
 import entities.Photo;
-import entities.Search;
+import entities.search.Search;
 import entities.VehicleClass;
 import entities.VehicleSeries;
 

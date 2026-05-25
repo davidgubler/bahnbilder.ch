@@ -1,14 +1,11 @@
-package entities;
+package entities.search;
 
-import biz.FreeTextSearch;
+import entities.*;
 import play.mvc.Http;
 import utils.Context;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ContextSearch extends Search {
 
@@ -121,7 +118,7 @@ public class ContextSearch extends Search {
         return query;
     }
 
-    private List<FreeTextSearch.TokenResult> freeTextSearchTokenResults = null;
+    private List<TokenResult> freeTextSearchTokenResults = null;
 
     private Map<? extends VehicleClass, Float> vehicleSeriesToClassMap(Context context, Map<? extends VehicleSeries, Float> vehicleSeriesMap) {
         Map<VehicleClass, Float> vehicleClasses = new HashMap<>();
@@ -133,15 +130,29 @@ public class ContextSearch extends Search {
         return vehicleClasses;
     }
 
-    public List<FreeTextSearch.TokenResult> getFreeTextSearchTokenResults() {
-        if (freeTextSearchTokenResults == null) {
-            List<String> tokens = FreeTextSearch.tokenize(getFreeText());
+    private List<String> tokenize(String freeText) {
+        List<String> tokens = new ArrayList<>();
+        boolean quoted = false;
+        for( String s : freeText.split("\"") ) {
+            if (quoted) {
+                tokens.add(s);
+            } else {
+                tokens.addAll(Arrays.asList(s.split(" ")));
+            }
+            quoted = !quoted;
+        }
+        return tokens.stream().map(t -> t.trim()).filter(t -> !t.isEmpty()).toList();
+    }
 
-            List<FreeTextSearch.TokenResult> tokenResults = new ArrayList<>();
+    public List<TokenResult> getFreeTextSearchTokenResults() {
+        if (freeTextSearchTokenResults == null) {
+            List<String> tokens = tokenize(getFreeText());
+
+            List<TokenResult> tokenResults = new ArrayList<>();
             for (String token : tokens) {
                 String quotedToken = token.contains(" ") ? "\"" + token + "\"" : token;
                 tokenResults.add(
-                        new FreeTextSearch.TokenResult(
+                        new TokenResult(
                                 token,
                                 context.getUsersModel().searchFreeText(quotedToken),
                                 context.getCountriesModel().searchFreeText(quotedToken),

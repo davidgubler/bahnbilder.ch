@@ -1,6 +1,8 @@
 package biz;
 
 import entities.*;
+import entities.search.ContextSearch;
+import entities.search.TokenResult;
 import play.libs.F;
 import utils.Context;
 
@@ -8,95 +10,7 @@ import java.util.*;
 
 public class FreeTextSearch {
 
-    public static List<String> tokenize(String freeText) {
-        List<String> tokens = new ArrayList<>();
-        boolean quoted = false;
-        for( String s : freeText.split("\"") ) {
-            if (quoted) {
-                tokens.add(s);
-            } else {
-                tokens.addAll(Arrays.asList(s.split(" ")));
-            }
-            quoted = !quoted;
-        }
-        return tokens.stream().map(t -> t.trim()).filter(t -> !t.isEmpty()).toList();
-    }
-
     // FIXME: Missing search by number, description, keywords, photographer, detected text, detected objects
-
-    public static class TokenResult {
-        private final String token;
-        private final Map<? extends User, Float> users;
-        private final Map<? extends Country, Float> countries;
-        private final Map<? extends Location, Float> locations;
-        private final Map<? extends Operator, Float> operators;
-        private final Map<? extends VehicleClass, Float> vehicleClasses;
-        private final Map<? extends VehicleClass, Float> vehicleClassesBySeries;
-
-        public TokenResult(String token,
-                            Map<? extends User, Float> users,
-                            Map<? extends Country, Float> countries,
-                            Map<? extends Location, Float> locations,
-                            Map<? extends Operator, Float> operators,
-                            Map<? extends VehicleClass, Float> vehicleClasses,
-                            Map<? extends VehicleClass, Float> vehicleClassesBySeries) {
-            this.token = token;
-            this.users = users;
-            this.countries = countries;
-            this.locations = locations;
-            this.operators = operators;
-            this.vehicleClasses = vehicleClasses;
-            this.vehicleClassesBySeries = vehicleClassesBySeries;
-        }
-
-        @Override
-        public String toString() {
-            String s = token;
-            if (!users.isEmpty()) {
-                s += "->" + users;
-            }
-            if (!countries.isEmpty()) {
-                s += "->" + countries;
-            }
-            if (!locations.isEmpty()) {
-                s += "->" + locations;
-            }
-            if (!operators.isEmpty()) {
-                s += "->" + operators;
-            }
-            if (!vehicleClasses.isEmpty()) {
-                s += "->" + vehicleClasses;
-            }
-            if (!vehicleClassesBySeries.isEmpty()) {
-                s += "->" + vehicleClassesBySeries;
-            }
-            return s;
-        }
-
-        public Map<? extends User, Float> getUsers() {
-            return users;
-        }
-
-        public Map<? extends Country, Float> getCountries() {
-            return countries;
-        }
-
-        public Map<? extends Location, Float> getLocations() {
-            return locations;
-        }
-
-        public Map<? extends Operator, Float> getOperators() {
-            return operators;
-        }
-
-        public Map<? extends VehicleClass, Float> getVehicleClasses() {
-            return vehicleClasses;
-        }
-
-        public Map<? extends VehicleClass, Float> getVehicleClassesBySeries() {
-            return vehicleClassesBySeries;
-        }
-    }
 
     private static float rank(List<TokenResult> tokenResults, Photo photo) {
         float[] points = new float[1]; // the lambdas want an immutable variable, hence this array hack

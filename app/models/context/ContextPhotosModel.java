@@ -5,6 +5,7 @@ import entities.*;
 import entities.aggregations.AggregationCountryViews;
 import entities.formdata.PhotoFormData;
 import entities.mongodb.MongoDbPhoto;
+import entities.search.Search;
 import models.PhotosModel;
 import models.VehicleClassesModel;
 import models.VehicleTypesModel;
