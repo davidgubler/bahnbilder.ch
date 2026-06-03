@@ -92,7 +92,7 @@ public class ContextSearch extends Search {
     }
 
     public boolean isActive() {
-        return !toQuery().isEmpty() && !inactive;
+        return !toQuery().isEmpty() && !getInactive();
     }
 
     @Override
@@ -113,11 +113,7 @@ public class ContextSearch extends Search {
 
     @Override
     public String toQueryInactive() {
-        boolean inactive = this.inactive;
-        this.inactive = true;
-        String query = toQuery();
-        this.inactive = inactive;
-        return query;
+        return new Search(this).withInactive(true).toQuery();
     }
 
     private List<TokenResult> freeTextSearchTokenResults = null;

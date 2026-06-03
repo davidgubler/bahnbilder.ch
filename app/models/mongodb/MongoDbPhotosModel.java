@@ -275,8 +275,8 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         FindOptions findOptions = getSortOptions(search.getSortBy(), false);
 
         //findOptions.projection().include("numId", "resolutions", "operatorId", "vehicleClassId", "locationId", "nr"); // not worth it
-        findOptions.skip((search.getPage() - 1) * Search.RESULTS_PER_PAGE);
-        findOptions.limit(Search.RESULTS_PER_PAGE);
+        findOptions.skip((search.getPage() - 1) * search.getResultsPerPage());
+        findOptions.limit(search.getResultsPerPage());
 
         List<MongoDbPhoto> photos = query(search).stream(findOptions).toList();
 
