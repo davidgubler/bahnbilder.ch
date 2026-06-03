@@ -18,8 +18,6 @@ import java.util.stream.Collectors;
 
 public class Search {
 
-    public static final int RESULTS_PER_PAGE = 20;
-
     public enum SortBy { views, uploadDate, photoDate, rating, photoType;
         public static SortBy fromString(String input) {
             if ("views".equalsIgnoreCase(input)) {
@@ -48,30 +46,31 @@ public class Search {
     /* Variable names are as they appear in the URL, not according to Java style.
      * Be aware that changing them breaks existing links!
      */
-    protected boolean inactive;
-    protected final String photographer;
-    protected final String description;
-    protected final LocalDate datefrom;
-    protected final LocalDate dateto;
-    protected final Integer author;
-    protected final Integer phototype;
-    protected final Integer country;
-    protected final Integer location;
-    protected final Integer operator;
-    protected final Integer vclass;
-    protected final Integer nr;
-    protected final Integer license;
-    protected final Double lat;
-    protected final Double lng;
-    protected final double radiusKm;
-    protected final List<String> labels;
-    protected final List<String> keywords;
-    protected final boolean series;
-    protected final boolean portraitsFirst;
-    protected final boolean withLocationOnly;
-    protected final SortBy sortBy;
-    protected final String q;
-    protected int page;
+    private boolean inactive;
+    private String photographer;
+    private String description;
+    private LocalDate datefrom;
+    private LocalDate dateto;
+    private Integer author;
+    private Integer phototype;
+    private Integer country;
+    private Integer location;
+    private Integer operator;
+    private Integer vclass;
+    private Integer nr;
+    private Integer license;
+    private Double lat;
+    private Double lng;
+    private double radiusKm = Config.PHOTO_SPOT_RADIUS_KM;
+    private List<String> labels;
+    private List<String> keywords;
+    private boolean series;
+    private boolean portraitsFirst;
+    private boolean withLocationOnly;
+    private SortBy sortBy = SortBy.photoDate;
+    private String q;
+    private int page = 1;
+    private int resultsPerPage = 20;
 
     public Search(Http.Request request) {
         if ("POST".equals(request.method())) {
@@ -95,7 +94,6 @@ public class Search {
             license = InputUtils.toInt(data.get("license"));
             lat = InputUtils.toDouble(data.get("lat"));
             lng = InputUtils.toDouble(data.get("lng"));
-            radiusKm = Config.PHOTO_SPOT_RADIUS_KM;
             labels = InputUtils.toListOfStrings(data.get("labels"), ",");
             keywords = InputUtils.toListOfStrings(data.get("keywords"), ",");
             series = InputUtils.toBoolean(data.get("series"));
@@ -103,7 +101,6 @@ public class Search {
             withLocationOnly = InputUtils.toBoolean(data.get("withLocationOnly"));
             sortBy = SortBy.fromString(data.get("sortBy"));
             q = InputUtils.trimToNull(data.get("q"));
-            page = 1;
         } else {
             inactive = InputUtils.toBoolean(request.queryString("inactive").orElse(null));
             String photographerTmp = InputUtils.trimToNull(request.queryString("photographer").orElse(null));
@@ -125,7 +122,6 @@ public class Search {
             license = InputUtils.toInt(request.queryString("license").orElse(null));
             lat = InputUtils.toDouble(request.queryString("lat").orElse(null));
             lng = InputUtils.toDouble(request.queryString("lng").orElse(null));
-            radiusKm = Config.PHOTO_SPOT_RADIUS_KM;
             labels = InputUtils.toListOfStrings(request.queryString("labels").orElse(null), ",");
             keywords = InputUtils.toListOfStrings(request.queryString("keywords").orElse(null), ",");
             series = InputUtils.toBoolean(request.queryString("series").orElse(null));
@@ -138,247 +134,94 @@ public class Search {
         }
     }
 
+    public Search() {
+    }
+
     public Search(SortBy sortBy, int page) {
-        photographer = null;
-        description = null;
-        datefrom = null;
-        dateto = null;
-        author = null;
-        phototype = null;
-        location = null;
-        country = null;
-        operator = null;
-        vclass = null;
-        nr = null;
-        license = null;
-        lat = null;
-        lng = null;
-        radiusKm = Config.PHOTO_SPOT_RADIUS_KM;
-        labels = null;
-        keywords = null;
-        series = false;
-        portraitsFirst = false;
-        withLocationOnly = false;
-        q = null;
         this.sortBy = sortBy;
         this.page = page;
     }
 
     public Search(int page, Integer country, Integer operator, Integer vclass) {
-        photographer = null;
-        description = null;
-        datefrom = null;
-        dateto = null;
-        author = null;
-        phototype = null;
-        location = null;
         this.country = country;
         this.operator = operator;
         this.vclass = vclass;
-        nr = null;
-        license = null;
-        lat = null;
-        lng = null;
-        radiusKm = Config.PHOTO_SPOT_RADIUS_KM;
-        labels = null;
-        keywords = null;
-        series = false;
-        portraitsFirst = false;
-        withLocationOnly = false;
-        q = null;
-        this.sortBy = SortBy.photoDate;
         this.page = page;
     }
 
     public Search(Integer photoType) {
-        photographer = null;
-        description = null;
-        datefrom = null;
-        dateto = null;
-        author = null;
         this.phototype = photoType;
-        location = null;
-        country = null;
-        operator = null;
-        vclass = null;
-        nr = null;
-        license = null;
-        lat = null;
-        lng = null;
-        radiusKm = Config.PHOTO_SPOT_RADIUS_KM;
-        labels = null;
-        keywords = null;
-        series = false;
-        portraitsFirst = false;
-        withLocationOnly = false;
-        q = null;
-        sortBy = SortBy.photoDate;
-        page = 1;
     }
 
     public Search(Integer country, Point point, double radiusKm) {
-        photographer = null;
-        description = null;
-        datefrom = null;
-        dateto = null;
-        author = null;
-        phototype = null;
-        location = null;
         this.country = country;
-        operator = null;
-        vclass = null;
-        nr = null;
-        license = null;
         lat = point == null ? null : point.getLat();
         lng = point == null ? null : point.getLng();
         this.radiusKm = radiusKm;
-        labels = null;
-        keywords = null;
-        series = false;
-        portraitsFirst = false;
-        withLocationOnly = false;
-        q = null;
-        sortBy = SortBy.photoDate;
-        page = 1;
     }
 
     // used by vehicle overview page
     public Search(Integer operatorId, Integer vehicleClassId) {
-        photographer = null;
-        description = null;
-        datefrom = null;
-        dateto = null;
-        author = null;
-        phototype = null;
-        location = null;
-        country = null;
         operator = operatorId;
         vclass = vehicleClassId;
-        nr = null;
-        license = null;
-        lat = null;
-        lng = null;
-        radiusKm = Config.PHOTO_SPOT_RADIUS_KM;
-        labels = null;
-        keywords = null;
-        series = false;
-        portraitsFirst = false;
-        withLocationOnly = false;
-        q = null;
-        sortBy = SortBy.photoType;
-        page = 1;
     }
 
     // used for searching for numbers
     public Search(Integer operatorId, Integer vehicleClassId, Integer nr) {
-        photographer = null;
-        description = null;
-        datefrom = null;
-        dateto = null;
-        author = null;
-        phototype = null;
-        location = null;
-        country = null;
         operator = operatorId;
         vclass = vehicleClassId;
         this.nr = nr;
-        license = null;
-        lat = null;
-        lng = null;
-        radiusKm = Config.PHOTO_SPOT_RADIUS_KM;
-        labels = null;
-        keywords = null;
-        series = false;
-        portraitsFirst = false;
-        withLocationOnly = false;
-        q = null;
-        sortBy = SortBy.photoDate;
-        page = 1;
+    }
+
+    public Search(Search search) {
+        for (Field f : this.getClass().getDeclaredFields()) {
+            try {
+                f.set(this, f.get(search));
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public Search withNr(Integer nr) {
-        return new Search(operator, vclass, nr);
+        Search search = new Search(this);
+        search.nr = nr;
+        return search;
+    }
+
+    public Search withResultsPerPage(int resultsPerPage) {
+        Search search = new Search(this);
+        search.resultsPerPage = resultsPerPage;
+        return search;
+    }
+
+    public Search withInactive(boolean inactive) {
+        Search search = new Search(this);
+        search.inactive = inactive;
+        return search;
     }
 
     // used for operator overview
     public Search(Integer operatorId, LocalDate inception, LocalDate dissolved) {
-        photographer = null;
-        description = null;
         datefrom = inception;
         dateto = dissolved;
-        author = null;
-        phototype = null;
-        location = null;
-        country = null;
         operator = operatorId;
-        vclass = null;
-        nr = null;
-        license = null;
-        lat = null;
-        lng = null;
-        radiusKm = Config.PHOTO_SPOT_RADIUS_KM;
-        labels = null;
-        keywords = null;
-        series = false;
-        portraitsFirst = false;
-        withLocationOnly = false;
-        q = null;
-        sortBy = SortBy.photoDate;
-        page = 1;
     }
 
     // used by IncompleteSearch
     protected Search(User user, int page) {
-        photographer = null;
-        description = null;
-        datefrom = null;
-        dateto = null;
         author = user.getId();
-        phototype = null;
-        location = null;
-        country = null;
-        operator = null;
-        vclass = null;
-        nr = null;
-        license = null;
-        lat = null;
-        lng = null;
-        radiusKm = Config.PHOTO_SPOT_RADIUS_KM;
-        labels = null;
-        keywords = null;
-        series = false;
-        portraitsFirst = false;
-        withLocationOnly = false;
-        q = null;
-        sortBy = SortBy.photoDate;
         this.page = page;
     }
 
     // used by Browse country
     public Search(Country country, Integer vclass) {
-        photographer = null;
-        description = null;
-        datefrom = null;
-        dateto = null;
-        author = null;
-        phototype = null;
-        location = null;
         this.country = country.getId();
-        operator = null;
         this.vclass = vclass;
-        nr = null;
-        license = null;
-        lat = null;
-        lng = null;
-        radiusKm = Config.PHOTO_SPOT_RADIUS_KM;
-        labels = null;
-        keywords = null;
-        series = false;
-        portraitsFirst = false;
-        withLocationOnly = false;
-        q = null;
-        sortBy = SortBy.rating;
-        page = 1;
+    }
+
+    public boolean getInactive() {
+        return inactive;
     }
 
     public String getPhotographer() {
@@ -468,12 +311,16 @@ public class Search {
         return q;
     }
 
+    public int getResultsPerPage() {
+        return resultsPerPage;
+    }
+
     public SortBy getSortBy() {
         return sortBy;
     }
 
     public int getLastPage(long resultsCount) {
-        int lastPage = (int)(resultsCount / RESULTS_PER_PAGE + (resultsCount % RESULTS_PER_PAGE > 0 ? 1 : 0));
+        int lastPage = (int)(resultsCount / resultsPerPage + (resultsCount % resultsPerPage > 0 ? 1 : 0));
         if (lastPage < 1) {
             lastPage = 1;
         }

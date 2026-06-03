@@ -3,6 +3,7 @@ package biz;
 import entities.*;
 import entities.VehicleSeries;
 import entities.search.ContextSearch;
+import entities.search.Search;
 import entities.search.TokenResult;
 import play.libs.F;
 import utils.Context;
@@ -10,6 +11,7 @@ import utils.Context;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class FreeTextSearch {
 
@@ -48,7 +50,7 @@ public class FreeTextSearch {
         return vehicleClasses;
     }
 
-    // FIXME: Missing search by number, keywords, photographer, detected text, detected objects
+    // FIXME: Missing search by keywords, photographer, detected text, detected objects
 
     public static List<SearchCriterion> SEARCH_CRITERIA;
     static {
@@ -59,7 +61,15 @@ public class FreeTextSearch {
                 new SearchCriterion<>("operatorId", Photo::getOperatorId, (c, s) -> c.getOperatorsModel().searchFreeText(s)),
                 new SearchCriterion<>("vehicleClassId", Photo::getVehicleClassId, (c, s) -> c.getVehicleClassesModel().searchFreeText(s)),
                 new SearchCriterion<>("vehicleClassId", Photo::getVehicleClassId, (c, s) -> vehicleSeriesToClassMap(c, c.getVehicleSeriesModel().searchFreeText(s))),
-                new SearchCriterion<>("numId", Photo::getId, (c, s) -> c.getPhotosModel().searchFreeText(s))
+                new SearchCriterion<>("numId", Photo::getId, (c, s) -> c.getPhotosModel().searchFreeText(s)),
+                new SearchCriterion<>("numId", Photo::getId, (c, s) -> {
+                    // This is inefficient because we first search for photos with the given vehicle number and then run another query with the photo IDs... But it fits into the SearchCriterion pattern.
+                    try {
+                        return c.getPhotosModel().search(new Search().withResultsPerPage(Integer.MAX_VALUE).withNr(Integer.parseInt(s))).stream().collect(Collectors.toMap(p -> p, p -> 1.0f));
+                    } catch (NumberFormatException e) {
+                        return Collections.emptyMap();
+                    }
+                })
         );
     }
 
