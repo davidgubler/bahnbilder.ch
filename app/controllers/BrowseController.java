@@ -57,7 +57,7 @@ public class BrowseController extends Controller {
         }
 
         Integer mostCommonVehicleClass = context.getPhotosModel().getMostCommonVehicleClassByCountry(search.getCountry());
-        List<? extends Photo> mostPopularVehicleClassPhotos = context.getPhotosModel().search(new Search(search.getCountry(), mostCommonVehicleClass));
+        List<? extends Photo> mostPopularVehicleClassPhotos = context.getPhotosModel().search(new Search(search.getCountry(), mostCommonVehicleClass, Search.SortBy.rating));
 
         int vehicleClassCount = context.getPhotosModel().getVehicleClassCountByCountry(search.getCountry());
         int vehicleCount = context.getPhotosModel().getVehicleCountByCountry(search.getCountry());

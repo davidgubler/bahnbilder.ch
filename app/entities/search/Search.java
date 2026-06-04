@@ -215,9 +215,10 @@ public class Search {
     }
 
     // used by Browse country
-    public Search(Country country, Integer vclass) {
+    public Search(Country country, Integer vclass, SortBy sortBy) {
         this.country = country.getId();
         this.vclass = vclass;
+        this.sortBy = sortBy;
     }
 
     public boolean getInactive() {
