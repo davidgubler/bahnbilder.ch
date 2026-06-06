@@ -27,8 +27,8 @@ public class FreeTextSearch {
             this.searchFreeTextFunction = searchFreeTextFunction;
         }
 
-        public boolean matches(T t, Photo photo) {
-            return Objects.equals(t.getId(), photoGetFunction.apply(photo));
+        public Integer applyPhotoGetFunction(Photo photo) {
+            return photoGetFunction.apply(photo);
         }
 
         public Map<T, Float> search(Context context, String token) {
@@ -50,7 +50,7 @@ public class FreeTextSearch {
         return vehicleClasses;
     }
 
-    // FIXME: Missing search by keywords, photographer, detected text, detected objects
+    // FIXME: Missing search by keywords
 
     public static List<SearchCriterion> SEARCH_CRITERIA;
     static {
@@ -79,7 +79,10 @@ public class FreeTextSearch {
         for (TokenResult r : tokenResults) {
             for (SearchCriterion c : SEARCH_CRITERIA) {
                 Map<NumIdEntity, Float> m = r.get(c);
-                m.keySet().stream().filter(o -> c.matches(o, photo)).forEach(o -> points[0] += m.get(o));
+                Float weight = m.get(c.applyPhotoGetFunction(photo));
+                if (weight != null) {
+                    points[0] += weight;
+                }
             }
         }
         return points[0];
@@ -98,10 +101,21 @@ public class FreeTextSearch {
             this.tokenResults = tokenResults;
         }
 
+        private final Map<Photo, Float> ranks = new HashMap();
+
+        private float getRank(Photo photo) {
+            Float rank = ranks.get(photo);
+            if (rank == null) {
+                rank = rank(tokenResults, photo);
+                ranks.put(photo, rank);
+            }
+            return rank;
+        }
+
         @Override
         public int compare(Photo p1, Photo p2) {
-            float r1 = rank(tokenResults, p1);
-            float r2 = rank(tokenResults, p2);
+            float r1 = getRank(p1);
+            float r2 = getRank(p2);
             if (r1 != r2) {
                 return r1 < r2 ? 1 : -1;
             }

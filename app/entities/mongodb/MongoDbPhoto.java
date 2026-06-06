@@ -17,7 +17,7 @@ import java.util.Objects;
 import static dev.morphia.utils.IndexType.TEXT;
 
 @Indexes({
-        @Index(fields = @Field(value = "description", type = TEXT)),
+        @Index(fields = { @Field(value = "description", type = TEXT), @Field(value = "texts", type = TEXT), @Field(value = "labels", type = TEXT), @Field(value = "photographer", type = TEXT) }),
         @Index(fields = { @Field(value = "views"), @Field(value = "numId") }, options = @IndexOptions(name = "sort_views_numId")),
         @Index(fields = { @Field(value = "uploadDate"), @Field(value = "numId") }, options = @IndexOptions(name = "sort_uploadDate_numId")),
         @Index(fields = { @Field(value = "authorRating"), @Field(value = "views"), @Field(value = "numId") }, options = @IndexOptions(name = "sort_authorRating_views_numId")),
