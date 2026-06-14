@@ -1,0 +1,17 @@
+@(
+    inline: Boolean,
+    lang: String,
+)
+<form action="@routes.SearchController.search()" style="text-align: left;">
+    @if(inline) {
+        <div class="form-inline">
+            <input type='text' class='form-control mr-2' style="width: 100%; flex-grow: 1; flex-shrink: 1; flex-basis: 0%;" id='q' name='q' autocomplete='off'>
+            <button type='submit' name='submit' value='search' class='btn btn-primary'>@i18n.Txt.get(lang, "search")</button>
+        </div>
+        <small>@i18n.Txt.get(lang, "searchFreeTextExample")</small>
+    } else {
+        <input type="text" class="form-control" id="q" name="q" autocomplete='off'>
+        <button class="btn btn-primary mt-1" style="float: right;" type="submit" value="search">@i18n.Txt.get(lang, "search")</button>
+        <small>@i18n.Txt.get(lang, "searchFreeTextExample")</small>
+    }
+</form>
