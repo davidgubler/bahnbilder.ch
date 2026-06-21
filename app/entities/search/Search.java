@@ -65,7 +65,6 @@ public class Search {
     private List<String> labels;
     private List<String> keywords;
     private boolean series;
-    private boolean portraitsFirst;
     private boolean withLocationOnly;
     private SortBy sortBy = SortBy.photoDate;
     private String q;
@@ -97,7 +96,6 @@ public class Search {
             labels = InputUtils.toListOfStrings(data.get("labels"), ",");
             keywords = InputUtils.toListOfStrings(data.get("keywords"), ",");
             series = InputUtils.toBoolean(data.get("series"));
-            portraitsFirst = InputUtils.toBoolean(data.get("portraitsFirst"));
             withLocationOnly = InputUtils.toBoolean(data.get("withLocationOnly"));
             sortBy = SortBy.fromString(data.get("sortBy"));
             q = InputUtils.trimToNull(data.get("q"));
@@ -125,7 +123,6 @@ public class Search {
             labels = InputUtils.toListOfStrings(request.queryString("labels").orElse(null), ",");
             keywords = InputUtils.toListOfStrings(request.queryString("keywords").orElse(null), ",");
             series = InputUtils.toBoolean(request.queryString("series").orElse(null));
-            portraitsFirst = InputUtils.toBoolean(request.queryString("portraitsFirst").orElse(null));
             withLocationOnly = InputUtils.toBoolean(request.queryString("withLocationOnly").orElse(null));
             sortBy = SortBy.fromString(request.queryString("sortBy").orElse(null));
             q = InputUtils.trimToNull(request.queryString("q").orElse(null));
@@ -198,6 +195,12 @@ public class Search {
     public Search withInactive(boolean inactive) {
         Search search = new Search(this);
         search.inactive = inactive;
+        return search;
+    }
+
+    public Search withSortBy(SortBy sortBy) {
+        Search search = new Search(this);
+        search.sortBy = sortBy;
         return search;
     }
 
