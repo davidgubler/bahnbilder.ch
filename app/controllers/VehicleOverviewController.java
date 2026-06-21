@@ -35,7 +35,7 @@ public class VehicleOverviewController extends Controller {
             List<? extends Country> countries = context.getCountriesModel().getByIds(context.getPhotosModel().getCountryIdsByOperatorAndVehicleClassIds(operator.getId(), List.of(vehicleClass.getId()))).sorted(LocalizedComparator.get(lang)).toList();
             countriesByOperator.put(operator, countries);
 
-            Search search = new Search(operator.getId(), vehicleClass.getId());
+            Search search = new Search(operator.getId(), vehicleClass.getId()).withSortBy(Search.SortBy.photoType);
             List<Integer> nrs = context.getPhotosModel().getNrsByOperatorAndVehicleClassId(operator.getId(), vehicleClass.getId());
             vehicleClassSummaryByOperator.put(operator, new VehicleClassSummary(context.getPhotosModel().search(search).get(0), search, context.getPhotosModel().searchCount(search), vehicleClass, vehicleSeries, nrs));
         }
@@ -72,7 +72,7 @@ public class VehicleOverviewController extends Controller {
 
             List<VehicleClassSummary> summaries = new ArrayList<>();
             for (VehicleClass vehicleClass : vehicleClasses) {
-                Search search = new Search(operator.getId(), vehicleClass.getId());
+                Search search = new Search(operator.getId(), vehicleClass.getId()).withSortBy(Search.SortBy.photoType);
                 long count = context.getPhotosModel().searchCount(search);
                 if (count > 0) {
                     List<Integer> nrs = context.getPhotosModel().getNrsByOperatorAndVehicleClassId(operator.getId(), vehicleClass.getId());
@@ -100,7 +100,7 @@ public class VehicleOverviewController extends Controller {
 
         Map<VehicleType, List<VehicleClassSummary>> summariesByVehicleType = new HashMap<>();
         for (VehicleClass vehicleClass : vehicleClasses) {
-            Search search = new Search(operator.getId(), vehicleClass.getId());
+            Search search = new Search(operator.getId(), vehicleClass.getId()).withSortBy(Search.SortBy.photoType);
             long count = context.getPhotosModel().searchCount(search);
             if (count > 0) {
                 List<Integer> nrs = context.getPhotosModel().getNrsByOperatorAndVehicleClassId(operator.getId(), vehicleClass.getId());
