@@ -533,8 +533,8 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
                 }
                 List<Filter> orFilters = new ArrayList<>();
                 for (FreeTextSearch.SearchCriterion sc : FreeTextSearch.SEARCH_CRITERIA) {
-                    if (!tr.get(sc).isEmpty()) {
-                        orFilters.add(Filters.in(sc.getField(), tr.get(sc).keySet().stream().map(NumIdEntity::getId).toList()));
+                    if (!tr.getIdResults(sc).isEmpty()) {
+                        orFilters.add(Filters.in(sc.getField(), tr.getIdResults(sc).keySet()));
                     }
                 }
                 if (orFilters.isEmpty()) {

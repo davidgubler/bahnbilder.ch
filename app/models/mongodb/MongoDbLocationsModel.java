@@ -5,7 +5,6 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.query.Meta;
 import dev.morphia.query.filters.Filters;
 import entities.Location;
-import entities.User;
 import entities.mongodb.MongoDbLocation;
 import models.LocationsModel;
 
@@ -74,6 +73,13 @@ public class MongoDbLocationsModel extends MongoDbModel<MongoDbLocation> impleme
 
     @Override
     public Map<? extends Location, Float> searchFreeText(String freeText) {
-        return query().filter(Filters.text(freeText)).stream(new FindOptions().projection().project(Meta.textScore("searchScore"))).collect(Collectors.toMap(l -> l, l -> l.getSearchScore()));
+        Map<Location, Float> results = query().filter(Filters.text(freeText)).stream(new FindOptions().projection().project(Meta.textScore("searchScore"))).collect(Collectors.toMap(l -> l, l -> l.getSearchScore()));
+        // exact matches need to be prioritized
+        for (Location l : results.keySet()) {
+            if (l.getName().equalsIgnoreCase(freeText)) {
+                results.put(l, 2.0f);
+            }
+        }
+        return results;
     }
 }

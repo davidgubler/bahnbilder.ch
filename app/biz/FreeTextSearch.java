@@ -78,7 +78,7 @@ public class FreeTextSearch {
         points[0] = 0.0f;
         for (TokenResult r : tokenResults) {
             for (SearchCriterion c : SEARCH_CRITERIA) {
-                Map<NumIdEntity, Float> m = r.get(c);
+                Map<Integer, Float> m = r.getIdResults(c);
                 Float weight = m.get(c.applyPhotoGetFunction(photo));
                 if (weight != null) {
                     points[0] += weight;

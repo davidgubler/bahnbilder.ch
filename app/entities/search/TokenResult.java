@@ -3,6 +3,8 @@ package entities.search;
 import biz.FreeTextSearch;
 import entities.*;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class TokenResult {
@@ -10,9 +12,21 @@ public class TokenResult {
 
     private final Map<FreeTextSearch.SearchCriterion<NumIdEntity>, Map<NumIdEntity, Float>> results;
 
+    private final Map<FreeTextSearch.SearchCriterion<NumIdEntity>, Map<Integer, Float>> idResults;
+
     public TokenResult(String token, Map<FreeTextSearch.SearchCriterion<NumIdEntity>, Map<NumIdEntity, Float>> results) {
         this.token = token;
         this.results = results;
+
+        Map<FreeTextSearch.SearchCriterion<NumIdEntity>, Map<Integer, Float>> idResults = new HashMap<>();
+        for (FreeTextSearch.SearchCriterion sc : results.keySet()) {
+            Map<Integer, Float> scResults = new HashMap<>();
+            for (Map.Entry<NumIdEntity, Float> entry : results.get(sc).entrySet()) {
+                scResults.put(entry.getKey().getId(), entry.getValue());
+            }
+            idResults.put(sc, Collections.unmodifiableMap(scResults));
+        }
+        this.idResults = Collections.unmodifiableMap(idResults);
     }
 
     public String getToken() {
@@ -40,7 +54,7 @@ public class TokenResult {
         return true;
     }
 
-    public Map<NumIdEntity, Float> get(FreeTextSearch.SearchCriterion sc) {
-        return results.get(sc);
+    public Map<Integer, Float> getIdResults(FreeTextSearch.SearchCriterion sc) {
+        return idResults.get(sc);
     }
 }
