@@ -631,6 +631,9 @@ public class Txt {
         en.put("username", "Username");
         de.put("username", "Benutzername");
 
+        en.put("userSince", "User since {0}");
+        de.put("userSince", "Mitglied seit {0}");
+
         en.put("vclass", "Class");
         de.put("vclass", "Baureihe");
 
