@@ -21,7 +21,7 @@ public class BahnbilderLogger {
             // will throw a RuntimeException if there's no context
             return request.remoteAddress() + " ";
         } catch (RuntimeException e) {
-            return "127.0.0.1";
+            return "127.0.0.1 ";
         }
     }
 

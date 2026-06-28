@@ -134,6 +134,10 @@ public class Context {
         return getContextModel(ContextRequestsDailyModel.class);
     }
 
+    public DnsModel getDnsModel() {
+        return getContextModel(ContextDnsModel.class);
+    }
+
     public Map<String, F.Tuple<Integer, Integer>> getCallSummary() {
         Map<String, F.Tuple<Integer, Integer>> callSummary = new HashMap<>();
         for (ContextModel cm : models.values()) {

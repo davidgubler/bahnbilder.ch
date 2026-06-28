@@ -4,6 +4,8 @@ import org.apache.commons.codec.binary.Hex;
 import play.mvc.Http;
 
 import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.List;
 
 public class Config {
     public static final double PHOTO_SPOT_RADIUS_KM = 0.25;
@@ -45,8 +47,12 @@ public class Config {
         CALENDAR_PRICE_EUR,
         CALENDAR_SHIPPING_CHF,
         CALENDAR_SHIPPING_EUR,
+        CLOUDFLARE_FAILOVER_HOSTS,
+        CLOUDFLARE_ZONE_ID,
+        CLOUDFLARE_API_TOKEN,
         HOST_DE,
         HOST_EN,
+        HOSTNAME,
         GOOGLE_MAPS_JS_KEY,
         GOOGLE_MAPS_SERVER_KEY,
         LIVEFILES_HOSTNAME,
@@ -75,6 +81,10 @@ public class Config {
 
         public boolean getBool() {
             return Boolean.TRUE.toString().equalsIgnoreCase(get());
+        }
+
+        public List<String> getStrings() {
+            return Arrays.asList(get().split(","));
         }
     }
 

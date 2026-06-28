@@ -97,8 +97,10 @@ POST    /users/:uid/_delete                             controllers.UsersControl
 GET     /webcamzhb                                      controllers.WebcamController.view(request: Request)
 
 GET     /about                                          controllers.AboutController.view(request: Request)
+GET     /about/:uid                                     controllers.AboutController.user(request: Request, uid: Integer)
 GET     /privacy                                        controllers.AboutController.privacy(request: Request)
 GET     /status                                         controllers.AboutController.status(request: Request)
+GET     /dnsupdate                                      controllers.AboutController.dnsUpdate(request: Request)
 
 GET     /calendar                                       controllers.CalendarController.view(request: Request)
 GET     /calendar/order                                 controllers.CalendarController.order(request: Request)

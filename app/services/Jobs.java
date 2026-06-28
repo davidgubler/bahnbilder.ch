@@ -1,12 +1,20 @@
 package services;
 
+import biz.Dns;
+import biz.ValidationException;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
+import entities.User;
+import entities.dummy.DummyUser;
 import models.ViewsModel;
 import org.apache.pekko.actor.ActorSystem;
+import play.mvc.Http;
 import utils.BahnbilderLogger;
+import utils.Context;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Random;
 import java.util.function.Supplier;
 
 public class Jobs {
@@ -17,6 +25,16 @@ public class Jobs {
     private ViewsModel viewsModel;
 
     @Inject
+    private Dns dns;
+
+    @Inject
+    private Injector injector;
+
+    private static final Http.Request REQUEST = new Http.RequestBuilder().remoteAddress("127.0.0.1").build();
+
+    private static final User USER = new DummyUser("BackgroundJob");
+
+    @Inject
     public Jobs(ActorSystem system) {
         system.registerOnTermination(() -> {
             shutDown = true;
@@ -24,6 +42,15 @@ public class Jobs {
         job(system, 4, 0, 0, () -> {
             logger.info(null, "collecting views");
             viewsModel.collect();
+            return null;
+        });
+        job(system, null, null, new Random().nextInt(60), () -> {
+            logger.info(REQUEST, "Testing URLs");
+            try {
+                dns.check(new Context(injector, REQUEST), USER);
+            } catch (ValidationException e) {
+                throw new RuntimeException(e.getErrors().toString());
+            }
             return null;
         });
     }
