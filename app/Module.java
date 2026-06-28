@@ -1,6 +1,7 @@
 import biz.*;
 import com.google.inject.AbstractModule;
 import models.*;
+import models.cloudflare.CloudflareDnsModel;
 import models.google.GoogleGeocodingModel;
 import models.hardcoded.HardcodedLicensesModel;
 import models.mongodb.*;
@@ -21,6 +22,7 @@ public class Module extends AbstractModule {
         bind(VehicleClasses.class);
         bind(VehicleSeries.class);
         bind(Keywords.class);
+        bind(Dns.class);
         bind(UsersModel.class).to(MongoDbUsersModel.class).asEagerSingleton();
         bind(CountriesModel.class).to(MongoDbCountriesModel.class).asEagerSingleton();
         bind(CalendarOrdersModel.class).to(MongoDbCalendarOrdersModel.class).asEagerSingleton();
@@ -38,7 +40,8 @@ public class Module extends AbstractModule {
         bind(ViewsModel.class).to(MongoDbViewsModel.class).asEagerSingleton();
         bind(RequestsDailyModel.class).to(MongoDbRequestsDailyModel.class).asEagerSingleton();
         bind(LicensesModel.class).to(HardcodedLicensesModel.class);
-        bind(GeocodingModel.class).to(GoogleGeocodingModel.class);
+        bind(GeocodingModel.class).to(GoogleGeocodingModel.class).asEagerSingleton();
+        bind(DnsModel.class).to(CloudflareDnsModel.class).asEagerSingleton();
         bind(Jobs.class).asEagerSingleton();
         if (Config.Option.LIVEFILES_HOSTNAME.get() != null) {
             bind(LiveFiles.class).asEagerSingleton();

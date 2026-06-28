@@ -1,0 +1,45 @@
+@(  implicit request: Http.Request,
+    featured: List[entities.Photo],
+    travelogues: List[_ <: entities.Travelogue],
+    countryViews: List[_ <: entities.aggregations.AggregationCountryViews],
+    lang: String,
+)
+
+@retro.template(request, if(lang=="en"){"rail.pictures"}else{"bahnbilder.ch"}, "home", lang) {
+} {
+<table width="100%">
+    <tr>
+        <td width="30%" valign="top">
+            <h2>Reiseberichte</h2>
+            @for(travelogue <- travelogues) {
+                <h3><a class="divButton" href="@routes.TraveloguesController.view(travelogue.getId)">@travelogue.getTitle()</a></h3>
+                <img src="@travelogue.getTitlePhoto().getUrlPublic200()" /><br />
+                @utils.StringUtils.limitText(travelogue.getSummary(), 280)<br />
+                <br />
+            }
+        </td>
+        <td width="40%" valign="top" align="center">
+            @for(photo <- featured) {
+                <h3>@photo.getVehicleClass</h3>
+                <a href="@routes.PhotoController.view(photo.getId)?menu=home"><img src="@photo.getUrlPublic200()"/></a><br />
+                @photo.getGeneratedDescription(lang, true, false, true, true, false)<br />
+                <br />
+            }
+        </td>
+        <td width="30%" valign="top">
+            <h4>@i18n.Txt.get(lang, "countriesByViews")</h4>
+            <table class="stats">
+                @for(cv <- countryViews) {
+                <tr>
+                    <td><span><a href="@routes.BrowseController.country(1, cv.getCountry + "")" >@cv.getCountry().getName(lang)</a></span></td>
+                    <td align="right">@(cv.getViews() / 1000L)&nbsp;k</td>
+                </tr>
+                }
+            </table>
+            <div class="mt-4 d-none d-md-block">
+                @freeTextSearch(false, lang)
+            </div>
+        </td>
+    </tr>
+</table>
+}
