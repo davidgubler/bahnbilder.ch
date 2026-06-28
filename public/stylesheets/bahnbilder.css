@@ -1,7 +1,7 @@
 body {
 	background-color: #000000;
 	color: #d0d0d0;
-	font-size: 14px;
+	font-size: 15px;
 	font-family: Arial, sans-serif;
 }
 pre {
@@ -92,7 +92,7 @@ h2 {
 	font-size: 20px;
 }
 h3 {
-	font-size: 16px;
+	font-size: 17px;
 }
 
 a {
@@ -352,7 +352,7 @@ label {
 input, textarea, select {
 	background-color: #181818 !important;
 	color: #d0d0d0 !important;
-	font-size: 14px !important;
+	font-size: 15px !important;
 	border-color: #505050 !important;
 }
 
@@ -380,7 +380,7 @@ textarea {
 button.btn {
 	background-color: #181818 !important;
 	border-color: #505050 !important;
-	font-size: 14px !important;
+	font-size: 15px !important;
 }
 
 button.btn-primary {
@@ -394,7 +394,7 @@ button.btn-danger {
 }
 
 .btn-link {
-	font-size: 14px !important;
+	font-size: 15px !important;
 	color: #d0d0d0 !important;
 }
 
@@ -436,7 +436,7 @@ div#maptooltipid a:hover {
 	padding: 45px 12px 4px 8px;
 	text-align: center;
 	display: none;
-	font-size: 13px;
+	font-size: 15px;
 }
 @media(hover: hover) {
 	a:hover > .bottom-label {
@@ -547,8 +547,8 @@ body.fullscreen div.bottom-label {
 	opacity: 0;
 	font-size: 18px;
 	color: #ffffff;
-	padding-top: 200px;
-	background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0.6) 200px);
+	padding-top: 100px;
+	background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0.6) 100px);
 }
 @media(hover: hover) {
 	body.fullscreen div.bottom-label:hover {
