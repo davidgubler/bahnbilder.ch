@@ -38,7 +38,7 @@ public class Title extends ContentNode {
             html += node.toHtml(lang, photosModel);
         }
 
-        return "<h1>" + html + "</h1>";
+        return "<h2>" + html + "</h2>";
     }
 
     @Override
