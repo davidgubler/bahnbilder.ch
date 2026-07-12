@@ -16,29 +16,29 @@
 </head>
 <body bgcolor="#202020" text="#d0d0d0" link="#88bbff" vlink="#ccccee" alink="#ffffff">
 <font face="sans-serif">
-<table align="center" width="1000">
+<table align="center" width="900">
     <tr>
-        <td>
-
-
-    <div>
-        <a href='/'>@if(lang=="en"){<span style="color: #a0a0a0; font-size: 32px;">rail.pictures</span>}else{<span style="color: #a0a0a0; font-size: 32px;">bahnbilder</span><span style="color: #707070; font-size: 24px;">.ch</span>}</a>
-    </div>
-    <div>
-        @if(menu=="home")       { <b>@i18n.Txt.get(lang, "home")</b>        } else { <a href='@routes.HomeController.home()'>@i18n.Txt.get(lang, "home")</a> } &middot;
-        @if(menu=="newest")     { <b>@i18n.Txt.get(lang, "newest")</b>      } else { <a href='@routes.NewestController.list()'>@i18n.Txt.get(lang, "newest")</a> } &middot;
-        @if(menu=="travelogues"){ <b>@i18n.Txt.get(lang, "travelogues")</b> } else { <a @if(menu=="travelogues"){class='active'} href='@routes.TraveloguesController.list(null)'>@i18n.Txt.get(lang, "travelogues")</a> } &middot;
-        @if(menu=="browse")     { <b>@i18n.Txt.get(lang, "browse")</b>      } else { <a @if(menu=="browse"){class='active'} href='@routes.BrowseController.world()'>@i18n.Txt.get(lang, "browse")</a> } &middot;
-        @if(menu=="search")     { <b>@i18n.Txt.get(lang, "search")</b>      } else { <a @if(menu=="search"){class='active'} href='@routes.SearchController.search()'>@i18n.Txt.get(lang, "search")</a> } &middot;
-        @if(menu=="about")      { <b>@i18n.Txt.get(lang, "about")</b>       } else { <a @if(menu=="about"){class='active'} href='/about'>@i18n.Txt.get(lang, "about")</a> }
-    </div>
-    <hr />
-
-@content
-
-<footer>
-    <span id='footer-text'><a href='@routes.AboutController.privacy()'>@i18n.Txt.get(lang, "privacyPolicy")</a> &middot; @if(lang!="en"){<a href='@routes.HomeController.lang("en", request.uri())'>English</a>}@if(lang!="de"){<a href='@routes.HomeController.lang("de", request.uri())'>Deutsch</a>}</span>
-</footer>
+        <td align="left" width="30%">
+            @if(lang=="en"){<span style="color: #a0a0a0; font-size: 32px;">rail.pictures</span>}else{<span style="color: #a0a0a0; font-size: 32px;">bahnbilder</span><span style="color: #707070; font-size: 24px;">.ch</span>}
+        </td>
+        <td align="right" width="70%">
+            @if(menu=="home")       { <b>@i18n.Txt.get(lang, "home")</b>        } else { <a href='@routes.HomeController.home()'>@i18n.Txt.get(lang, "home")</a> } &middot;
+            @if(menu=="newest")     { <b>@i18n.Txt.get(lang, "newest")</b>      } else { <a href='@routes.NewestController.list()'>@i18n.Txt.get(lang, "newest")</a> } &middot;
+            @if(menu=="travelogues"){ <b>@i18n.Txt.get(lang, "travelogues")</b> } else { <a @if(menu=="travelogues"){class='active'} href='@routes.TraveloguesController.list(null)'>@i18n.Txt.get(lang, "travelogues")</a> } &middot;
+            @if(menu=="browse")     { <b>@i18n.Txt.get(lang, "browse")</b>      } else { <a @if(menu=="browse"){class='active'} href='@routes.BrowseController.world()'>@i18n.Txt.get(lang, "browse")</a> } &middot;
+            @if(menu=="search")     { <b>@i18n.Txt.get(lang, "search")</b>      } else { <a @if(menu=="search"){class='active'} href='@routes.SearchController.search()'>@i18n.Txt.get(lang, "search")</a> } &middot;
+            @if(menu=="about")      { <b>@i18n.Txt.get(lang, "about")</b>       } else { <a @if(menu=="about"){class='active'} href='/about'>@i18n.Txt.get(lang, "about")</a> }
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <hr />
+            @content
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" align="center">
+            <a href='@routes.AboutController.privacy()'>@i18n.Txt.get(lang, "privacyPolicy")</a> &middot; @if(lang!="en"){<a href='@routes.HomeController.lang("en", request.uri())'>English</a>}@if(lang!="de"){<a href='@routes.HomeController.lang("de", request.uri())'>Deutsch</a>}</span>
         </td>
     </tr>
 </table>
