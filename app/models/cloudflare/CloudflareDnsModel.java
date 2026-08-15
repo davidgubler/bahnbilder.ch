@@ -18,6 +18,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -116,7 +117,7 @@ public class CloudflareDnsModel implements DnsModel {
 
     @Override
     public boolean check(URI uri) {
-        HttpRequest req = HttpRequest.newBuilder(uri).build();
+        HttpRequest req = HttpRequest.newBuilder(uri).timeout(Duration.ofSeconds(15)).build();
         try {
             client.sendAsync(req, java.net.http.HttpResponse.BodyHandlers.ofByteArray()).get();
             return true;
