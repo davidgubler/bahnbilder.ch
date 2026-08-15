@@ -58,25 +58,34 @@ public class Jobs {
     private volatile boolean shutDown = false;
 
     private LocalDateTime next(LocalDateTime now, Integer hour, Integer minute, Integer second) {
-        LocalDateTime next = now.truncatedTo(ChronoUnit.SECONDS).plusSeconds(1);
+        LocalDateTime next = now.truncatedTo(ChronoUnit.SECONDS);
+        ChronoUnit smallest = ChronoUnit.DAYS;
+
         if (hour != null) {
             next = next.withHour(hour);
-            if (now.getHour() > hour) {
-                next = next.plusDays(1);
-            }
+        } else {
+            smallest = ChronoUnit.HOURS;
         }
+
         if (minute != null) {
             next = next.withMinute(minute);
-            if (now.getMinute() > minute) {
-                next = next.plusHours(1);
-            }
+        } else {
+            smallest = ChronoUnit.MINUTES;
         }
+
         if (second != null) {
             next = next.withSecond(second);
-            if (now.getSecond() > second) {
-                next = next.plusMinutes(1);
-            }
+        } else {
+            smallest = ChronoUnit.SECONDS;
         }
+
+        while (next.isAfter(now)) {
+            next = next.minus(1, smallest);
+        }
+        while (!next.isAfter(now)) {
+            next = next.plus(1, smallest);
+        }
+
         return next;
     }
 
