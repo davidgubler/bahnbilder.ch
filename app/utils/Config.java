@@ -3,6 +3,7 @@ package utils;
 import org.apache.commons.codec.binary.Hex;
 import play.mvc.Http;
 
+import java.net.InetAddress;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +19,7 @@ public class Config {
 
     private static final Integer plainPort;
     private static final Integer tlsPort;
+    private static final String hostname;
 
     public static final byte[] MAC_SIGNING_KEY;
     static {
@@ -32,6 +34,17 @@ public class Config {
         String plainPortProperty = System.getProperty("http.port");
         plainPort = "disabled".equals(plainPortProperty) ? null : (InputUtils.toInt(plainPortProperty) == null ? 9000 : InputUtils.toInt(plainPortProperty));
         tlsPort = InputUtils.toInt(System.getProperty("https.port"));
+
+        String hn = Config.Option.HOSTNAME.get();
+        if (hn == null) {
+            try {
+                InetAddress inetAddress = InetAddress.getLocalHost();
+                hn = inetAddress.getHostName();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        hostname = hn;
     }
 
     public enum Option {
@@ -117,5 +130,9 @@ public class Config {
     public static String getSelfUrl(String lang) {
         String host = getSelfHost(lang);
         return (tlsEnabled() ? "https://" : "http://") + host;
+    }
+
+    public static String getHostname() {
+        return hostname;
     }
 }

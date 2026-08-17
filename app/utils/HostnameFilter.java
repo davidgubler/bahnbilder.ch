@@ -19,6 +19,9 @@ public class HostnameFilter extends EssentialFilter {
     @Override
     public EssentialAction apply(EssentialAction next) {
         return EssentialAction.of(request -> {
+            if (request.host().startsWith(Config.getHostname() + ".")) {
+                return next.apply(request);
+            }
             // redirect to main host name without prefixes
             if (Config.Option.HOST_DE.get() != null && request.host().endsWith("." + Config.Option.HOST_DE.get())) {
                 String protocol = request.secure() ? "https://" : "http://";
