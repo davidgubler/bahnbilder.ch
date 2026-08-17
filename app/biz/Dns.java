@@ -4,8 +4,6 @@ import entities.DnsRecord;
 import entities.User;
 import utils.*;
 
-import javax.mail.Message;
-import java.net.InetAddress;
 import java.net.URI;
 import java.util.*;
 
@@ -51,18 +49,6 @@ public class Dns {
         if (zoneId == null) {
             errors.put("zoneId", ErrorMessages.MISSING_VALUE);
         }
-        String hostname = Config.Option.HOSTNAME.get();
-        if (hostname == null) {
-            try {
-                InetAddress inetAddress = InetAddress.getLocalHost();
-                hostname = inetAddress.getHostName();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-        if (hostname == null) {
-            errors.put("hostname", ErrorMessages.MISSING_VALUE);
-        }
         if (!errors.isEmpty()) {
             throw new ValidationException(errors);
         }
@@ -87,7 +73,7 @@ public class Dns {
             }
             boolean check = context.getDnsModel().check(uri);
 
-            if (failoverHost.equals(hostname)) {
+            if (failoverHost.equals(Config.getHostname())) {
                 if (check && hostRecord == null) {
                     logger.info(context.getRequest(), "Failover host " + testHost + " responds, adding to DNS");
                     createRecord(context, domain, null, "AAAA", ip, true, user);
