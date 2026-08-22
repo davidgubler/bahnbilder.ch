@@ -1,5 +1,5 @@
 body {
-	background-color: #000000;
+	background-color: #202020;
 	color: #d0d0d0;
 	font-size: 15px;
 	font-family: Arial, sans-serif;
@@ -19,6 +19,7 @@ div#main {
 	body {
 		padding-left: 5%;
 		padding-right: 5%;
+		background-color: #000000;
 	}
 }
 nav.navbar {
