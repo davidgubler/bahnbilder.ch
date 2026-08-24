@@ -5,6 +5,8 @@
 
 @template(request, i18n.Txt.get(lang, "about"), "about", user, lang) {
 } {
+<script src='@routes.Assets.versioned("javascripts/suncalc.js")'></script>
+<script src='@routes.Assets.versioned("javascripts/sunpos.js")'></script>
     <h2>@i18n.Txt.get(lang, "about")</h2>
     @if(lang == "de") {
         <p>Diese Seite ist ein Privatprojekt von einigen Eisenbahnfotografen. Sie entstand aus der Erkenntnis heraus, dass man als Fotograf zwar gerne grosse Mengen an Bildern anh&auml;uft, was aber nicht viel n&uuml;tzt, wenn es nicht m&ouml;glich ist, die gew&uuml;nschten Bilder auch wieder zu finden. Im Internetzeitalter lag es da nahe, die Bilder auf einen Webserver zu stellen, die Metainformationen in eine Datenbank zu f&uuml;ttern und das Ganze auf verschiedene Arten durchsuchbar zu machen.</p>

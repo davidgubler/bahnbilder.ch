@@ -49,10 +49,16 @@ var init = function() {
     mapOptions.center = new google.maps.LatLng(lat, lng);
 
     map = new google.maps.Map(document.getElementById('mapCanvas'), mapOptions);
-    google.maps.event.addListener(map, "tilesloaded", () => {
+    const sunPos = new SunPos(map);
+    google.maps.event.addListener(map, "idle", () => {
+        // map has initialized
+        sunPos.updatePos();
+    });
+    google.maps.event.addListener(map, "center_changed", () => {
         window.localStorage.setItem('map-zoom', map.getZoom());
         window.localStorage.setItem('map-lat', map.getCenter().lat());
         window.localStorage.setItem('map-lng', map.getCenter().lng());
+        sunPos.updatePos();
     });
     markerData.map(addMarker);
     var mcOptions = { gridSize: 50, maxZoom: 10 };
