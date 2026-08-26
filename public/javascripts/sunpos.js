@@ -39,8 +39,12 @@ var drawSunArc = function(ctx, radius, x, y, date, lat, lng, sunrise, sunset) {
         let onCircle = posOnCircle(radius * (1 - sunPos.altitude / 90), sunPos.azimuth * Math.PI / 180);
         ctx.lineTo(x + onCircle.x, y + onCircle.y);
     }
+    let sunPos = SunCalc.getPosition(sunset, lat, lng);
+    let onCircle = posOnCircle(radius * (1 - sunPos.altitude / 90), sunPos.azimuth * Math.PI / 180);
+    ctx.lineTo(x + onCircle.x, y + onCircle.y);
     ctx.stroke();
 }
+
 
 var drawCrossHairs = function(ctx, x, y) {
     ctx.strokeStyle = "#ffffff";
@@ -52,18 +56,75 @@ var drawCrossHairs = function(ctx, x, y) {
     ctx.stroke();
 }
 
+var drawInfos = function(ctx, x, y, date) {
+    ctx.font = "15px sans-serif";
+    ctx.fillStyle = "#ffffff";
+    ctx.textAlign = 'right';
+    ctx.fillText(new Intl.DateTimeFormat().format(date), x, y);
+    ctx.fillText(date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0'), x, y + 20);
+}
+
+const drawCircle = function(ctx) {
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(200, 200, 180, 0, 2 * Math.PI);
+    ctx.stroke();
+}
+
+var draw = function(canvas, ctx, date, lat, lng) {
+    const sunCalcTimes = SunCalc.getTimes(date, lat, lng);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawNight(ctx, 180, 200, 200, date, lat, lng, sunCalcTimes.sunrise, sunCalcTimes.sunset);
+    drawSunArc(ctx, 180, 200, 200, date, lat, lng, sunCalcTimes.sunrise, sunCalcTimes.sunset);
+    drawCrossHairs(ctx, 200, 200);
+    drawInfos(ctx, 380, 30, date);
+    drawCircle(ctx);
+
+
+    const sunPosition = SunCalc.getPosition(date, lat, lng);
+
+    const sunPosOnOuterCircle = posOnCircle(180, sunPosition.azimuth * Math.PI / 180);
+    ctx.beginPath();
+    ctx.moveTo(200, 200);
+    ctx.lineTo(200 + sunPosOnOuterCircle.x, 200 + sunPosOnOuterCircle.y);
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "#ffff00";
+    ctx.stroke();
+    const sunPosOnAltitudeCircle = posOnCircle(180 - 180 * sunPosition.altitude / 90, sunPosition.azimuth * Math.PI / 180)
+    drawSun(ctx, sunPosOnAltitudeCircle.x + 200, sunPosOnAltitudeCircle.y + 200)
+}
+
 var sunPos = function(map) {
     console.log(map);
 
     const lat = 47;
     const lng = 8;
 
-    var canvas = document.createElement('canvas');
-    canvas.style.cssText = 'position:fixed;width:401px;height:401px;z-index:100;background:#000;left:200px;top:200px;background-color:rgba(0,0,0,0);';
+    const div = document.createElement('div');
+    div.style.cssText = 'width: 401px; height: 450px; position: fixed;left: 200px; top: 200px;';
+
+
+    document.body.appendChild(div);
+
+
+    const slider = document.createElement('input');
+    slider.setAttribute('type', 'range');
+    slider.setAttribute('id', 'time');
+    slider.setAttribute('value', '15');
+    slider.setAttribute('min', '0');
+    slider.setAttribute('max', '288');
+    slider.style.cssText = 'margin-left: 50px; width: 300px;';
+
+
+    const canvas = document.createElement('canvas');
     canvas.setAttribute("draggable", true);
+    canvas.style.cssText = 'width:401px;height:401px;';
+    canvas.width = 400;
+    canvas.height = 400;
 
     canvas.addEventListener('dragstart', function(event){
-        var style = window.getComputedStyle(event.target, null);
+        var style = window.getComputedStyle(div, null);
         event.dataTransfer.setData("text/plain",(parseInt(style.getPropertyValue("left"),10) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top"),10) - event.clientY));
     }, false);
 
@@ -74,50 +135,25 @@ var sunPos = function(map) {
 
     document.body.addEventListener('drop',function(event) {
         var offset = event.dataTransfer.getData("text/plain").split(',');
-        canvas.style.left = (event.clientX + parseInt(offset[0],10)) + 'px';
-        canvas.style.top = (event.clientY + parseInt(offset[1],10)) + 'px';
+        div.style.left = (event.clientX + parseInt(offset[0],10)) + 'px';
+        div.style.top = (event.clientY + parseInt(offset[1],10)) + 'px';
         event.preventDefault();
         return false;
     },false);
 
-    document.body.appendChild(canvas);
 
-    canvas.width = 400;
-    canvas.height = 400;
+    div.appendChild(slider);
+    div.appendChild(document.createElement('br'));
+    div.appendChild(canvas);
+
     const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const date = new Date();
-    date.setTime(date.getTime() - 1*60*60*1000);
-    const sunCalcTimes = SunCalc.getTimes(date, lat, lng);
-    console.log(sunCalcTimes);
-
-    drawNight(ctx, 180, 200, 200, date, lat, lng, sunCalcTimes.sunrise, sunCalcTimes.sunset);
-    drawSunArc(ctx, 180, 200, 200, date, lat, lng, sunCalcTimes.sunrise, sunCalcTimes.sunset);
-    drawCrossHairs(ctx, 200, 200);
-
-    ctx.strokeStyle = "white";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(200, 200, 180, 0, 2 * Math.PI);
-    ctx.stroke();
-
-
-    console.log(date);
-    const sunPosition = SunCalc.getPosition(date, lat, lng);
-
-    const sunPosOnOuterCircle = posOnCircle(180, sunPosition.azimuth * Math.PI / 180);
-    ctx.beginPath();
-    ctx.moveTo(200, 200);
-    ctx.lineTo(200 + sunPosOnOuterCircle.x, 200 + sunPosOnOuterCircle.y);
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = "#ffff00";
-    ctx.stroke();
-
-    const sunPosOnAltitudeCircle = posOnCircle(180 - 180 * sunPosition.altitude / 90, sunPosition.azimuth * Math.PI / 180)
-    drawSun(ctx, sunPosOnAltitudeCircle.x + 200, sunPosOnAltitudeCircle.y + 200)
-
-
+    slider.addEventListener('input', function(event){
+        const date = new Date();
+        const minutes = parseInt(event.target.value)*5;
+        date.setHours(0, minutes, 0, 0);
+        draw(canvas, ctx, date, lat, lng);
+    });
 }
 
 sunPos(null);
