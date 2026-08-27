@@ -57,7 +57,7 @@ var drawCrossHairs = function(ctx, x, y) {
 }
 
 var drawInfos = function(ctx, x, y, date) {
-    ctx.font = "15px sans-serif";
+    ctx.font = "16px sans-serif";
     ctx.fillStyle = "#ffffff";
     ctx.textAlign = 'right';
     ctx.fillText(new Intl.DateTimeFormat().format(date), x, y);
@@ -70,6 +70,25 @@ const drawCircle = function(ctx) {
     ctx.beginPath();
     ctx.arc(200, 200, 180, 0, 2 * Math.PI);
     ctx.stroke();
+
+    for (i = 0; i < 90; i+=10) {
+        ctx.strokeStyle = "#ffffff33";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(200, 200, i * 2, 0, 2 * Math.PI);
+        ctx.stroke();
+    }
+
+    for (i = 0; i < 360; i+=10) {
+        ctx.strokeStyle = "#ffffff33";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(200, 200);
+        let pos = posOnCircle(180, i * Math.PI / 180);
+        ctx.lineTo(200 + pos.x, 200 + pos.y);
+        ctx.stroke();
+    }
+
 }
 
 var draw = function(canvas, ctx, date, lat, lng) {
@@ -83,6 +102,17 @@ var draw = function(canvas, ctx, date, lat, lng) {
 
 
     const sunPosition = SunCalc.getPosition(date, lat, lng);
+
+    /* draw 30° sector */
+    let startRadians = (sunPosition.azimuth - 30)* Math.PI / 180;
+    let endRadians = (sunPosition.azimuth + 30) * Math.PI / 180;
+    ctx.beginPath();
+    ctx.moveTo(200, 200);
+    ctx.arc(200, 200, 180, startRadians - 0.5*Math.PI, endRadians - 0.5*Math.PI);
+    ctx.closePath();
+    ctx.fillStyle = "#ee000055";
+    ctx.fill();
+
 
     const sunPosOnOuterCircle = posOnCircle(180, sunPosition.azimuth * Math.PI / 180);
     ctx.beginPath();
@@ -114,7 +144,9 @@ var sunPos = function(map) {
     slider.setAttribute('value', '15');
     slider.setAttribute('min', '0');
     slider.setAttribute('max', '288');
-    slider.style.cssText = 'margin-left: 50px; width: 300px;';
+    slider.style.cssText = 'margin-left: 20px; width: 360px;';
+
+
 
 
     const canvas = document.createElement('canvas');
@@ -147,6 +179,13 @@ var sunPos = function(map) {
     div.appendChild(canvas);
 
     const ctx = canvas.getContext("2d");
+
+    const date = new Date();
+    const startOfDay = new Date();
+    startOfDay.setTime(date.getTime());
+    startOfDay.setHours(0,0,0,0);
+    slider.value = (date.getTime() - startOfDay.getTime()) / 1000 / 60 / 5;
+    draw(canvas, ctx, date, lat, lng);
 
     slider.addEventListener('input', function(event){
         const date = new Date();
