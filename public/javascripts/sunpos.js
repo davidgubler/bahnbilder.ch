@@ -3,7 +3,7 @@ class SunPos {
 
     constructor() {
         const div = document.createElement('div');
-        div.style.cssText = 'width: 401px; height: 450px; position: fixed;left: 200px; top: 200px;';
+        div.style.cssText = 'width: 400px; height: 450px; position: fixed;left: 200px; top: 200px;';
 
         document.body.appendChild(div);
 
@@ -17,7 +17,7 @@ class SunPos {
 
         this.canvas = document.createElement('canvas');
         this.canvas.setAttribute("draggable", true);
-        this.canvas.style.cssText = 'width:401px;height:401px;';
+        this.canvas.style.cssText = 'width:400px;height:400px;';
         this.canvas.width = 400;
         this.canvas.height = 400;
 
