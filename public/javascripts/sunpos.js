@@ -88,61 +88,61 @@ class SunPos {
         this.ctx.fill();
     }
 
-    drawSunArc(ctx, radius, x, y, lat, lng, sunrise, sunset) {
-        ctx.strokeStyle = "#ffff00";
-        ctx.beginPath();
+    drawSunArc(radius, x, y,  sunrise, sunset) {
+        this.ctx.strokeStyle = "#ffff00";
+        this.ctx.beginPath();
         for (let i = sunrise.getTime(); i < sunset.getTime(); i += 10*60*1000) {
-            let sunPos = SunCalc.getPosition(new Date().setTime(i), lat, lng);
+            let sunPos = SunCalc.getPosition(new Date().setTime(i), this.lat, this.lng);
             let onCircle = this.posOnCircle(radius * (1 - sunPos.altitude / 90), sunPos.azimuth * Math.PI / 180);
-            ctx.lineTo(x + onCircle.x, y + onCircle.y);
+            this.ctx.lineTo(x + onCircle.x, y + onCircle.y);
         }
-        let sunPos = SunCalc.getPosition(sunset, lat, lng);
+        let sunPos = SunCalc.getPosition(sunset, this.lat, this.lng);
         let onCircle = this.posOnCircle(radius * (1 - sunPos.altitude / 90), sunPos.azimuth * Math.PI / 180);
-        ctx.lineTo(x + onCircle.x, y + onCircle.y);
-        ctx.stroke();
+        this.ctx.lineTo(x + onCircle.x, y + onCircle.y);
+        this.ctx.stroke();
     }
 
-    drawCrossHairs(ctx, x, y) {
-        ctx.strokeStyle = "#ffffff";
-        ctx.beginPath();
-        ctx.arc(x, y, 10, 0, 2 * Math.PI);
-        ctx.lineTo(x-10, y);
-        ctx.moveTo(x, y-10);
-        ctx.lineTo(x, y+10);
-        ctx.stroke();
+    drawCrossHairs(x, y) {
+        this.ctx.strokeStyle = "#ffffff";
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, 10, 0, 2 * Math.PI);
+        this.ctx.lineTo(x-10, y);
+        this.ctx.moveTo(x, y-10);
+        this.ctx.lineTo(x, y+10);
+        this.ctx.stroke();
     }
 
-    drawInfos(ctx, x, y) {
-        ctx.font = "16px sans-serif";
-        ctx.fillStyle = "#ffffff";
-        ctx.textAlign = 'right';
-        ctx.fillText(new Intl.DateTimeFormat().format(this.sunPosDate), x, y);
-        ctx.fillText(this.sunPosDate.getHours().toString().padStart(2, '0') + ":" + this.sunPosDate.getMinutes().toString().padStart(2, '0'), x, y + 20);
+    drawInfos(x, y) {
+        this.ctx.font = "16px sans-serif";
+        this.ctx.fillStyle = "#ffffff";
+        this.ctx.textAlign = 'right';
+        this.ctx.fillText(new Intl.DateTimeFormat().format(this.sunPosDate), x, y);
+        this.ctx.fillText(this.sunPosDate.getHours().toString().padStart(2, '0') + ":" + this.sunPosDate.getMinutes().toString().padStart(2, '0'), x, y + 20);
     }
 
-    drawCircle(ctx) {
-        ctx.strokeStyle = "white";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(200, 200, 180, 0, 2 * Math.PI);
-        ctx.stroke();
+    drawCircle() {
+        this.ctx.strokeStyle = "white";
+        this.ctx.lineWidth = 2;
+        this.ctx.beginPath();
+        this.ctx.arc(200, 200, 180, 0, 2 * Math.PI);
+        this.ctx.stroke();
 
         for (let i = 0; i < 90; i+=10) {
-            ctx.strokeStyle = "#ffffff33";
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.arc(200, 200, i * 2, 0, 2 * Math.PI);
-            ctx.stroke();
+            this.ctx.strokeStyle = "#ffffff33";
+            this.ctx.lineWidth = 1;
+            this.ctx.beginPath();
+            this.ctx.arc(200, 200, i * 2, 0, 2 * Math.PI);
+            this.ctx.stroke();
         }
 
         for (let i = 0; i < 360; i+=10) {
-            ctx.strokeStyle = "#ffffff33";
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(200, 200);
+            this.ctx.strokeStyle = "#ffffff33";
+            this.ctx.lineWidth = 1;
+            this.ctx.beginPath();
+            this.ctx.moveTo(200, 200);
             let pos = this.posOnCircle(180, i * Math.PI / 180);
-            ctx.lineTo(200 + pos.x, 200 + pos.y);
-            ctx.stroke();
+            this.ctx.lineTo(200 + pos.x, 200 + pos.y);
+            this.ctx.stroke();
         }
     }
 
@@ -150,10 +150,10 @@ class SunPos {
         const sunCalcTimes = SunCalc.getTimes(this.sunPosDate, this.lat, this.lng);
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawNight(180, 200, 200, sunCalcTimes.sunrise, sunCalcTimes.sunset);
-        this.drawSunArc(this.ctx, 180, 200, 200, this.lat, this.lng, sunCalcTimes.sunrise, sunCalcTimes.sunset);
-        this.drawCrossHairs(this.ctx, 200, 200);
-        this.drawInfos(this.ctx, 380, 30);
-        this.drawCircle(this.ctx);
+        this.drawSunArc(180, 200, 200, sunCalcTimes.sunrise, sunCalcTimes.sunset);
+        this.drawCrossHairs(200, 200);
+        this.drawInfos(380, 30);
+        this.drawCircle();
 
         const sunPosition = SunCalc.getPosition(this.sunPosDate, this.lat, this.lng);
 
