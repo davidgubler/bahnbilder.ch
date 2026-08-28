@@ -1,7 +1,10 @@
 class SunPos {
-    constructor() {
-
+    constructor(map) {
+        const self = this;
+        this.map = map;
         this.sunPosDate = new Date();
+        this.x = 300;
+        this.y = 300;
 
         const div = document.createElement('div');
         div.style.cssText = 'width: 400px; height: 450px; position: fixed;left: 200px; top: 200px;';
@@ -15,6 +18,16 @@ class SunPos {
         this.slider.setAttribute('min', '0');
         this.slider.setAttribute('max', '288');
         this.slider.style.cssText = 'margin-left: 20px; width: 360px;';
+        this.slider.addEventListener('input', function(event){
+            self.sunPosDate = new Date();
+            const minutes = parseInt(event.target.value)*5;
+            self.sunPosDate.setHours(0, minutes, 0, 0);
+            self.draw();
+        });
+        const startOfDay = new Date();
+        startOfDay.setTime(this.sunPosDate.getTime());
+        startOfDay.setHours(0,0,0,0);
+        this.slider.value = ((this.sunPosDate.getTime() - startOfDay.getTime()) / 1000 / 60 / 5).toString();
 
         this.canvas = document.createElement('canvas');
         this.canvas.setAttribute("draggable", true);
@@ -32,17 +45,15 @@ class SunPos {
             return false;
         },false);
 
-        const self = this;
         document.body.addEventListener('drop',function(event) {
             const offset = event.dataTransfer.getData("text/plain").split(',');
 
-            const x = event.clientX + parseInt(offset[0],10);
-            const y = event.clientY + parseInt(offset[1],10);
+            self.x = event.clientX + parseInt(offset[0],10);
+            self.y = event.clientY + parseInt(offset[1],10);
+            div.style.left = self.x + 'px';
+            div.style.top = self.y + 'px';
 
-            div.style.left = x + 'px';
-            div.style.top = y + 'px';
-
-            const coords = self.screenToMapCoordinates(map, x + 200, y + 200);
+            const coords = self.screenToMapCoordinates();
             self.lat = coords.lat();
             self.lng = coords.lng();
             self.draw();
@@ -113,11 +124,16 @@ class SunPos {
     }
 
     drawInfos(x, y) {
-        this.ctx.font = "16px sans-serif";
-        this.ctx.fillStyle = "#ffffff";
+        this.ctx.font = "bold 16px sans-serif";
+        this.ctx.fillStyle = "#000000";
         this.ctx.textAlign = 'right';
         this.ctx.fillText(new Intl.DateTimeFormat().format(this.sunPosDate), x, y);
         this.ctx.fillText(this.sunPosDate.getHours().toString().padStart(2, '0') + ":" + this.sunPosDate.getMinutes().toString().padStart(2, '0'), x, y + 20);
+        this.ctx.font = "bold 16px sans-serif";
+        this.ctx.fillStyle = "#ffffff";
+        this.ctx.textAlign = 'right';
+        this.ctx.fillText(new Intl.DateTimeFormat().format(this.sunPosDate), x-1, y-1);
+        this.ctx.fillText(this.sunPosDate.getHours().toString().padStart(2, '0') + ":" + this.sunPosDate.getMinutes().toString().padStart(2, '0'), x-1, y + 19);
     }
 
     drawCircle() {
@@ -128,7 +144,7 @@ class SunPos {
         this.ctx.stroke();
 
         for (let i = 0; i < 90; i+=10) {
-            this.ctx.strokeStyle = "#ffffff33";
+            this.ctx.strokeStyle = "#ffffff66";
             this.ctx.lineWidth = 1;
             this.ctx.beginPath();
             this.ctx.arc(200, 200, i * 2, 0, 2 * Math.PI);
@@ -136,7 +152,7 @@ class SunPos {
         }
 
         for (let i = 0; i < 360; i+=10) {
-            this.ctx.strokeStyle = "#ffffff33";
+            this.ctx.strokeStyle = "#ffffff66";
             this.ctx.lineWidth = 1;
             this.ctx.beginPath();
             this.ctx.moveTo(200, 200);
@@ -178,11 +194,12 @@ class SunPos {
         this.drawSun(sunPosOnAltitudeCircle.x + 200, sunPosOnAltitudeCircle.y + 200)
     }
 
-    screenToMapCoordinates(map, x, y) {
+    screenToMapCoordinates() {
         // Compensate for map position in page
-        const mapPos = document.getElementById("mapCanvas").getBoundingClientRect();
-        x = x - mapPos.x;
-        y = y - mapPos.y;
+        const mapDiv = this.map.getDiv();
+        const mapPos = mapDiv.getBoundingClientRect();
+        let x = this.x - mapPos.x + 200;
+        let y = this.y - mapPos.y + 200;
 
         // Get the current map bounds and projection
         const bounds = map.getBounds();
@@ -198,7 +215,7 @@ class SunPos {
         const swPointInPx = projection.fromLatLngToPoint(swBound);
 
         // Calculate the percentage of where the pixel sits relative to the map container
-        const mapDiv = map.getDiv();
+
         const percentX = x / mapDiv.clientWidth;
         const percentY = y / mapDiv.clientHeight;
 
@@ -211,23 +228,11 @@ class SunPos {
         return projection.fromPointToLatLng(worldPoint);
     }
 
-    init(map) {
-        const coords = this.screenToMapCoordinates(map, 100, 100);
+    updatePos() {
+        const coords = this.screenToMapCoordinates();
         this.lat = coords.lat();
         this.lng = coords.lng();
-
-        const startOfDay = new Date();
-        startOfDay.setTime(this.sunPosDate.getTime());
-        startOfDay.setHours(0,0,0,0);
-        this.slider.value = (this.sunPosDate.getTime() - startOfDay.getTime()) / 1000 / 60 / 5;
         this.draw();
-
-        const self = this;
-        this.slider.addEventListener('input', function(event){
-            this.sunPosDate = new Date();
-            const minutes = parseInt(event.target.value)*5;
-            this.sunPosDate.setHours(0, minutes, 0, 0);
-            self.draw();
-        });
     }
 }
+
