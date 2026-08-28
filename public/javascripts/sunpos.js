@@ -1,7 +1,8 @@
 class SunPos {
-
-
     constructor() {
+
+        this.sunPosDate = new Date();
+
         const div = document.createElement('div');
         div.style.cssText = 'width: 400px; height: 450px; position: fixed;left: 200px; top: 200px;';
 
@@ -31,10 +32,21 @@ class SunPos {
             return false;
         },false);
 
+        const self = this;
         document.body.addEventListener('drop',function(event) {
             const offset = event.dataTransfer.getData("text/plain").split(',');
-            div.style.left = (event.clientX + parseInt(offset[0],10)) + 'px';
-            div.style.top = (event.clientY + parseInt(offset[1],10)) + 'px';
+
+            const x = event.clientX + parseInt(offset[0],10);
+            const y = event.clientY + parseInt(offset[1],10);
+
+            div.style.left = x + 'px';
+            div.style.top = y + 'px';
+
+            const coords = self.screenToMapCoordinates(map, x + 200, y + 200);
+            self.lat = coords.lat();
+            self.lng = coords.lng();
+            self.draw();
+
             event.preventDefault();
             return false;
         },false);
@@ -65,18 +77,18 @@ class SunPos {
         this.ctx.fill();
     }
 
-    drawNight(ctx, radius, x, y, date, lat, lng, sunrise, sunset) {
-        let startRadians = SunCalc.getPosition(sunset, lat, lng).azimuth * Math.PI / 180;
-        let endRadians = SunCalc.getPosition(sunrise, lat, lng).azimuth * Math.PI / 180;
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-        ctx.arc(x, y, radius, startRadians - 0.5*Math.PI, endRadians - 0.5*Math.PI);
-        ctx.closePath();
-        ctx.fillStyle = "#0022dd55";
-        ctx.fill();
+    drawNight(radius, x, y, sunrise, sunset) {
+        let startRadians = SunCalc.getPosition(sunset, this.lat, this.lng).azimuth * Math.PI / 180;
+        let endRadians = SunCalc.getPosition(sunrise, this.lat, this.lng).azimuth * Math.PI / 180;
+        this.ctx.beginPath();
+        this.ctx.moveTo(x, y);
+        this.ctx.arc(x, y, radius, startRadians - 0.5*Math.PI, endRadians - 0.5*Math.PI);
+        this.ctx.closePath();
+        this.ctx.fillStyle = "#0022dd55";
+        this.ctx.fill();
     }
 
-    drawSunArc(ctx, radius, x, y, date, lat, lng, sunrise, sunset) {
+    drawSunArc(ctx, radius, x, y, lat, lng, sunrise, sunset) {
         ctx.strokeStyle = "#ffff00";
         ctx.beginPath();
         for (let i = sunrise.getTime(); i < sunset.getTime(); i += 10*60*1000) {
@@ -100,12 +112,12 @@ class SunPos {
         ctx.stroke();
     }
 
-    drawInfos(ctx, x, y, date) {
+    drawInfos(ctx, x, y) {
         ctx.font = "16px sans-serif";
         ctx.fillStyle = "#ffffff";
         ctx.textAlign = 'right';
-        ctx.fillText(new Intl.DateTimeFormat().format(date), x, y);
-        ctx.fillText(date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0'), x, y + 20);
+        ctx.fillText(new Intl.DateTimeFormat().format(this.sunPosDate), x, y);
+        ctx.fillText(this.sunPosDate.getHours().toString().padStart(2, '0') + ":" + this.sunPosDate.getMinutes().toString().padStart(2, '0'), x, y + 20);
     }
 
     drawCircle(ctx) {
@@ -134,60 +146,88 @@ class SunPos {
         }
     }
 
-    draw(canvas, ctx, date, lat, lng) {
-        const sunCalcTimes = SunCalc.getTimes(date, lat, lng);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        this.drawNight(ctx, 180, 200, 200, date, lat, lng, sunCalcTimes.sunrise, sunCalcTimes.sunset);
-        this.drawSunArc(ctx, 180, 200, 200, date, lat, lng, sunCalcTimes.sunrise, sunCalcTimes.sunset);
-        this.drawCrossHairs(ctx, 200, 200);
-        this.drawInfos(ctx, 380, 30, date);
-        this.drawCircle(ctx);
+    draw() {
+        const sunCalcTimes = SunCalc.getTimes(this.sunPosDate, this.lat, this.lng);
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.drawNight(180, 200, 200, sunCalcTimes.sunrise, sunCalcTimes.sunset);
+        this.drawSunArc(this.ctx, 180, 200, 200, this.lat, this.lng, sunCalcTimes.sunrise, sunCalcTimes.sunset);
+        this.drawCrossHairs(this.ctx, 200, 200);
+        this.drawInfos(this.ctx, 380, 30);
+        this.drawCircle(this.ctx);
 
-        const sunPosition = SunCalc.getPosition(date, lat, lng);
+        const sunPosition = SunCalc.getPosition(this.sunPosDate, this.lat, this.lng);
 
         /* draw 30° sector */
         let startRadians = (sunPosition.azimuth - 30)* Math.PI / 180;
         let endRadians = (sunPosition.azimuth + 30) * Math.PI / 180;
-        ctx.beginPath();
-        ctx.moveTo(200, 200);
-        ctx.arc(200, 200, 180, startRadians - 0.5*Math.PI, endRadians - 0.5*Math.PI);
-        ctx.closePath();
-        ctx.fillStyle = "#ee000055";
-        ctx.fill();
+        this.ctx.beginPath();
+        this.ctx.moveTo(200, 200);
+        this.ctx.arc(200, 200, 180, startRadians - 0.5*Math.PI, endRadians - 0.5*Math.PI);
+        this.ctx.closePath();
+        this.ctx.fillStyle = "#ee000055";
+        this.ctx.fill();
 
         const sunPosOnOuterCircle = this.posOnCircle(180, sunPosition.azimuth * Math.PI / 180);
-        ctx.beginPath();
-        ctx.moveTo(200, 200);
-        ctx.lineTo(200 + sunPosOnOuterCircle.x, 200 + sunPosOnOuterCircle.y);
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = "#ffff00";
-        ctx.stroke();
+        this.ctx.beginPath();
+        this.ctx.moveTo(200, 200);
+        this.ctx.lineTo(200 + sunPosOnOuterCircle.x, 200 + sunPosOnOuterCircle.y);
+        this.ctx.lineWidth = 1;
+        this.ctx.strokeStyle = "#ffff00";
+        this.ctx.stroke();
         const sunPosOnAltitudeCircle = this.posOnCircle(180 - 180 * sunPosition.altitude / 90, sunPosition.azimuth * Math.PI / 180)
         this.drawSun(sunPosOnAltitudeCircle.x + 200, sunPosOnAltitudeCircle.y + 200)
     }
 
+    screenToMapCoordinates(map, x, y) {
+        // Compensate for map position in page
+        const mapPos = document.getElementById("mapCanvas").getBoundingClientRect();
+        x = x - mapPos.x;
+        y = y - mapPos.y;
+
+        // Get the current map bounds and projection
+        const bounds = map.getBounds();
+        const projection = map.getProjection();
+        if (!bounds || !projection) return null;
+
+        // Extract corners of the visible map area
+        const neBound = bounds.getNorthEast();
+        const swBound = bounds.getSouthWest();
+
+        // Convert corners into map point instances (world pixels)
+        const nePointInPx = projection.fromLatLngToPoint(neBound);
+        const swPointInPx = projection.fromLatLngToPoint(swBound);
+
+        // Calculate the percentage of where the pixel sits relative to the map container
+        const mapDiv = map.getDiv();
+        const percentX = x / mapDiv.clientWidth;
+        const percentY = y / mapDiv.clientHeight;
+
+        // Interpolate the world point location
+        const worldX = (nePointInPx.x - swPointInPx.x) * percentX + swPointInPx.x;
+        const worldY = (swPointInPx.y - nePointInPx.y) * percentY + nePointInPx.y;
+
+        // Convert the world point back into a LatLng object
+        const worldPoint = new google.maps.Point(worldX, worldY);
+        return projection.fromPointToLatLng(worldPoint);
+    }
+
     init(map) {
-        console.log(map);
+        const coords = this.screenToMapCoordinates(map, 100, 100);
+        this.lat = coords.lat();
+        this.lng = coords.lng();
 
-        const lat = 47;
-        const lng = 8;
-
-        const date = new Date();
         const startOfDay = new Date();
-        startOfDay.setTime(date.getTime());
+        startOfDay.setTime(this.sunPosDate.getTime());
         startOfDay.setHours(0,0,0,0);
-        this.slider.value = (date.getTime() - startOfDay.getTime()) / 1000 / 60 / 5;
-        this.draw(this.canvas, this.ctx, date, lat, lng);
+        this.slider.value = (this.sunPosDate.getTime() - startOfDay.getTime()) / 1000 / 60 / 5;
+        this.draw();
 
         const self = this;
         this.slider.addEventListener('input', function(event){
-            const date = new Date();
+            this.sunPosDate = new Date();
             const minutes = parseInt(event.target.value)*5;
-            date.setHours(0, minutes, 0, 0);
-            self.draw(self.canvas, self.ctx, date, lat, lng);
+            this.sunPosDate.setHours(0, minutes, 0, 0);
+            self.draw();
         });
     }
 }
-
-const sunPos = new SunPos();
-sunPos.init(null);

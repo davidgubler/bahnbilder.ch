@@ -53,11 +53,12 @@ var init = function() {
         window.localStorage.setItem('map-zoom', map.getZoom());
         window.localStorage.setItem('map-lat', map.getCenter().lat());
         window.localStorage.setItem('map-lng', map.getCenter().lng());
+        const sunPos = new SunPos();
+        sunPos.init(map);
     });
     markerData.map(addMarker);
     var mcOptions = { gridSize: 50, maxZoom: 10 };
     var mc = new MarkerClusterer(map, markers, mcOptions);
-    suncalc(map);
 }
 
 $(document).ready(function() {
