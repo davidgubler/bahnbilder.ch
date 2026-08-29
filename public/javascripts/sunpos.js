@@ -88,9 +88,14 @@ class SunPos {
         this.ctx.fill();
     }
 
-    drawNight(radius, x, y, sunrise, sunset) {
+    drawNight(radius, x, y, nadir, sunrise, sunset) {
         let startRadians = SunCalc.getPosition(sunset, this.lat, this.lng).azimuth * Math.PI / 180;
         let endRadians = SunCalc.getPosition(sunrise, this.lat, this.lng).azimuth * Math.PI / 180;
+        if ((SunCalc.getPosition(nadir, this.lat, this.lng).azimuth - 270) < 0) {
+            const tmp = endRadians;
+            endRadians = startRadians;
+            startRadians = tmp;
+        }
         this.ctx.beginPath();
         this.ctx.moveTo(x, y);
         this.ctx.arc(x, y, radius, startRadians - 0.5*Math.PI, endRadians - 0.5*Math.PI);
@@ -164,8 +169,9 @@ class SunPos {
 
     draw() {
         const sunCalcTimes = SunCalc.getTimes(this.sunPosDate, this.lat, this.lng);
+        console.log(sunCalcTimes);
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.drawNight(180, 200, 200, sunCalcTimes.sunrise, sunCalcTimes.sunset);
+        this.drawNight(180, 200, 200, sunCalcTimes.nadir, sunCalcTimes.sunrise, sunCalcTimes.sunset);
         this.drawSunArc(180, 200, 200, sunCalcTimes.sunrise, sunCalcTimes.sunset);
         this.drawCrossHairs(200, 200);
         this.drawInfos(380, 30);
