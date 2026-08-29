@@ -7,7 +7,7 @@ class SunPos {
         this.y = 300;
 
         const div = document.createElement('div');
-        div.style.cssText = 'width: 400px; height: 450px; position: fixed;left: 200px; top: 200px;';
+        div.style.cssText = 'width: 400px; height: 450px; position: fixed; left: 200px; top: 200px; pointer-events: none;';
 
         document.body.appendChild(div);
 
@@ -29,42 +29,20 @@ class SunPos {
         startOfDay.setHours(0,0,0,0);
         this.slider.value = ((this.sunPosDate.getTime() - startOfDay.getTime()) / 1000 / 60 / 5).toString();
 
+
+        const div1 = document.createElement('div');
+        div1.style.cssText = 'position: relative; width: 100%; height: calc(100% - 100px); pointer-events: none;';
+        const div2 = document.createElement('div');
+        div2.style.cssText = 'position: absolute; inset: 0; max-height: 100%; max-width: 100%; object-fit: contain; aspect-ratio: 1 / 1; margin-left: auto; margin-right: auto;';
+        div1.appendChild(div2);
         this.canvas = document.createElement('canvas');
-        this.canvas.setAttribute("draggable", true);
-        this.canvas.style.cssText = 'width:400px;height:400px;';
-        this.canvas.width = 400;
-        this.canvas.height = 400;
-
-        this.canvas.addEventListener('dragstart', function(event){
-            var style = window.getComputedStyle(div, null);
-            event.dataTransfer.setData("text/plain",(parseInt(style.getPropertyValue("left"),10) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top"),10) - event.clientY));
-        }, false);
-
-        document.body.addEventListener('dragover',function(event){
-            event.preventDefault();
-            return false;
-        },false);
-
-        document.body.addEventListener('drop',function(event) {
-            const offset = event.dataTransfer.getData("text/plain").split(',');
-
-            self.x = event.clientX + parseInt(offset[0],10);
-            self.y = event.clientY + parseInt(offset[1],10);
-            div.style.left = self.x + 'px';
-            div.style.top = self.y + 'px';
-
-            const coords = self.screenToMapCoordinates();
-            self.lat = coords.lat();
-            self.lng = coords.lng();
-            self.draw();
-
-            event.preventDefault();
-            return false;
-        },false);
+        this.canvas.style.cssText = 'width: 100%; height: 100%;';
+        div2.append(this.canvas);
+        map.getDiv().appendChild(div1);
 
         div.appendChild(this.slider);
         div.appendChild(document.createElement('br'));
-        div.appendChild(this.canvas);
+        //div.appendChild(this.canvas);
 
         this.ctx = this.canvas.getContext("2d");
     }
@@ -141,41 +119,49 @@ class SunPos {
         this.ctx.fillText(this.sunPosDate.getHours().toString().padStart(2, '0') + ":" + this.sunPosDate.getMinutes().toString().padStart(2, '0'), x-1, y + 19);
     }
 
-    drawCircle() {
+    drawCircle(r, x, y) {
         this.ctx.strokeStyle = "white";
         this.ctx.lineWidth = 2;
         this.ctx.beginPath();
-        this.ctx.arc(200, 200, 180, 0, 2 * Math.PI);
+        this.ctx.arc(x, y, r, 0, 2 * Math.PI);
         this.ctx.stroke();
 
-        for (let i = 0; i < 90; i+=10) {
-            this.ctx.strokeStyle = "#ffffff66";
+        for (let i = 10; i <= 90; i+=10) {
+            this.ctx.strokeStyle = "#ffffff88";
             this.ctx.lineWidth = 1;
             this.ctx.beginPath();
-            this.ctx.arc(200, 200, i * 2, 0, 2 * Math.PI);
+            this.ctx.arc(x, y, i * r / 90, 0, 2 * Math.PI);
             this.ctx.stroke();
         }
 
         for (let i = 0; i < 360; i+=10) {
-            this.ctx.strokeStyle = "#ffffff66";
+            this.ctx.strokeStyle = "#ffffff8866";
             this.ctx.lineWidth = 1;
             this.ctx.beginPath();
-            this.ctx.moveTo(200, 200);
-            let pos = this.posOnCircle(180, i * Math.PI / 180);
-            this.ctx.lineTo(200 + pos.x, 200 + pos.y);
+            this.ctx.moveTo(x, y);
+            let pos = this.posOnCircle(r, i * Math.PI / 180);
+            this.ctx.lineTo(x + pos.x, y + pos.y);
             this.ctx.stroke();
         }
     }
 
     draw() {
+        const cs = this.canvas.getBoundingClientRect();
+        this.canvas.width = cs.width;
+        this.canvas.height = cs.height;
+
+        const centerX = Math.round(this.canvas.width / 2);
+        const centerY = Math.round(this.canvas.height / 2);
+        const radius = Math.round(this.canvas.width / 2) - 20;
+
         const sunCalcTimes = SunCalc.getTimes(this.sunPosDate, this.lat, this.lng);
         console.log(sunCalcTimes);
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.drawNight(180, 200, 200, sunCalcTimes.nadir, sunCalcTimes.sunrise, sunCalcTimes.sunset);
-        this.drawSunArc(180, 200, 200, sunCalcTimes.sunrise, sunCalcTimes.sunset);
-        this.drawCrossHairs(200, 200);
+        this.drawNight(radius, centerX, centerY, sunCalcTimes.nadir, sunCalcTimes.sunrise, sunCalcTimes.sunset);
+        this.drawSunArc(radius, centerX, centerY, sunCalcTimes.sunrise, sunCalcTimes.sunset);
+        this.drawCrossHairs(centerX, centerY);
         this.drawInfos(380, 30);
-        this.drawCircle();
+        this.drawCircle(radius, centerX, centerY);
 
         const sunPosition = SunCalc.getPosition(this.sunPosDate, this.lat, this.lng);
 
@@ -183,21 +169,21 @@ class SunPos {
         let startRadians = (sunPosition.azimuth - 30)* Math.PI / 180;
         let endRadians = (sunPosition.azimuth + 30) * Math.PI / 180;
         this.ctx.beginPath();
-        this.ctx.moveTo(200, 200);
-        this.ctx.arc(200, 200, 180, startRadians - 0.5*Math.PI, endRadians - 0.5*Math.PI);
+        this.ctx.moveTo(centerX, centerY);
+        this.ctx.arc(centerX, centerY, radius, startRadians - 0.5*Math.PI, endRadians - 0.5*Math.PI);
         this.ctx.closePath();
         this.ctx.fillStyle = "#ee000055";
         this.ctx.fill();
 
-        const sunPosOnOuterCircle = this.posOnCircle(180, sunPosition.azimuth * Math.PI / 180);
+        const sunPosOnOuterCircle = this.posOnCircle(radius, sunPosition.azimuth * Math.PI / 180);
         this.ctx.beginPath();
-        this.ctx.moveTo(200, 200);
-        this.ctx.lineTo(200 + sunPosOnOuterCircle.x, 200 + sunPosOnOuterCircle.y);
+        this.ctx.moveTo(centerX, centerY);
+        this.ctx.lineTo(centerX + sunPosOnOuterCircle.x, centerY + sunPosOnOuterCircle.y);
         this.ctx.lineWidth = 1;
         this.ctx.strokeStyle = "#ffff00";
         this.ctx.stroke();
-        const sunPosOnAltitudeCircle = this.posOnCircle(180 - 180 * sunPosition.altitude / 90, sunPosition.azimuth * Math.PI / 180)
-        this.drawSun(sunPosOnAltitudeCircle.x + 200, sunPosOnAltitudeCircle.y + 200)
+        const sunPosOnAltitudeCircle = this.posOnCircle(radius - 180 * sunPosition.altitude / 90, sunPosition.azimuth * Math.PI / 180)
+        this.drawSun(sunPosOnAltitudeCircle.x + centerX, sunPosOnAltitudeCircle.y + centerY)
     }
 
     screenToMapCoordinates() {

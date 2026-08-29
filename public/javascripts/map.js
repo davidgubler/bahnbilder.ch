@@ -50,6 +50,10 @@ var init = function() {
 
     map = new google.maps.Map(document.getElementById('mapCanvas'), mapOptions);
     const sunPos = new SunPos(map);
+    google.maps.event.addListener(map, "idle", () => {
+        // map has initialized
+        sunPos.updatePos();
+    });
     google.maps.event.addListener(map, "center_changed", () => {
         window.localStorage.setItem('map-zoom', map.getZoom());
         window.localStorage.setItem('map-lat', map.getCenter().lat());
