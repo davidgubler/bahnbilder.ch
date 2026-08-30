@@ -6,10 +6,6 @@ class SunPos {
         this.x = 300;
         this.y = 300;
 
-        const div = document.createElement('div');
-        div.style.cssText = 'width: 400px; height: 450px; position: fixed; left: 200px; top: 200px; pointer-events: none;';
-
-        document.body.appendChild(div);
 
         this.slider = document.createElement('input');
         this.slider.setAttribute('type', 'range');
@@ -28,6 +24,11 @@ class SunPos {
         startOfDay.setTime(this.sunPosDate.getTime());
         startOfDay.setHours(0,0,0,0);
         this.slider.value = ((this.sunPosDate.getTime() - startOfDay.getTime()) / 1000 / 60 / 5).toString();
+        const sliderDiv = document.createElement('div');
+        sliderDiv.appendChild(this.slider);
+
+        sliderDiv.style.cssText = 'width: 100%; max-width: 400px; height: 40px; position: absolute; bottom: 20px; background-color: black; left: calc(50% - 200px);';
+        map.getDiv().appendChild(sliderDiv);
 
 
         const div1 = document.createElement('div');
@@ -40,8 +41,9 @@ class SunPos {
         div2.append(this.canvas);
         map.getDiv().appendChild(div1);
 
-        div.appendChild(this.slider);
-        div.appendChild(document.createElement('br'));
+
+
+
         //div.appendChild(this.canvas);
 
         this.ctx = this.canvas.getContext("2d");
