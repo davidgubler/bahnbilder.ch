@@ -32,9 +32,9 @@ class SunPos {
 
 
         const div1 = document.createElement('div');
-        div1.style.cssText = 'position: relative; width: 100%; height: calc(100% - 100px); pointer-events: none;';
+        div1.style.cssText = 'position: relative; width: 100%; height: 100%; pointer-events: none;';
         const div2 = document.createElement('div');
-        div2.style.cssText = 'position: absolute; inset: 0; max-height: 100%; max-width: 100%; object-fit: contain; aspect-ratio: 1 / 1; margin-left: auto; margin-right: auto;';
+        div2.style.cssText = 'position: absolute; inset: 0; max-height: 100%; max-width: 100%; object-fit: contain; aspect-ratio: 1 / 1; margin-left: auto; margin-right: auto; padding: 50px;';
         div1.appendChild(div2);
         this.canvas = document.createElement('canvas');
         this.canvas.style.cssText = 'width: 100%; height: 100%;';
@@ -194,44 +194,9 @@ class SunPos {
         this.drawSun(sunPosOnAltitudeCircle.x + centerX, sunPosOnAltitudeCircle.y + centerY)
     }
 
-    screenToMapCoordinates() {
-        // Compensate for map position in page
-        const mapDiv = this.map.getDiv();
-        const mapPos = mapDiv.getBoundingClientRect();
-        let x = this.x - mapPos.x + 200;
-        let y = this.y - mapPos.y + 200;
-
-        // Get the current map bounds and projection
-        const bounds = map.getBounds();
-        const projection = map.getProjection();
-        if (!bounds || !projection) return null;
-
-        // Extract corners of the visible map area
-        const neBound = bounds.getNorthEast();
-        const swBound = bounds.getSouthWest();
-
-        // Convert corners into map point instances (world pixels)
-        const nePointInPx = projection.fromLatLngToPoint(neBound);
-        const swPointInPx = projection.fromLatLngToPoint(swBound);
-
-        // Calculate the percentage of where the pixel sits relative to the map container
-
-        const percentX = x / mapDiv.clientWidth;
-        const percentY = y / mapDiv.clientHeight;
-
-        // Interpolate the world point location
-        const worldX = (nePointInPx.x - swPointInPx.x) * percentX + swPointInPx.x;
-        const worldY = (swPointInPx.y - nePointInPx.y) * percentY + nePointInPx.y;
-
-        // Convert the world point back into a LatLng object
-        const worldPoint = new google.maps.Point(worldX, worldY);
-        return projection.fromPointToLatLng(worldPoint);
-    }
-
     updatePos() {
-        const coords = this.screenToMapCoordinates();
-        this.lat = coords.lat();
-        this.lng = coords.lng();
+        this.lat = this.map.getCenter().lat();
+        this.lng = this.map.getCenter().lng();
         this.draw();
     }
 }
