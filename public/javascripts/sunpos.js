@@ -84,16 +84,21 @@ class SunPos {
         this.ctx.fill();
     }
 
-    drawSunArc(radius, x, y,  sunrise, sunset) {
-        this.ctx.strokeStyle = "#ffff00";
+    drawSunArc(radius, x, y, sunrise, sunset) {
         this.ctx.beginPath();
-        for (let i = sunrise.getTime(); i < sunset.getTime(); i += 10*60*1000) {
+        this.ctx.strokeStyle = "#ffff00";
+        let sunPos = SunCalc.getPosition(sunrise, this.lat, this.lng);
+        let onCircle = this.posOnCircle(radius * (1 - sunPos.altitude / 90), sunPos.azimuth * Math.PI / 180);
+        this.ctx.moveTo(x + onCircle.x, y + onCircle.y);
+
+        for (let i = sunrise.getTime() + 10*60*1000; i < sunset.getTime(); i += 10*60*1000) {
             let sunPos = SunCalc.getPosition(new Date().setTime(i), this.lat, this.lng);
             let onCircle = this.posOnCircle(radius * (1 - sunPos.altitude / 90), sunPos.azimuth * Math.PI / 180);
             this.ctx.lineTo(x + onCircle.x, y + onCircle.y);
         }
-        let sunPos = SunCalc.getPosition(sunset, this.lat, this.lng);
-        let onCircle = this.posOnCircle(radius * (1 - sunPos.altitude / 90), sunPos.azimuth * Math.PI / 180);
+
+        sunPos = SunCalc.getPosition(sunset, this.lat, this.lng);
+        onCircle = this.posOnCircle(radius * (1 - sunPos.altitude / 90), sunPos.azimuth * Math.PI / 180);
         this.ctx.lineTo(x + onCircle.x, y + onCircle.y);
         this.ctx.stroke();
     }
@@ -127,6 +132,8 @@ class SunPos {
         this.ctx.beginPath();
         this.ctx.arc(x, y, r, 0, 2 * Math.PI);
         this.ctx.stroke();
+        this.ctx.fillStyle = "#40404030";
+        this.ctx.fill();
 
         for (let i = 10; i <= 90; i+=10) {
             this.ctx.strokeStyle = "#ffffff88";
@@ -158,11 +165,11 @@ class SunPos {
 
         const sunCalcTimes = SunCalc.getTimes(this.sunPosDate, this.lat, this.lng);
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.drawCircle(radius, centerX, centerY);
         this.drawNight(radius, centerX, centerY, sunCalcTimes.solarNoon, sunCalcTimes.sunrise, sunCalcTimes.sunset);
         this.drawSunArc(radius, centerX, centerY, sunCalcTimes.sunrise, sunCalcTimes.sunset);
         this.drawCrossHairs(centerX, centerY);
         this.drawInfos(380, 30);
-        this.drawCircle(radius, centerX, centerY);
 
         const sunPosition = SunCalc.getPosition(this.sunPosDate, this.lat, this.lng);
 
