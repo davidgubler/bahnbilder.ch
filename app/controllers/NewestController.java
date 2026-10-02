@@ -23,10 +23,10 @@ public class NewestController extends Controller {
         String lang = Lang.get(request);
 
         Search search = new Search(Search.SortBy.uploadDate, page);
-        long count = context.getPhotosModel().searchCount(search);
+        long count = context.getPhotosModel().searchCount(search, user);
         int lastPage = search.getLastPage(count);
         search.adjustPage(lastPage);
-        List<? extends Photo> photos = context.getPhotosModel().search(search);
+        List<? extends Photo> photos = context.getPhotosModel().search(search, user);
 
         return ok(views.html.newest.list.render(request, search.getPage(), lastPage, photos, user, lang));
     }

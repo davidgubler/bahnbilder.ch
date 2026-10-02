@@ -3,6 +3,7 @@ package controllers;
 import entities.File;
 import entities.Photo;
 import entities.PhotoResolution;
+import entities.User;
 import org.apache.pekko.util.ByteString;
 import play.http.HttpEntity;
 import play.mvc.*;
@@ -41,10 +42,11 @@ public class FilesController extends Controller {
 
     public Result original(Http.Request request, Integer photoId) {
         Context context = Context.get(request);
+        User user = context.getUsersModel().getFromRequest(request);
         Instant ifModifiedSince = getIfLastModifiedSince(request);
         String ifNoneMatch = request.header(Http.HeaderNames.IF_NONE_MATCH).orElse(null);
 
-        Photo photo = context.getPhotosModel().get(photoId);
+        Photo photo = context.getPhotosModel().get(photoId, user);
         if (photo == null) {
             throw new NotFoundException("Photo not found");
         }
@@ -73,10 +75,11 @@ public class FilesController extends Controller {
 
     public Result scaled(Http.Request request, Integer photoId, PhotoResolution.Size size) {
         Context context = Context.get(request);
+        User user = context.getUsersModel().getFromRequest(request);
         Instant ifModifiedSince = getIfLastModifiedSince(request);
         String ifNoneMatch = request.header(Http.HeaderNames.IF_NONE_MATCH).orElse(null);
 
-        Photo photo = context.getPhotosModel().get(photoId);
+        Photo photo = context.getPhotosModel().get(photoId, user);
         if (photo == null) {
             throw new NotFoundException("Photo not found");
         }

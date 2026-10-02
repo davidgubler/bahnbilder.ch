@@ -64,7 +64,7 @@ public class PhotoController extends Controller {
         Context context = Context.get(request);
         User user = context.getUsersModel().getFromRequest(request);
         String lang = Lang.get(request);
-        Photo photo = context.getPhotosModel().get(id);
+        Photo photo = context.getPhotosModel().get(id, user);
         if (photo == null) {
             throw new NotFoundException("Photo");
         }
@@ -77,7 +77,7 @@ public class PhotoController extends Controller {
         Context context = Context.get(request);
         User user = context.getUsersModel().getFromRequest(request);
         String lang = Lang.get(request);
-        Photo photo = context.getPhotosModel().get(id);
+        Photo photo = context.getPhotosModel().get(id, user);
         if (photo == null) {
             throw new NotFoundException("Photo");
         }
@@ -111,12 +111,12 @@ public class PhotoController extends Controller {
         state.photo.height = photo.getResXLarge().getHeight();
 
         if (search.getFreeText() == null) {
-            Photo next = context.getPhotosModel().getNext(photo, search);
+            Photo next = context.getPhotosModel().getNext(photo, search, user);
             state.next = next == null ? null : next.getId();
-            Photo prev = context.getPhotosModel().getPrev(photo, search);
+            Photo prev = context.getPhotosModel().getPrev(photo, search, user);
             state.prev = prev == null ? null : prev.getId();
         } else {
-            play.libs.F.Tuple<Photo, Photo> prevNext = FreeTextSearch.getPrevNext(context, photo, search);
+            play.libs.F.Tuple<Photo, Photo> prevNext = FreeTextSearch.getPrevNext(context, photo, search, user);
             state.next = prevNext._1 == null ? null : prevNext._1.getId();
             state.prev = prevNext._2 == null ? null : prevNext._2.getId();
         }
@@ -158,7 +158,7 @@ public class PhotoController extends Controller {
     public Result rate(Http.Request request, Integer id) {
         Context context = Context.get(request);
         User user = context.getUsersModel().getFromRequest(request);
-        Photo photo = context.getPhotosModel().get(id);
+        Photo photo = context.getPhotosModel().get(id, user);
         if (photo == null) {
             throw new NotFoundException("Photo");
         }
@@ -181,7 +181,7 @@ public class PhotoController extends Controller {
             throw new NotAllowedException();
         }
         List<Integer> photoIds = InputUtils.toListOfIntegers(ids, ",");
-        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds).sorted(Comparator.comparing(Photo::getId)).toList();
+        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds, user).sorted(Comparator.comparing(Photo::getId)).toList();
         if (photos.isEmpty()) {
             throw new NotFoundException("Photos");
         }
@@ -205,7 +205,7 @@ public class PhotoController extends Controller {
         Context context = Context.get(request);
         User user = context.getUsersModel().getFromRequest(request);
         List<Integer> photoIds = InputUtils.toListOfIntegers(ids, ",");
-        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds).sorted(Comparator.comparing(Photo::getId)).toList();
+        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds, user).sorted(Comparator.comparing(Photo::getId)).toList();
         if (photos.isEmpty()) {
             throw new NotFoundException("Photos");
         }
@@ -231,7 +231,7 @@ public class PhotoController extends Controller {
             throw new NotAllowedException();
         }
         List<Integer> photoIds = InputUtils.toListOfIntegers(ids, ",");
-        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds).sorted().toList();
+        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds, user).sorted().toList();
         if (photos.isEmpty()) {
             throw new NotFoundException("Photos");
         }
@@ -248,7 +248,7 @@ public class PhotoController extends Controller {
         Context context = Context.get(request);
         User user = context.getUsersModel().getFromRequest(request);
         List<Integer> photoIds = InputUtils.toListOfIntegers(ids, ",");
-        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds).sorted().toList();
+        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds, user).sorted().toList();
         if (photos.isEmpty()) {
             throw new NotFoundException("Photos");
         }
@@ -260,7 +260,7 @@ public class PhotoController extends Controller {
     public Result replace(Http.Request request, Integer id, String returnUrl) {
         Context context = Context.get(request);
         User user = context.getUsersModel().getFromRequest(request);
-        Photo photo = context.getPhotosModel().get(id);
+        Photo photo = context.getPhotosModel().get(id, user);
         String lang = Lang.get(request);
         if (user == null || !user.canEdit(photo)) {
             throw new NotAllowedException();
@@ -271,7 +271,7 @@ public class PhotoController extends Controller {
     public Result replacePost(Http.Request request, Integer id, String returnUrl) {
         Context context = Context.get(request);
         User user = context.getUsersModel().getFromRequest(request);
-        Photo photo = context.getPhotosModel().get(id);
+        Photo photo = context.getPhotosModel().get(id, user);
         String lang = Lang.get(request);
 
         Http.MultipartFormData<Object> data = request.body().asMultipartFormData();
@@ -294,7 +294,7 @@ public class PhotoController extends Controller {
         }
         String lang = Lang.get(request);
         List<Integer> photoIds = InputUtils.toListOfIntegers(ids, ",");
-        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds).sorted(Comparator.comparing(Photo::getId)).toList();
+        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds, user).sorted(Comparator.comparing(Photo::getId)).toList();
         if (photos.isEmpty()) {
             throw new NotFoundException("Photos");
         }
@@ -317,7 +317,7 @@ public class PhotoController extends Controller {
         Context context = Context.get(request);
         User user = context.getUsersModel().getFromRequest(request);
         List<Integer> photoIds = InputUtils.toListOfIntegers(ids, ",");
-        List<? extends Photo> photoList = context.getPhotosModel().getByIds(photoIds).toList();
+        List<? extends Photo> photoList = context.getPhotosModel().getByIds(photoIds, user).toList();
         if (photoList.isEmpty()) {
             throw new NotFoundException("Photos");
         }
@@ -374,7 +374,7 @@ public class PhotoController extends Controller {
             throw new NotAllowedException();
         }
         List<Integer> photoIds = InputUtils.toListOfIntegers(ids, ",");
-        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds).sorted(Comparator.comparing(Photo::getId)).toList();
+        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds, user).sorted(Comparator.comparing(Photo::getId)).toList();
         if (photos.isEmpty()) {
             throw new NotFoundException("Photos");
         }
@@ -382,7 +382,7 @@ public class PhotoController extends Controller {
         for (Photo photo : photos) {
             if (photo.getLat() != null && photo.getLng() != null) {
                 Set<Location> locationSet = new HashSet<>();
-                context.getPhotosModel().search(new Search(null, photo.getCoordinates(), Config.PHOTO_SPOT_RADIUS_KM)).stream().filter(p -> p.getLocation() != null).forEach(p -> locationSet.add(p.getLocation()));
+                context.getPhotosModel().search(new Search(null, photo.getCoordinates(), Config.PHOTO_SPOT_RADIUS_KM), user).stream().filter(p -> p.getLocation() != null).forEach(p -> locationSet.add(p.getLocation()));
                 if (!locationSet.isEmpty()) {
                     return ok(MAPPER.writeValueAsString(locationSet.stream().sorted(LocalizedComparator.get(lang)).collect(Collectors.toUnmodifiableList()))).as(Http.MimeTypes.JSON);
                 }
@@ -405,7 +405,7 @@ public class PhotoController extends Controller {
             throw new NotAllowedException();
         }
         List<Integer> photoIds = InputUtils.toListOfIntegers(ids, ",");
-        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds).sorted(Comparator.comparing(Photo::getId)).toList();
+        List<? extends Photo> photos = context.getPhotosModel().getByIds(photoIds, user).sorted(Comparator.comparing(Photo::getId)).toList();
 
         for (Photo photo : photos) {
             if (photo.getCountry() != null && photo.getLat() != null && photo.getLng() != null && photo.getPhotoDate() != null) {

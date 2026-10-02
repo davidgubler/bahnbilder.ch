@@ -308,7 +308,7 @@ public class ManagementController extends Controller {
         if (user == null) {
             throw new NotAllowedException();
         }
-        List<? extends Photo> photos = context.getPhotosModel().getByIds(InputUtils.toListOfIntegers(ids, ",")).filter(p -> user.canEdit(p)).toList();
+        List<? extends Photo> photos = context.getPhotosModel().getByIds(InputUtils.toListOfIntegers(ids, ","), user).filter(p -> user.canEdit(p)).toList();
 
         List<Integer> photoIdsWithSolution = new ArrayList<>();
         for (Photo photo : photos) {

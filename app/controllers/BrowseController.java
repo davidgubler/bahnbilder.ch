@@ -46,10 +46,10 @@ public class BrowseController extends Controller {
             throw new NotFoundException("Country");
         }
 
-        long count = context.getPhotosModel().searchCount(search);
+        long count = context.getPhotosModel().searchCount(search, user);
         int lastPage = search.getLastPage(count);
         search.adjustPage(lastPage);
-        List<? extends Photo> photos = context.getPhotosModel().search(search);
+        List<? extends Photo> photos = context.getPhotosModel().search(search, user);
 
         List<? extends Operator> operators = null;
         if (search.getCountryId() != null && search.getOperatorId() == null) {
@@ -57,7 +57,7 @@ public class BrowseController extends Controller {
         }
 
         Integer mostCommonVehicleClass = context.getPhotosModel().getMostCommonVehicleClassByCountry(search.getCountry());
-        List<? extends Photo> mostPopularVehicleClassPhotos = context.getPhotosModel().search(new Search(search.getCountry(), mostCommonVehicleClass, Search.SortBy.rating));
+        List<? extends Photo> mostPopularVehicleClassPhotos = context.getPhotosModel().search(new Search(search.getCountry(), mostCommonVehicleClass, Search.SortBy.rating), user);
 
         int vehicleClassCount = context.getPhotosModel().getVehicleClassCountByCountry(search.getCountry());
         int vehicleCount = context.getPhotosModel().getVehicleCountByCountry(search.getCountry());
@@ -84,10 +84,10 @@ public class BrowseController extends Controller {
         ContextSearch search = new ContextSearch(context, page, country == null ? null : country.getId(), operatorId, null);
         injector.injectMembers(search);
 
-        long count = context.getPhotosModel().searchCount(search);
+        long count = context.getPhotosModel().searchCount(search, user);
         int lastPage = search.getLastPage(count);
         search.adjustPage(lastPage);
-        List<? extends Photo> photos = context.getPhotosModel().search(search);
+        List<? extends Photo> photos = context.getPhotosModel().search(search, user);
 
         List<? extends VehicleClass> vehicleClasses = null;
         if (search.getCountryId() != null && search.getOperatorId() != null && search.getVehicleClassId() == null) {
@@ -107,10 +107,10 @@ public class BrowseController extends Controller {
         ContextSearch search = new ContextSearch(context, page, country == null ? null : country.getId(), operatorId, vehicleClassId);
         injector.injectMembers(search);
 
-        long count = context.getPhotosModel().searchCount(search);
+        long count = context.getPhotosModel().searchCount(search, user);
         int lastPage = search.getLastPage(count);
         search.adjustPage(lastPage);
-        List<? extends Photo> photos = context.getPhotosModel().search(search);
+        List<? extends Photo> photos = context.getPhotosModel().search(search, user);
 
         return ok(views.html.browse.vehicleClass.render(request, country, operator, vehicleClass, search, lastPage, photos, user, lang));
     }

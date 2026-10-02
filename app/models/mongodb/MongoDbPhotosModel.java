@@ -102,6 +102,13 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         return photo;
     }
 
+    private Filter[] userFilter(User user) {
+        if (user == null) {
+            return new Filter[]{ Filters.ne("internal", true) };
+        }
+        return new Filter[0];
+    }
+
     @Override
     public Photo create(Exif exif, int userId, String uploadFilename, Instant uploadDate, LocalDateTime photoDate, Integer licenseId, Integer photoTypeId, Integer countryId, Double longitude, Double latitude, Integer operatorId, Integer vehicleClassId, Integer nr) {
         Photo photo = null;
@@ -121,8 +128,25 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
     }
 
     @Override
-    public List<Photo> getFeatured(VehicleClassesModel vehicleClassesModel, VehicleTypesModel vehicleTypesModel) {
+    public Photo get(Integer id, User user) {
+        if (id == null) {
+            return null;
+        }
+        return query().filter(userFilter(user)).filter(Filters.eq("numId", id)).first();
+    }
+
+    @Override
+    public Stream<? extends Photo> getByIds(Collection<Integer> ids, User user) {
+        if (ids == null || ids.isEmpty()) {
+            return Stream.empty();
+        }
+        return query().filter(userFilter(user)).filter(Filters.in("numId", ids)).stream();
+    }
+
+    @Override
+    public List<Photo> getFeatured(VehicleClassesModel vehicleClassesModel, VehicleTypesModel vehicleTypesModel, User user) {
         List<AggregationDate> lastAggregationDates = mongoDb.getDs().aggregate(MongoDbPhoto.class)
+                .match(userFilter(user))
                 .match(Filters.ne("photoDate", null), Filters.ne("vehicleClassId", null), Filters.ne("locationId", null))
                 .group(Group.group().field("_id", DateExpressions.dateToString().date("$photoDate").format("%Y-%m-%d")))
                 .sort(Sort.sort().descending("_id"))
@@ -135,6 +159,7 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
 
         for (LocalDate date : lastDates) {
             List<MongoDbPhoto> candidates = new ArrayList(query()
+                    .filter(userFilter(user))
                     .filter(Filters.gte("photoDate", date))
                     .filter(Filters.lt("photoDate", date.plusDays(1)))
                     .stream().toList());
@@ -271,14 +296,14 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
     }
 
     @Override
-    public List<? extends Photo> search(Search search) {
+    public List<? extends Photo> search(Search search, User user) {
         FindOptions findOptions = getSortOptions(search.getSortBy(), false);
 
         //findOptions.projection().include("numId", "resolutions", "operatorId", "vehicleClassId", "locationId", "nr"); // not worth it
         findOptions.skip((search.getPage() - 1) * search.getResultsPerPage());
         findOptions.limit(search.getResultsPerPage());
 
-        List<MongoDbPhoto> photos = query(search).stream(findOptions).toList();
+        List<MongoDbPhoto> photos = query(search, user).stream(findOptions).toList();
 
         // prepopulate some data
         Map<Integer, ? extends Operator> operators = operatorsModel.getByIdsAsMap(photos.stream().map(Photo::getOperatorId).filter(Objects::nonNull).collect(Collectors.toSet()));
@@ -293,8 +318,8 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
     }
 
     @Override
-    public Stream<? extends Photo> searchAll(Search search) {
-        return query(search).stream();
+    public Stream<? extends Photo> searchAll(Search search, User user) {
+        return query(search, user).stream();
     }
 
     private Filter getFilter(String field, Object value, boolean forward) {
@@ -322,8 +347,8 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         return findOptions;
     }
 
-    public Photo getPrev(Photo photo, Search search, boolean forward) {
-        Query<MongoDbPhoto> query = query(search);
+    public Photo getPrev(Photo photo, Search search, boolean forward, User user) {
+        Query<MongoDbPhoto> query = query(search, user);
         if (search.getSortBy() == Search.SortBy.views) {
             query = query.filter(Filters.or(
                     getFilter("views", photo.getViews(), forward),
@@ -383,18 +408,18 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
     }
 
     @Override
-    public Photo getPrev(Photo photo, Search search) {
-        return getPrev(photo, search, false);
+    public Photo getPrev(Photo photo, Search search, User user) {
+        return getPrev(photo, search, false, user);
     }
 
     @Override
-    public Photo getNext(Photo photo, Search search) {
-        return getPrev(photo, search, true);
+    public Photo getNext(Photo photo, Search search, User user) {
+        return getPrev(photo, search, true, user);
     }
 
     @Override
-    public long searchCount(Search search) {
-        return query(search).count();
+    public long searchCount(Search search, User user) {
+        return query(search, user).count();
     }
 
     @Override
@@ -498,8 +523,8 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         return nrs;
     }
 
-    private Query<MongoDbPhoto> queryIncompleteSearch(Search search) {
-        Query<MongoDbPhoto> q = query();
+    private Query<MongoDbPhoto> queryIncompleteSearch(Search search, User user) {
+        Query<MongoDbPhoto> q = query().filter(userFilter(user));
         q = q.filter(Filters.eq("userId", search.getAuthorId()));
         q = q.filter(
             Filters.or(
@@ -519,14 +544,14 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
         return q;
     }
 
-    private Query<MongoDbPhoto> query(Search search) {
+    private Query<MongoDbPhoto> query(Search search, User user) {
         if (search instanceof IncompleteSearch) {
-            return queryIncompleteSearch(search);
+            return queryIncompleteSearch(search, user);
         }
 
         if (search.getFreeText() != null) {
-            List<TokenResult> tokenResults = ((ContextSearch)search).getFreeTextSearchTokenResults();
-            Query<MongoDbPhoto> query = query();
+            List<TokenResult> tokenResults = ((ContextSearch)search).getFreeTextSearchTokenResults(user);
+            Query<MongoDbPhoto> query = query().filter(userFilter(user));
             for (TokenResult tr : tokenResults) {
                 if (tr.ignored()) {
                     continue;
@@ -547,7 +572,7 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
             return query;
         }
 
-        Query<MongoDbPhoto> q = query();
+        Query<MongoDbPhoto> q = query().filter(userFilter(user));
 
         if (search.getAuthorId() != null) {
             q = q.filter(Filters.eq("userId", search.getAuthorId()));
@@ -642,8 +667,8 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
     }
 
     @Override
-    public Stream<? extends Photo> getCoordinates(Search search) {
-        return query(search)
+    public Stream<? extends Photo> getCoordinates(Search search, User user) {
+        return query(search, user)
                 .filter(Filters.ne("lat", null), Filters.ne("lng", null))
                 .stream(new FindOptions().sort(dev.morphia.query.Sort.descending("photoDate")).projection().include("numId", "lat", "lng"));
     }
@@ -930,8 +955,8 @@ public class MongoDbPhotosModel extends MongoDbModel<MongoDbPhoto> implements Ph
     }
 
     @Override
-    public Map<? extends Photo, Float> searchFreeText(String freeText) {
-        return query().filter(Filters.text(freeText)).stream(new FindOptions().projection().project(Meta.textScore("searchScore"))).collect(Collectors.toMap(p -> p, p -> p.getSearchScore()));
+    public Map<? extends Photo, Float> searchFreeText(String freeText, User user) {
+        return query().filter(userFilter(user)).filter(Filters.text(freeText)).stream(new FindOptions().projection().project(Meta.textScore("searchScore"))).collect(Collectors.toMap(p -> p, p -> p.getSearchScore()));
     }
 
     @Entity
