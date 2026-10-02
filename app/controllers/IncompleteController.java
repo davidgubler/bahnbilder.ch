@@ -25,10 +25,10 @@ public class IncompleteController extends Controller {
         String lang = Lang.get(request);
 
         Search search = new IncompleteSearch(user, page);
-        long count = context.getPhotosModel().searchCount(search);
+        long count = context.getPhotosModel().searchCount(search, user);
         int lastPage = search.getLastPage(count);
         search.adjustPage(lastPage);
-        List<? extends Photo> photos = context.getPhotosModel().search(search);
+        List<? extends Photo> photos = context.getPhotosModel().search(search, user);
 
         return ok(views.html.incomplete.list.render(request, search.getPage(), lastPage, photos, user, lang));
     }

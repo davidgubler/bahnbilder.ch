@@ -44,8 +44,8 @@ public class ContextPhotosModel extends ContextModel implements PhotosModel {
     }
 
     @Override
-    public Photo get(Integer id) {
-        return call(() -> photosModel.get(id));
+    public Photo get(Integer id, User user) {
+        return call(() -> photosModel.get(id, user));
     }
 
     @Override
@@ -54,13 +54,13 @@ public class ContextPhotosModel extends ContextModel implements PhotosModel {
     }
 
     @Override
-    public Stream<? extends Photo> getByIds(Collection<Integer> ids) {
-        return call(() -> photosModel.getByIds(ids));
+    public Stream<? extends Photo> getByIds(Collection<Integer> ids, User user) {
+        return call(() -> photosModel.getByIds(ids, user));
     }
 
     @Override
-    public List<Photo> getFeatured(VehicleClassesModel vehicleClassesModel, VehicleTypesModel vehicleTypesModel) {
-        return call(() -> photosModel.getFeatured(vehicleClassesModel, vehicleTypesModel));
+    public List<Photo> getFeatured(VehicleClassesModel vehicleClassesModel, VehicleTypesModel vehicleTypesModel, User user) {
+        return call(() -> photosModel.getFeatured(vehicleClassesModel, vehicleTypesModel, user));
     }
 
     @Override
@@ -89,28 +89,28 @@ public class ContextPhotosModel extends ContextModel implements PhotosModel {
     }
 
     @Override
-    public List<? extends Photo> search(Search search) {
-        return call(() -> photosModel.search(search));
+    public List<? extends Photo> search(Search search, User user) {
+        return call(() -> photosModel.search(search, user));
     }
 
     @Override
-    public Stream<? extends Photo> searchAll(Search search) {
-        return call(() -> photosModel.searchAll(search));
+    public Stream<? extends Photo> searchAll(Search search, User user) {
+        return call(() -> photosModel.searchAll(search, user));
     }
 
     @Override
-    public Photo getNext(Photo photo, Search search) {
-        return call(() -> photosModel.getNext(photo, search));
+    public Photo getNext(Photo photo, Search search, User user) {
+        return call(() -> photosModel.getNext(photo, search, user));
     }
 
     @Override
-    public Photo getPrev(Photo photo, Search search) {
-        return call(() -> photosModel.getPrev(photo, search));
+    public Photo getPrev(Photo photo, Search search, User user) {
+        return call(() -> photosModel.getPrev(photo, search, user));
     }
 
     @Override
-    public long searchCount(Search search) {
-        return call(() -> photosModel.searchCount(search));
+    public long searchCount(Search search, User user) {
+        return call(() -> photosModel.searchCount(search, user));
     }
 
     @Override
@@ -159,8 +159,8 @@ public class ContextPhotosModel extends ContextModel implements PhotosModel {
     }
 
     @Override
-    public Stream<? extends Photo> getCoordinates(Search search) {
-        return call(() -> photosModel.getCoordinates(search));
+    public Stream<? extends Photo> getCoordinates(Search search, User user) {
+        return call(() -> photosModel.getCoordinates(search, user));
     }
 
     @Override
@@ -269,7 +269,7 @@ public class ContextPhotosModel extends ContextModel implements PhotosModel {
     }
 
     @Override
-    public Map<? extends Photo, Float> searchFreeText(String freeText) {
-        return call(() -> photosModel.searchFreeText(freeText));
+    public Map<? extends Photo, Float> searchFreeText(String freeText, User user) {
+        return call(() -> photosModel.searchFreeText(freeText, user));
     }
 }

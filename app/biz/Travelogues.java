@@ -22,7 +22,7 @@ public class Travelogues {
         Map<String, String> errors = new HashMap<>();
         InputUtils.validateString(title, "title", errors);
         Integer titlePhotoId = InputUtils.toInt(titlePhoto);
-        if (titlePhoto != null && context.getPhotosModel().get(titlePhotoId) == null) {
+        if (titlePhoto != null && context.getPhotosModel().get(titlePhotoId, null) == null) {
             errors.put("titlePhoto", ErrorMessages.INVALID_PHOTO_ID);
         }
         LocalDate date = InputUtils.validateDate(dateStr, "date", true, errors);
@@ -49,7 +49,7 @@ public class Travelogues {
         Map<String, String> errors = new HashMap<>();
         InputUtils.validateString(title, "title", errors);
         Integer titlePhotoId = InputUtils.toInt(titlePhoto);
-        if (titlePhoto != null && context.getPhotosModel().get(titlePhotoId) == null) {
+        if (titlePhoto != null && context.getPhotosModel().get(titlePhotoId, null) == null) {
             errors.put("titlePhoto", ErrorMessages.INVALID_PHOTO_ID);
         }
         LocalDate date = InputUtils.validateDate(dateStr, "date", true, errors);

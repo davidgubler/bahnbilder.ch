@@ -37,7 +37,7 @@ public class VehicleOverviewController extends Controller {
 
             Search search = new Search(operator.getId(), vehicleClass.getId()).withSortBy(Search.SortBy.photoType);
             List<Integer> nrs = context.getPhotosModel().getNrsByOperatorAndVehicleClassId(operator.getId(), vehicleClass.getId());
-            vehicleClassSummaryByOperator.put(operator, new VehicleClassSummary(context.getPhotosModel().search(search).get(0), search, context.getPhotosModel().searchCount(search), vehicleClass, vehicleSeries, nrs));
+            vehicleClassSummaryByOperator.put(operator, new VehicleClassSummary(context.getPhotosModel().search(search, user).get(0), search, context.getPhotosModel().searchCount(search, user), vehicleClass, vehicleSeries, nrs));
         }
         return ok(views.html.vehicleOverview.vehicleClass.render(request, vehicleClass, vehicleSeries, operators, countriesByOperator, vehicleClassSummaryByOperator, user, lang));
     }
@@ -73,10 +73,10 @@ public class VehicleOverviewController extends Controller {
             List<VehicleClassSummary> summaries = new ArrayList<>();
             for (VehicleClass vehicleClass : vehicleClasses) {
                 Search search = new Search(operator.getId(), vehicleClass.getId()).withSortBy(Search.SortBy.photoType);
-                long count = context.getPhotosModel().searchCount(search);
+                long count = context.getPhotosModel().searchCount(search, user);
                 if (count > 0) {
                     List<Integer> nrs = context.getPhotosModel().getNrsByOperatorAndVehicleClassId(operator.getId(), vehicleClass.getId());
-                    summaries.add(new VehicleClassSummary(context.getPhotosModel().search(search).get(0), search, count, vehicleClass, vehicleSeries, nrs));
+                    summaries.add(new VehicleClassSummary(context.getPhotosModel().search(search, user).get(0), search, count, vehicleClass, vehicleSeries, nrs));
                 }
             }
             vehicleClassSummariesByOperator.put(operator, summaries);
@@ -101,7 +101,7 @@ public class VehicleOverviewController extends Controller {
         Map<VehicleType, List<VehicleClassSummary>> summariesByVehicleType = new HashMap<>();
         for (VehicleClass vehicleClass : vehicleClasses) {
             Search search = new Search(operator.getId(), vehicleClass.getId()).withSortBy(Search.SortBy.photoType);
-            long count = context.getPhotosModel().searchCount(search);
+            long count = context.getPhotosModel().searchCount(search, user);
             if (count > 0) {
                 List<Integer> nrs = context.getPhotosModel().getNrsByOperatorAndVehicleClassId(operator.getId(), vehicleClass.getId());
                 VehicleType vehicleType = vehicleClass.getVehicleType();
@@ -111,7 +111,7 @@ public class VehicleOverviewController extends Controller {
                 if (!summariesByVehicleType.containsKey(vehicleType)) {
                     summariesByVehicleType.put(vehicleType, new ArrayList<>());
                 }
-                summariesByVehicleType.get(vehicleType).add(new VehicleClassSummary(context.getPhotosModel().search(search).get(0), search, count, vehicleClass, vehicleClass.getVehicleSeries(), nrs));
+                summariesByVehicleType.get(vehicleType).add(new VehicleClassSummary(context.getPhotosModel().search(search, user).get(0), search, count, vehicleClass, vehicleClass.getVehicleSeries(), nrs));
             }
         }
 

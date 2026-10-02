@@ -51,7 +51,7 @@ public class PicAuto extends Node {
 
     @Override
     public String toHtml(String lang, PhotosModel photosModel) {
-        Photo photo = photosModel.get(id);
+        Photo photo = photosModel.get(id, null);
         if (photo == null) {
             return "<br /><b>&gt;&gt; PHOTO ID " + id + " NOT FOUND! &lt;&lt;</b><br />\n";
         }
@@ -60,7 +60,7 @@ public class PicAuto extends Node {
 
     @Override
     public String toBBCode(String lang, PhotosModel photosModel) {
-        Photo photo = photosModel.get(id);
+        Photo photo = photosModel.get(id, null);
         if (photo == null) {
             return "[b]>> PHOTO ID " + id + " NOT FOUND! <<[/b]\n";
         }

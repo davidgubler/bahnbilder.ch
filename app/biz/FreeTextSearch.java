@@ -7,9 +7,9 @@ import entities.search.Search;
 import entities.search.TokenResult;
 import play.libs.F;
 import utils.Context;
+import utils.TriFunction;
 
 import java.util.*;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -19,9 +19,9 @@ public class FreeTextSearch {
 
         private final String field;
         private final Function<Photo, Integer> photoGetFunction;
-        private final BiFunction<Context, String, Map<T, Float>> searchFreeTextFunction;
+        private final TriFunction<Context, String, User, Map<T, Float>> searchFreeTextFunction;
 
-        public SearchCriterion(String field, Function<Photo, Integer> photoGetFunction, BiFunction<Context, String, Map<T, Float>> searchFreeTextFunction) {
+        public SearchCriterion(String field, Function<Photo, Integer> photoGetFunction, TriFunction<Context, String, User, Map<T, Float>> searchFreeTextFunction) {
             this.field = field;
             this.photoGetFunction = photoGetFunction;
             this.searchFreeTextFunction = searchFreeTextFunction;
@@ -31,8 +31,8 @@ public class FreeTextSearch {
             return photoGetFunction.apply(photo);
         }
 
-        public Map<T, Float> search(Context context, String token) {
-            return searchFreeTextFunction.apply(context, token);
+        public Map<T, Float> search(Context context, String token, User user) {
+            return searchFreeTextFunction.apply(context, token, user);
         }
 
         public String getField() {
@@ -55,17 +55,17 @@ public class FreeTextSearch {
     public static List<SearchCriterion> SEARCH_CRITERIA;
     static {
         SEARCH_CRITERIA = List.of(
-                new SearchCriterion<>("userId", Photo::getUserId, (c, s) -> c.getUsersModel().searchFreeText(s)),
-                new SearchCriterion<>("countryId", Photo::getCountryId, (c, s) -> c.getCountriesModel().searchFreeText(s)),
-                new SearchCriterion<>("locationId", Photo::getLocationId, (c, s) -> c.getLocationsModel().searchFreeText(s)),
-                new SearchCriterion<>("operatorId", Photo::getOperatorId, (c, s) -> c.getOperatorsModel().searchFreeText(s)),
-                new SearchCriterion<>("vehicleClassId", Photo::getVehicleClassId, (c, s) -> c.getVehicleClassesModel().searchFreeText(s)),
-                new SearchCriterion<>("vehicleClassId", Photo::getVehicleClassId, (c, s) -> vehicleSeriesToClassMap(c, c.getVehicleSeriesModel().searchFreeText(s))),
-                new SearchCriterion<>("numId", Photo::getId, (c, s) -> c.getPhotosModel().searchFreeText(s)),
-                new SearchCriterion<>("numId", Photo::getId, (c, s) -> {
+                new SearchCriterion<>("userId", Photo::getUserId, (c, s, u) -> c.getUsersModel().searchFreeText(s)),
+                new SearchCriterion<>("countryId", Photo::getCountryId, (c, s, u) -> c.getCountriesModel().searchFreeText(s)),
+                new SearchCriterion<>("locationId", Photo::getLocationId, (c, s, u) -> c.getLocationsModel().searchFreeText(s)),
+                new SearchCriterion<>("operatorId", Photo::getOperatorId, (c, s, u) -> c.getOperatorsModel().searchFreeText(s)),
+                new SearchCriterion<>("vehicleClassId", Photo::getVehicleClassId, (c, s, u) -> c.getVehicleClassesModel().searchFreeText(s)),
+                new SearchCriterion<>("vehicleClassId", Photo::getVehicleClassId, (c, s, u) -> vehicleSeriesToClassMap(c, c.getVehicleSeriesModel().searchFreeText(s))),
+                new SearchCriterion<>("numId", Photo::getId, (c, s, u) -> c.getPhotosModel().searchFreeText(s, u)),
+                new SearchCriterion<>("numId", Photo::getId, (c, s, u) -> {
                     // This is inefficient because we first search for photos with the given vehicle number and then run another query with the photo IDs... But it fits into the SearchCriterion pattern.
                     try {
-                        return c.getPhotosModel().search(new Search().withResultsPerPage(Integer.MAX_VALUE).withNr(Integer.parseInt(s))).stream().collect(Collectors.toMap(p -> p, p -> 1.0f));
+                        return c.getPhotosModel().search(new Search().withResultsPerPage(Integer.MAX_VALUE).withNr(Integer.parseInt(s)), u).stream().collect(Collectors.toMap(p -> p, p -> 1.0f));
                     } catch (NumberFormatException e) {
                         return Collections.emptyMap();
                     }
@@ -88,9 +88,9 @@ public class FreeTextSearch {
         return points[0];
     }
 
-    public static List<? extends Photo> search(Context context, ContextSearch search) {
-        List<? extends Photo> photos = new ArrayList<>(context.getPhotosModel().searchAll(search).toList());
-        Collections.sort(photos, new PhotoRankComparator(search.getFreeTextSearchTokenResults()));
+    public static List<? extends Photo> search(Context context, ContextSearch search, User user) {
+        List<? extends Photo> photos = new ArrayList<>(context.getPhotosModel().searchAll(search, user).toList());
+        Collections.sort(photos, new PhotoRankComparator(search.getFreeTextSearchTokenResults(user)));
         return photos;
     }
 
@@ -129,8 +129,8 @@ public class FreeTextSearch {
         }
     }
 
-    public static F.Tuple<Photo, Photo> getPrevNext(Context context, Photo photo, ContextSearch search) {
-        List<? extends Photo> photos = search(context, search);
+    public static F.Tuple<Photo, Photo> getPrevNext(Context context, Photo photo, ContextSearch search, User user) {
+        List<? extends Photo> photos = search(context, search, user);
         int pos = photos.indexOf(photo);
         if (pos == -1) {
             return new F.Tuple<>(null, null);

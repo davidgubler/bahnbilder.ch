@@ -132,7 +132,7 @@ public class ContextSearch extends Search {
         return tokens.stream().map(t -> t.trim()).filter(t -> !t.isEmpty()).toList();
     }
 
-    public List<TokenResult> getFreeTextSearchTokenResults() {
+    public List<TokenResult> getFreeTextSearchTokenResults(User user) {
         if (freeTextSearchTokenResults == null) {
             List<String> tokens = tokenize(getFreeText());
 
@@ -142,7 +142,7 @@ public class ContextSearch extends Search {
 
                 Map<FreeTextSearch.SearchCriterion<NumIdEntity>, Map<NumIdEntity, Float>> results = new HashMap<>();
                 for (FreeTextSearch.SearchCriterion sc : FreeTextSearch.SEARCH_CRITERIA) {
-                    results.put(sc, sc.search(context, quotedToken));
+                    results.put(sc, sc.search(context, quotedToken, user));
                 }
 
                 tokenResults.add(new TokenResult(token, results));
@@ -152,11 +152,11 @@ public class ContextSearch extends Search {
         return freeTextSearchTokenResults;
     }
 
-    public String getFreeTextActive() {
-        return StringUtils.join(getFreeTextSearchTokenResults().stream().filter(tr -> !tr.ignored()).map(tr -> tr.getToken()).toList(), " ");
+    public String getFreeTextActive(User user) {
+        return StringUtils.join(getFreeTextSearchTokenResults(user).stream().filter(tr -> !tr.ignored()).map(tr -> tr.getToken()).toList(), " ");
     }
 
-    public List<String> getFreeTextInactive() {
-        return getFreeTextSearchTokenResults().stream().filter(tr -> tr.ignored()).map(tr -> tr.getToken()).toList();
+    public List<String> getFreeTextInactive(User user) {
+        return getFreeTextSearchTokenResults(user).stream().filter(tr -> tr.ignored()).map(tr -> tr.getToken()).toList();
     }
 }

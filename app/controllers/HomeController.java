@@ -19,7 +19,7 @@ public class HomeController extends Controller {
         User user = context.getUsersModel().getFromRequest(request);
         String lang = Lang.get(request);
 
-        List<Photo> featured = context.getPhotosModel().getFeatured(context.getVehicleClassesModel(), context.getVehicleTypesModel());
+        List<Photo> featured = context.getPhotosModel().getFeatured(context.getVehicleClassesModel(), context.getVehicleTypesModel(), user);
         List<? extends Travelogue> travelogues = context.getTraveloguesModel().getFeatured();
         List<? extends AggregationCountryViews> countryViews = context.getPhotosModel().getTopCountryIdsByViews();
 

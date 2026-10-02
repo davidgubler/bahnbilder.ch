@@ -112,7 +112,7 @@ public class MongoDbTravelogue implements MongoDbEntity, Travelogue, ContextAwar
     @Override
     public Photo getTitlePhoto() {
         if (titlePhoto == null) {
-            titlePhoto = context.getPhotosModel().get(titlePhotoId);
+            titlePhoto = context.getPhotosModel().get(titlePhotoId, null);
         }
         return titlePhoto;
     }

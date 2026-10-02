@@ -39,7 +39,7 @@ public abstract class MongoDbModel<T extends MongoDbEntity> {
     }
 
     protected Query<T> query() {
-        return getDs().find(clazz);
+        return getDs().find(clazz).filter();
     }
 
     protected Query<T> query(Object entity) {

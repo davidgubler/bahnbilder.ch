@@ -83,7 +83,7 @@ public class MongoDbOperatorEra implements OperatorEra {
     @Override
     public long getSearchCount() {
         if (count == null) {
-            count = context.getPhotosModel().searchCount(getSearch());
+            count = context.getPhotosModel().searchCount(getSearch(), null);
         }
         return count;
     }

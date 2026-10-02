@@ -87,6 +87,8 @@ public class MongoDbPhoto implements MongoDbEntity, Photo, ContextAwareEntity {
 
     private Float searchScore;
 
+    private Boolean internal = null;
+
     @Transient
     private Context context;
 

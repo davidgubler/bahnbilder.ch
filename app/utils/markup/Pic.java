@@ -51,7 +51,7 @@ public class Pic extends ContentNode {
             html += node.toHtml(lang, photosModel);
         }
 
-        Photo photo = photosModel.get(id);
+        Photo photo = photosModel.get(id, null);
         if (photo == null) {
             return "<br /><b>&gt;&gt; PHOTO ID " + id + " NOT FOUND! &lt;&lt;</b><br />\n";
         }
@@ -71,7 +71,7 @@ public class Pic extends ContentNode {
 
     @Override
     public String toBBCode(String lang, PhotosModel photosModel) {
-        Photo photo = photosModel.get(id);
+        Photo photo = photosModel.get(id, null);
         if (photo == null) {
             return "[b]>> PHOTO ID " + id + " NOT FOUND! <<[/b]\n";
         }

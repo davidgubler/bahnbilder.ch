@@ -42,12 +42,12 @@ public class SearchController extends Controller {
         int lastPage;
         List<? extends Photo> photos;
         if (search.getFreeText() == null) {
-            long resultsCount = context.getPhotosModel().searchCount(search);
+            long resultsCount = context.getPhotosModel().searchCount(search, user);
             lastPage = search.getLastPage(resultsCount);
             search.adjustPage(lastPage);
-            photos = context.getPhotosModel().search(search);
+            photos = context.getPhotosModel().search(search, user);
         } else  {
-            photos = new FreeTextSearch().search(context, search);
+            photos = new FreeTextSearch().search(context, search, user);
             lastPage = search.getLastPage(photos.size());
             search.adjustPage(lastPage);
             photos = photos.subList((search.getPage() - 1) * 20, Math.min(search.getPage() * 20, photos.size()));
@@ -63,6 +63,7 @@ public class SearchController extends Controller {
 
     public Result locations(Http.Request request, Integer countryId) {
         Context context = Context.get(request);
+        User user = context.getUsersModel().getFromRequest(request);
         String lang = Lang.get(request);
         List<? extends Location> locations = context.getLocationsModel().get(context.getPhotosModel().getLocationIdsByCountryId(countryId)).sorted(LocalizedComparator.get(lang)).toList();
         try {

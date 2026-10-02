@@ -42,10 +42,11 @@ public class MapController extends Controller {
 
     public Result markers(Http.Request request) {
         Context context = Context.get(request);
+        User user = context.getUsersModel().getFromRequest(request);
         ContextSearch search = new ContextSearch(request);
         injector.injectMembers(search);
         NearbyMap<Photo> nearbyMap = new NearbyMap<>(Config.PHOTO_SPOT_RADIUS_KM);
-        context.getPhotosModel().getCoordinates(search).forEach(p -> {
+        context.getPhotosModel().getCoordinates(search, user).forEach(p -> {
             Point photoCoordinates = p.getCoordinates();
             Photo nearbyPhoto = nearbyMap.getNearest(photoCoordinates);
             if (nearbyPhoto == null) {

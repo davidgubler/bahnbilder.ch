@@ -54,13 +54,13 @@ public interface PhotosModel {
             Integer vehicleClassId,
             Integer nr);
 
-    Photo get(Integer id);
+    Photo get(Integer id, User user);
 
     Stream<? extends Photo> getAll();
 
-    Stream<? extends Photo> getByIds(Collection<Integer> ids);
+    Stream<? extends Photo> getByIds(Collection<Integer> ids, User user);
 
-    List<Photo> getFeatured(VehicleClassesModel vehicleClassesModel, VehicleTypesModel vehicleTypesModel);
+    List<Photo> getFeatured(VehicleClassesModel vehicleClassesModel, VehicleTypesModel vehicleTypesModel, User user);
 
     int getLocationCardinality(int locationId);
 
@@ -72,15 +72,15 @@ public interface PhotosModel {
 
     void fetchExif(Photo photo);
 
-    List<? extends Photo> search(Search search);
+    List<? extends Photo> search(Search search, User user);
 
-    Stream<? extends Photo> searchAll(Search search);
+    Stream<? extends Photo> searchAll(Search search, User user);
 
-    Photo getNext(Photo photo, Search search);
+    Photo getNext(Photo photo, Search search, User user);
 
-    Photo getPrev(Photo photo, Search search);
+    Photo getPrev(Photo photo, Search search, User user);
 
-    long searchCount(Search search);
+    long searchCount(Search search, User user);
 
     List<Integer> getLocationIdsByCountryId(Integer countryId);
 
@@ -100,7 +100,7 @@ public interface PhotosModel {
 
     void rate(Photo photo, int authorRating);
 
-    Stream<? extends Photo> getCoordinates(Search search);
+    Stream<? extends Photo> getCoordinates(Search search, User user);
 
     List<Integer> getUsedCountryIds();
 
@@ -144,5 +144,5 @@ public interface PhotosModel {
 
     List<Integer> getLocationIds();
 
-    Map<? extends Photo, Float> searchFreeText(String freeText);
+    Map<? extends Photo, Float> searchFreeText(String freeText, User user);
 }
