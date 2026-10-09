@@ -211,8 +211,8 @@ public class Txt {
         en.put("focalLength", "Focal length");
         de.put("focalLength", "Brennweite");
 
-        en.put("followUsOnFacebook", "Follow us on Facebook");
-        de.put("followUsOnFacebook", "Folge uns auf Facebook");
+        en.put("followUsOnFacebook", "Facebook");
+        de.put("followUsOnFacebook", "Facebook");
 
         en.put("fromDate", "from");
         de.put("fromDate", "vom");
