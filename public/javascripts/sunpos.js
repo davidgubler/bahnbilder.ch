@@ -44,20 +44,12 @@ class SunPos {
         div1.style.cssText = 'position: relative; width: 100%; height: 100%; pointer-events: none;';
         div1.style.visibility = 'hidden';
         const div2 = document.createElement('div');
-        div2.style.cssText = 'position: absolute; inset: 0; max-height: 100%; max-width: 100%; object-fit: contain; aspect-ratio: 1 / 1; margin-left: auto; margin-right: auto; padding: 50px;';
+        div2.style.cssText = 'position: absolute; inset: 0; max-height: 100%; max-width: 100%; object-fit: contain; margin: auto; padding: 50px 0px 50px 0px;';
         div1.appendChild(div2);
         this.canvas = document.createElement('canvas');
         this.canvas.style.cssText = 'width: 100%; height: 100%;';
         div2.append(this.canvas);
         map.getDiv().appendChild(div1);
-
-        const cs = this.canvas.getBoundingClientRect();
-        this.canvas.width = cs.width;
-        this.canvas.height = cs.height;
-
-        this.centerX = Math.round(this.canvas.width / 2);
-        this.centerY = Math.round(this.canvas.height / 2);
-        this.radius = Math.round(this.canvas.width / 2) - 20;
 
         this.ctx = this.canvas.getContext("2d");
 
@@ -217,6 +209,13 @@ class SunPos {
     }
 
     draw() {
+        const cs = this.canvas.getBoundingClientRect();
+        this.canvas.width = cs.width;
+        this.canvas.height = cs.height;
+        this.centerX = Math.round(this.canvas.width / 2);
+        this.centerY = Math.round(this.canvas.height / 2);
+        this.radius = Math.round(Math.min(this.canvas.width, this.canvas.height) / 2) - 20;
+
         this.sunPosition = SunCalc.getPosition(this.sunPosDate, this.lat, this.lng);
         this.sunCalcTimes = SunCalc.getTimes(this.sunPosDate, this.lat, this.lng);
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
