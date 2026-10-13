@@ -56,7 +56,12 @@ public class Dns {
         // BUSINESS
         List<? extends DnsRecord> records = context.getDnsModel().getRecords(zoneId);
         String domain = extractDomain(records);
-        for (String failoverHost : Config.Option.CLOUDFLARE_FAILOVER_HOSTS.getStrings()) {
+
+        List<String> failoverHosts = new ArrayList<>(Config.Option.CLOUDFLARE_FAILOVER_HOSTS.getStrings());
+        failoverHosts.remove(Config.getHostname());
+        failoverHosts.add(0, Config.getHostname()); // do this server first
+
+        for (String failoverHost : failoverHosts) {
             String testHost = failoverHost + "." + domain;
             String ip = records.stream().filter(r -> r.getName().equals(testHost)).filter(r -> "AAAA".equals(r.getType())).map(DnsRecord::getContent).findFirst().orElse(null);
             if (ip == null) {
@@ -74,7 +79,11 @@ public class Dns {
             boolean check = context.getDnsModel().check(uri);
 
             if (failoverHost.equals(Config.getHostname())) {
-                if (check && hostRecord == null) {
+                if (!check) {
+                    logger.info(context.getRequest(), "Failover host " + testHost + " (self) does not respond, aborting checks");
+                    break;
+                }
+                if (hostRecord == null) {
                     logger.info(context.getRequest(), "Failover host " + testHost + " responds, adding to DNS");
                     createRecord(context, domain, null, "AAAA", ip, true, user);
                 }
