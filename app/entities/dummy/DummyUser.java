@@ -46,4 +46,9 @@ public class DummyUser implements User {
     public boolean isAdmin() {
         return false;
     }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }
