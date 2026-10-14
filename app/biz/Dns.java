@@ -9,6 +9,8 @@ import java.util.*;
 
 public class Dns {
 
+    private static final Map<String, Integer> strikes = Collections.synchronizedMap(new HashMap<>());
+
     private BahnbilderLogger logger = new BahnbilderLogger(Dns.class);
 
     private boolean allRecordsAreInDomain(Collection<DnsRecord> dnsRecords, String domain) {
@@ -84,13 +86,24 @@ public class Dns {
                     break;
                 }
                 if (hostRecord == null) {
-                    logger.info(context.getRequest(), "Failover host " + testHost + " responds, adding to DNS");
+                    logger.info(context.getRequest(), "Failover host " + testHost + " (self) responds, adding to DNS");
                     createRecord(context, domain, null, "AAAA", ip, true, user);
+                } else {
+                    logger.info(context.getRequest(), "Failover host " + testHost + " (self) OK");
                 }
             } else {
-                if (!check && hostRecord != null) {
-                    logger.info(context.getRequest(), "Failover host " + testHost + " not responding, removing from DNS");
-                    deleteRecord(context, hostRecord, user);
+                if (check) {
+                    logger.info(context.getRequest(), "Failover host " + testHost + " OK");
+                    strikes.remove(failoverHost);
+                } else {
+                    Integer s = strikes.getOrDefault(failoverHost, 0);
+                    s++;
+                    logger.info(context.getRequest(), "Failover host " + testHost + " not responding, strike " + s);
+                    strikes.put(failoverHost, s);
+                    if (hostRecord != null && s > 2) {
+                        logger.info(context.getRequest(), "Failover host " + testHost + " has more than 2 strikes, removing from DNS");
+                        deleteRecord(context, hostRecord, user);
+                    }
                 }
             }
         }
