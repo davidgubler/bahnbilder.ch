@@ -115,11 +115,24 @@ public class CloudflareDnsModel implements DnsModel {
         }
     }
 
+    private Function<HttpResponse<byte[]>, String> responseHandler() {
+        return httpResponse -> {
+            if (httpResponse.statusCode() < 200 || httpResponse.statusCode() >= 300) {
+                throw new CompletionException("HTTP response " + httpResponse.statusCode(), null);
+            }
+            try {
+                return new String(httpResponse.body());
+            } catch (Exception e) {
+                throw new CompletionException(e);
+            }
+        };
+    }
+
     @Override
     public boolean check(URI uri) {
         HttpRequest req = HttpRequest.newBuilder(uri).timeout(Duration.ofSeconds(15)).build();
         try {
-            client.sendAsync(req, java.net.http.HttpResponse.BodyHandlers.ofByteArray()).get();
+            client.sendAsync(req, java.net.http.HttpResponse.BodyHandlers.ofByteArray()).thenApply(responseHandler()).get();
             return true;
         } catch (Exception e) {
             return false;
