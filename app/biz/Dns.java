@@ -46,6 +46,10 @@ public class Dns {
         }
 
         // INPUT
+        List<String> failoverHosts = new ArrayList<>(Config.Option.CLOUDFLARE_FAILOVER_HOSTS.getStrings());
+        if (!failoverHosts.contains(Config.getHostname())) {
+            return; // this host is not in the failover configuration
+        }
         Map<String, String> errors = new HashMap<>();
         String zoneId = Config.Option.CLOUDFLARE_ZONE_ID.get();
         if (zoneId == null) {
@@ -57,9 +61,7 @@ public class Dns {
 
         // BUSINESS
         List<? extends DnsRecord> records = context.getDnsModel().getRecords(zoneId);
-        String domain = extractDomain(records);
-
-        List<String> failoverHosts = new ArrayList<>(Config.Option.CLOUDFLARE_FAILOVER_HOSTS.getStrings());
+        String domain = extractDomain(records);        
         failoverHosts.remove(Config.getHostname());
         failoverHosts.add(0, Config.getHostname()); // do this server first
 
