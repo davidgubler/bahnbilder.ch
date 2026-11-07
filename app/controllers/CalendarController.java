@@ -17,6 +17,7 @@ import utils.NotAllowedException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.time.*;
 
 public class CalendarController extends Controller {
     @Inject
@@ -106,32 +107,25 @@ public class CalendarController extends Controller {
         }
     }
 
-    public Result list(Http.Request request) {
+    public Result orders(Http.Request request, Integer selectedYear) {
         Context context = Context.get(request);
         User user = context.getUsersModel().getFromRequest(request);
         if (user == null) {
             throw new NotAllowedException();
         }
         String lang = Lang.get(request);
-        List<Integer> years = context.getCalendarOrdersModel().getYears();
-        List<? extends CalendarOrder> orders = context.getCalendarOrdersModel().getByYear(Config.Option.CALENDAR_YEAR.getInt());
-        return ok(views.html.calendar.list.render(request, Config.Option.CALENDAR_YEAR.getInt(), years, orders, user, lang));
-    }
-
-    public Result listPost(Http.Request request) {
-        Context context = Context.get(request);
-        User user = context.getUsersModel().getFromRequest(request);
-        if (user == null) {
-            throw new NotAllowedException();
-        }
-        String lang = Lang.get(request);
-        List<Integer> years = context.getCalendarOrdersModel().getYears();
-        Map<String, String[]> data = request.body().asFormUrlEncoded();
-        Integer year = InputUtils.toInt(data.get("year"));
+        Integer year = Config.Option.CALENDAR_YEAR.getInt();
         if (year == null) {
-            year = Config.Option.CALENDAR_YEAR.getInt();
+            year = LocalDate.now().getYear();
         }
-        List<? extends CalendarOrder> orders = context.getCalendarOrdersModel().getByYear(year);
-        return ok(views.html.calendar.list.render(request, year, years, orders, user, lang));
+        List<Integer> years = context.getCalendarOrdersModel().getYears();
+        if (!years.contains(year)) {
+            years.add(year);
+        }
+        if (selectedYear == null) {
+            selectedYear = year;
+        }
+        List<? extends CalendarOrder> orders = context.getCalendarOrdersModel().getByYear(selectedYear);
+        return ok(views.html.calendar.orders.render(request, selectedYear, years, orders, user, lang));
     }
 }

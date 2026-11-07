@@ -105,8 +105,8 @@ GET     /dnsupdate                                      controllers.AboutControl
 GET     /calendar                                       controllers.CalendarController.view(request: Request)
 GET     /calendar/order                                 controllers.CalendarController.order(request: Request)
 POST    /calendar/order                                 controllers.CalendarController.orderPost(request: Request)
-GET     /calendar/orders                                controllers.CalendarController.list(request: Request)
-POST    /calendar/orders                                controllers.CalendarController.listPost(request: Request)
+GET     /calendar/orders                                controllers.CalendarController.orders(request: Request, year: Integer ?= null)
+GET     /calendar/orders/:year                          controllers.CalendarController.orders(request: Request, year: Integer)
 
 GET     /photos/original/:id.jpg                        controllers.FilesController.original(request: Request, id: Integer)
 GET     /pictures/original/:id.jpg                      controllers.FilesController.original(request: Request, id: Integer)

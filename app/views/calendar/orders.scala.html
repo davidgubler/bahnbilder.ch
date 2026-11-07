@@ -12,7 +12,7 @@
     <div class='row'>
         <div class='col-12'>
             @form(request) {
-                @formSelect(i18n.Txt.get(lang, "year"), "year", true, Collections.emptyMap()) {
+                @formSelect(i18n.Txt.get(lang, "year"), "year", true, Collections.emptyMap(), null, routes.CalendarController.orders(null)) {
                     @for(y <- years) {
                         <option value='@y' @if(year==y){selected="selected"}>@y</option>
                     }

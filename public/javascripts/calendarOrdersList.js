@@ -1,8 +1,6 @@
 $(document).ready(function() {
 	$("select").change(function(s) {
-	    var name = s.target.name;
-	    var form = s.target.parentElement.parentElement.parentElement;
-	    console.log(form);
-	    form.submit();
+	    target = $(s.target);
+	    window.location.href = target.data("base-url") + "/" + target.val();
 	});
 });
