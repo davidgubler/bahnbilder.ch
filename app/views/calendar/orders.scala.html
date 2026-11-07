@@ -30,7 +30,7 @@
                 </tr>
                 @for(order <- orders) {
                     <tr>
-                        <td style="padding-right: 20px;">@order.getTimestamp()</td>
+                        <td style="padding-right: 20px;">@utils.StringUtils.formatInstant(lang, order.getTimestamp())</td>
                         <td style="padding-right: 20px;">@order.getNrOfRailCalendars()</td>
                         <td style="padding-right: 20px;">@order.getNrOfAnimalCalendars()</td>
                         <td style="padding-right: 20px;">@order.getFirstName() @order.getLastName()</td>

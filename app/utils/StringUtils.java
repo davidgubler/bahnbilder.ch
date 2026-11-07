@@ -1,9 +1,7 @@
 package utils;
 
 import java.text.Normalizer;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
@@ -51,6 +49,14 @@ public class StringUtils {
 
     public static String formatTime(String lang, LocalDateTime date) {
         return date == null ? "" : date.toLocalTime().format(hourMinuteFormatter);
+    }
+
+    public static String formatInstant(String lang, Instant instant) {
+        if (instant == null) {
+            return "";
+        }
+        ZonedDateTime zdt = instant.atZone(Config.DEFAULT_ZONE_ID);
+        return formatDate(lang, zdt.toLocalDate()) + " " + zdt.toLocalTime().format(hourMinuteSecondFormatter);
     }
 
     public static long formatTimeEpochSecond(LocalDateTime dateTime, ZoneId zoneId) {
